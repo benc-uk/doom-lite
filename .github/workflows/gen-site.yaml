@@ -33,12 +33,6 @@ jobs:
       - name: Setup Pages
         uses: actions/configure-pages@v2
 
-      # - name: Generate index page
-      #   uses: jaywcjlove/markdown-to-html-cli@main
-      #   with:
-      #     source: readme.md
-      #     output: index.html
-
       - name: Upload artifact
         uses: actions/upload-pages-artifact@v1
         with:
