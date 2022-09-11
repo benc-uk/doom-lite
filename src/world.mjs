@@ -83,7 +83,7 @@ export function buildInstances(gl, physWorld) {
             shape: new Cannon.Box(new Cannon.Vec3(5, 5, 5)),
           })
           box.position.set(x * MAP_SIZE + MAP_SIZE / 2, 0, y * MAP_SIZE + MAP_SIZE / 2)
-          //physWorld.addBody(box)
+          physWorld.addBody(box)
           break
         case 2:
         case 0:
@@ -113,7 +113,7 @@ export function buildInstances(gl, physWorld) {
             object: spriteObj,
             location: [x * MAP_SIZE + MAP_SIZE / 2, -2.0, y * MAP_SIZE + MAP_SIZE / 2],
             animTime: Math.random() * spriteObj.animSpeed,
-            textureIndex: 0,
+            textureIndex: Math.floor(Math.random() * spriteObj.textures.length),
           })
       }
     }

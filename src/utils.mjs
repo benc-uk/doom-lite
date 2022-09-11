@@ -29,3 +29,9 @@ export function setOverlay(message) {
   overlay.style.display = 'block'
   overlay.innerHTML = message
 }
+
+export function hideOverlay() {
+  const overlay = document.getElementById('overlay')
+  if (!overlay) return
+  overlay.style.display = 'none'
+}

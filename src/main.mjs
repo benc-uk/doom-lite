@@ -1,11 +1,11 @@
-import { fetchShaders, setOverlay } from './utils.mjs'
+import { fetchShaders, hideOverlay, setOverlay } from './utils.mjs'
 import { buildInstances, testWallsInstance } from './world.mjs'
 import * as twgl from '../lib/twgl/dist/4.x/twgl-full.module.js'
 import { mat4 } from '../lib/gl-matrix/esm/index.js'
 
 import * as Cannon from '../lib/cannon-es/dist/cannon-es.js'
 
-const VERSION = '0.1.3'
+const VERSION = '0.1.4'
 const FOV = 45
 const FAR_CLIP = 300
 
@@ -52,6 +52,10 @@ window.onload = async () => {
     return
   }
 
+  setTimeout(() => {
+    hideOverlay()
+  }, 5000)
+
   const physWorld = new Cannon.World({})
   playerBody = new Cannon.Body({
     mass: 0.001,
@@ -85,24 +89,21 @@ window.onload = async () => {
   // ******* HACK HERE **********
 
   // Draw the scene repeatedly every frame
-  //console.log('♻️ Starting render loop with', instances.length + sprites.length, 'instances')
+  console.log('♻️ Starting render loop with', instances.length + sprites.length, 'instances')
   var prevTime = 0
 
   async function render(now) {
     now *= 0.001
     const deltaTime = now - prevTime // Get smoothed time difference
     prevTime = now
-
-    setOverlay(`FPS: ${Math.round(1 / deltaTime)}`)
-
     // Process inputs and controls
     handleInputs(deltaTime)
 
     // Update physics
     physWorld.fixedStep()
 
-    if (now % 2 < deltaTime) {
-      //console.log(facing)
+    if (now % 3 < deltaTime) {
+      console.log(`🚀 FPS: ${Math.round(1 / deltaTime)}`)
     }
 
     gl.clear(gl.COLOR_BUFFER_BIT)
