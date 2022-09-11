@@ -11,7 +11,7 @@ export function wallBufferInfo(gl, p1, p2, floorHeight, ceilingHeight) {
      p1.x, ceilingHeight, p1.y,
      p2.x, ceilingHeight, p2.y,
      p1.x, floorHeight, p1.y,
-     p2.x, floorHeight, p2.y,
+     p2.x, floorHeight, p2.y,s
   ];
   const positionBuffer = gl.createBuffer()
   gl.bindBuffer(gl.ARRAY_BUFFER, positionBuffer)
