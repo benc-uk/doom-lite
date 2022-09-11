@@ -1,7 +1,12 @@
+SRC_DIR := "./src"
+
 # Things you don't want to change
 REPO_DIR := $(abspath $(dir $(lastword $(MAKEFILE_LIST))))
+
 # Tools
-BS_PATH := $(REPO_DIR)/bin/node_modules/.bin/browser-sync # Remove if local server not needed
+BS_PATH := $(REPO_DIR)/bin/node_modules/.bin/browser-sync
+PR_PATH := $(REPO_DIR)/bin/node_modules/.bin/prettier
+ESL_PATH := $(REPO_DIR)/bin/node_modules/.bin/eslint
 
 .PHONY: help install-tools local-server lint lint-fix
 .DEFAULT_GOAL := help
@@ -12,17 +17,19 @@ help: ## 💬 This help message :)
 
 install-tools: ## 🔮 Install dev tools into project bin directory
 	@figlet $@ || true
-	@$(BS_PATH) -v > /dev/null 2>&1 || npm install --prefix ./bin browser-sync
+	@$(BS_PATH) --version > /dev/null 2>&1 || npm install --prefix ./bin browser-sync
+	@$(PR_PATH) -v > /dev/null 2>&1 || npm install --prefix ./bin prettier
+	@$(ESL_PATH) -v > /dev/null 2>&1 || npm install --prefix ./bin eslint
 
-lint: ## 🌟 Lint & format, will not fix but sets exit code on error
+lint: ## 🌟 Lint & format check only, sets exit code on error
 	@figlet $@ || true
-	@$(GOLINT_PATH) > /dev/null || curl -sSfL https://raw.githubusercontent.com/golangci/golangci-lint/master/install.sh | sh
-	cd $(SRC_DIR); $(GOLINT_PATH) run --modules-download-mode=mod *.go
-	cd $(SRC_DIR); npm run lint
+	@$(PR_PATH) $(SRC_DIR) --check
+	@$(ESL_PATH) $(SRC_DIR)/**
 
-lint-fix: ## 🔍 Lint & format, will try to fix errors and modify code
+lint-fix: ## 📝 Lint & format, attempts to fix errors & modify code
 	@figlet $@ || true
-	cd $(SPA_DIR); npm run lint-fix
+	@$(ESL_PATH) $(SRC_DIR)/** --fix
+	@$(PR_PATH) $(SRC_DIR) --write
 
 local-server: ## 🌐 Start a local HTTP server for development
 	@figlet $@ || true

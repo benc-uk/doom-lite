@@ -72,7 +72,7 @@ export function buildInstances(gl, physWorld) {
       const type = map[y][x]
 
       switch (type) {
-        case 1:
+        case 1: {
           instances.push({
             object: wallObj,
             location: [x * MAP_SIZE + MAP_SIZE / 2, 0, y * MAP_SIZE + MAP_SIZE / 2],
@@ -85,6 +85,7 @@ export function buildInstances(gl, physWorld) {
           box.position.set(x * MAP_SIZE + MAP_SIZE / 2, 0, y * MAP_SIZE + MAP_SIZE / 2)
           physWorld.addBody(box)
           break
+        }
         case 2:
         case 0:
           instances.push({
@@ -139,11 +140,11 @@ function createObject(name, uniforms, buffers, textures, animSpeed) {
 }
 
 export function testWallsInstance(gl) {
-  const wallBuff1 = wallBufferInfo(gl, { x: -20, y: -60 }, { x: 20, y: -60 }, -10, 10)
-  const wallBuff2 = wallBufferInfo(gl, { x: 20, y: -60 }, { x: 70, y: -20 }, -10, 10)
-  const wallBuff3 = wallBufferInfo(gl, { x: 70, y: -20 }, { x: 50, y: 0 }, -10, 10)
-  // console.log(w.attribs.position)
-  // console.log(w.indices)
+  const s = 40
+  const wallBuff1 = wallBufferInfo(gl, { x: 0, y: 0 }, { x: s * 2, y: 0 }, 0, 10)
+  const wallBuff2 = wallBufferInfo(gl, { x: s * 2, y: 0 }, { x: s, y: s }, 0, 10)
+  const wallBuff3 = wallBufferInfo(gl, { x: s, y: s }, { x: 0, y: s * 1.5 }, 0, 10)
+  const wallBuff4 = wallBufferInfo(gl, { x: 0, y: s * 1.5 }, { x: 0, y: 0 }, -3, 16)
 
   const wallTexture = twgl.createTexture(gl, {
     src: 'textures/STARG2.png',
@@ -152,6 +153,7 @@ export function testWallsInstance(gl) {
   const wallObjNew1 = createObject('wallNew', baseUniforms, wallBuff1, [wallTexture], 0.0)
   const wallObjNew2 = createObject('wallNew', baseUniforms, wallBuff2, [wallTexture], 0.0)
   const wallObjNew3 = createObject('wallNew', baseUniforms, wallBuff3, [wallTexture], 0.0)
+  const wallObjNew4 = createObject('wallNew', baseUniforms, wallBuff4, [wallTexture], 0.0)
 
   const instances = [
     {
@@ -166,6 +168,11 @@ export function testWallsInstance(gl) {
     },
     {
       object: wallObjNew3,
+      location: [0, 0, 0],
+      textureIndex: 0,
+    },
+    {
+      object: wallObjNew4,
       location: [0, 0, 0],
       textureIndex: 0,
     },

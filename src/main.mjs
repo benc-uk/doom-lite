@@ -1,5 +1,5 @@
 import { fetchShaders, hideOverlay, setOverlay } from './utils.mjs'
-import { buildInstances, testWallsInstance } from './world.mjs'
+import { testWallsInstance } from './world.mjs'
 import * as twgl from '../lib/twgl/dist/4.x/twgl-full.module.js'
 import { mat4 } from '../lib/gl-matrix/esm/index.js'
 
@@ -41,7 +41,7 @@ window.onload = async () => {
     const { vertex: worldVert, fragment: worldFrag } = await fetchShaders('shaders/world-vert.glsl', 'shaders/world-frag.glsl')
     worldProg = twgl.createProgramInfo(gl, [worldVert, worldFrag])
 
-    let { vertex: spriteVert, fragment: spriteFrag } = await fetchShaders('shaders/sprite-vert.glsl', 'shaders/sprite-frag.glsl')
+    const { vertex: spriteVert, fragment: spriteFrag } = await fetchShaders('shaders/sprite-vert.glsl', 'shaders/sprite-frag.glsl')
     spriteProg = twgl.createProgramInfo(gl, [spriteVert, spriteFrag])
 
     console.log('🎨 Loaded all shaders, GL is ready')
@@ -64,12 +64,13 @@ window.onload = async () => {
   })
   physWorld.addBody(playerBody)
   console.log('🧪 Physics initialized')
+  physWorld.re
 
   // build everything we are going to render
-  let { instances, sprites } = buildInstances(gl, physWorld)
+  //let { instances, sprites } = buildInstances(gl, physWorld)
 
   // Setup player position and camera
-  const playerStart = { x: 50, y: 0.1, z: 65 }
+  const playerStart = { x: 5, y: 5.1, z: 5 }
   camera = mat4.targetTo(mat4.create(), [0, 0, 0], [0, 0, -1], [0, 1, 0])
   mat4.translate(camera, camera, [playerStart.x, playerStart.y, playerStart.z])
   mat4.rotateY(camera, camera, 0)
@@ -83,14 +84,15 @@ window.onload = async () => {
   // ******* HACK HERE **********
   // ******* HACK HERE **********
 
-  //let instances = testWallsInstance(gl)
+  const instances = testWallsInstance(gl)
+  const sprites = []
 
   // ******* HACK HERE **********
   // ******* HACK HERE **********
 
   // Draw the scene repeatedly every frame
   console.log('♻️ Starting render loop with', instances.length + sprites.length, 'instances')
-  var prevTime = 0
+  let prevTime = 0
 
   async function render(now) {
     now *= 0.001
@@ -117,12 +119,10 @@ window.onload = async () => {
   requestAnimationFrame(render)
 }
 
-let time = 0.0
 //
 // Draw the scene!
 //
 function drawScene(gl, programInfo, instances, deltaTime, billboard = false) {
-  time += deltaTime
   twgl.resizeCanvasToDisplaySize(gl.canvas)
   gl.viewport(0, 0, gl.canvas.width, gl.canvas.height)
 
@@ -137,7 +137,7 @@ function drawScene(gl, programInfo, instances, deltaTime, billboard = false) {
     u_lightWorldPos: playerLight,
   }
 
-  for (let instance of instances) {
+  for (const instance of instances) {
     let tex = instance.object.textures[instance.textureIndex]
     instance.animTime += deltaTime
     if (instance.animTime > instance.object.animSpeed) {
@@ -233,11 +233,11 @@ function initInput(gl) {
   canvas.addEventListener('touchstart', touchMouseHandler)
   canvas.addEventListener('mousedown', touchMouseHandler)
 
-  canvas.addEventListener('touchend', (e) => {
+  canvas.addEventListener('touchend', () => {
     inputMap = {}
   })
 
-  canvas.addEventListener('mouseup', (e) => {
+  canvas.addEventListener('mouseup', () => {
     inputMap = {}
   })
 }
@@ -246,8 +246,8 @@ function initInput(gl) {
 // Handle any active input, called every frame
 //
 function handleInputs(deltaTime) {
-  let moveSpeed = 64.0 // Don't understand why don't need to multiply by deltaTime here
-  let turnSpeed = 3.8 * deltaTime
+  const moveSpeed = 64.0 // Don't understand why don't need to multiply by deltaTime here
+  const turnSpeed = 3.8 * deltaTime
 
   if (inputMap['w'] || inputMap['ArrowUp']) {
     playerBody.velocity.set(-playerFacing[0] * moveSpeed, -playerFacing[1] * moveSpeed, -playerFacing[2] * moveSpeed)

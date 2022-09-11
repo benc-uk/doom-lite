@@ -1,6 +1,8 @@
 import * as twgl from '../lib/twgl/dist/4.x/twgl-full.module.js'
 import { vec3 } from '../lib/gl-matrix/esm/index.js'
 
+export const TEX_SCALE = 10
+
 //
 // wallBufferInfo - creates a rectangle, how hard can that be?!
 // Returns a twgl BufferInfo https://twgljs.org/docs/module-twgl.html#.BufferInfo
@@ -11,31 +13,23 @@ export function wallBufferInfo(gl, p1, p2, floorHeight, ceilingHeight) {
      p1.x, ceilingHeight, p1.y,
      p2.x, ceilingHeight, p2.y,
      p1.x, floorHeight, p1.y,
-     p2.x, floorHeight, p2.y,s
+     p2.x, floorHeight, p2.y,
   ];
-  const positionBuffer = gl.createBuffer()
-  gl.bindBuffer(gl.ARRAY_BUFFER, positionBuffer)
-  gl.bufferData(gl.ARRAY_BUFFER, new Float32Array(positions), gl.STATIC_DRAW)
 
   // Work out normal with classic cross product method
-  let v1 = vec3.fromValues(positions[0] - positions[3], positions[1] - positions[4], positions[2] - positions[5])
-  let v2 = vec3.fromValues(positions[0] - positions[6], positions[1] - positions[7], positions[2] - positions[8])
-  let n = vec3.normalize(vec3.create(), vec3.cross(vec3.create(), v2, v1))
-  const normals = [n[0], n[1], n[2], n[0], n[1], n[2], n[0], n[1], n[2], n[0], n[1], n[2]]
+  const v1 = vec3.fromValues(positions[0] - positions[3], positions[1] - positions[4], positions[2] - positions[5])
+  const v2 = vec3.fromValues(positions[0] - positions[6], positions[1] - positions[7], positions[2] - positions[8])
 
-  // prettier-ignore
-  const indices = [
-    0, 2, 1,
-    1, 2, 3
-  ];
-  const indexBuffer = gl.createBuffer()
-  gl.bindBuffer(gl.ELEMENT_ARRAY_BUFFER, indexBuffer)
-  gl.bufferData(gl.ELEMENT_ARRAY_BUFFER, new Uint16Array(indices), gl.STATIC_DRAW)
+  const v1Len = vec3.length(v1) / TEX_SCALE
+  const v2Len = vec3.length(v2) / TEX_SCALE
 
-  var arrays = {
-    position: { data: positions },
-    normal: { numComponents: 3, data: normals },
-    indices: { numComponents: 3, data: indices },
+  const norm = vec3.normalize(vec3.create(), vec3.cross(vec3.create(), v2, v1))
+
+  const arrays = {
+    position: positions,
+    texcoord: [0, 0, v1Len, 0, 0, v2Len, v1Len, v2Len],
+    normal: [norm[0], norm[1], norm[2], norm[0], norm[1], norm[2], norm[0], norm[1], norm[2], norm[0], norm[1], norm[2]],
+    indices: [0, 2, 1, 1, 2, 3],
   }
 
   return twgl.createBufferInfoFromArrays(gl, arrays)
