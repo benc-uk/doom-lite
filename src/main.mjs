@@ -1,5 +1,6 @@
 import { fetchShaders, hideOverlay, setOverlay } from './utils.mjs'
-import { testWallsInstance } from './world.mjs'
+import { parseMap } from './world.mjs'
+import { mapNew } from './map.mjs'
 import * as twgl from '../lib/twgl/dist/4.x/twgl-full.module.js'
 import { mat4 } from '../lib/gl-matrix/esm/index.js'
 
@@ -70,10 +71,10 @@ window.onload = async () => {
   //let { instances, sprites } = buildInstances(gl, physWorld)
 
   // Setup player position and camera
-  const playerStart = { x: 5, y: 5.1, z: 5 }
+  const playerStart = { x: 25, y: 5.1, z: 25 }
   camera = mat4.targetTo(mat4.create(), [0, 0, 0], [0, 0, -1], [0, 1, 0])
   mat4.translate(camera, camera, [playerStart.x, playerStart.y, playerStart.z])
-  mat4.rotateY(camera, camera, 0)
+  mat4.rotateY(camera, camera, 3)
   playerBody.position.set(camera[12], camera[13], camera[14])
   playerFacing = [camera[8], camera[9], camera[10]]
   playerLight = [camera[12], camera[13], camera[14]]
@@ -84,7 +85,7 @@ window.onload = async () => {
   // ******* HACK HERE **********
   // ******* HACK HERE **********
 
-  const instances = testWallsInstance(gl)
+  const instances = parseMap(mapNew, gl, physWorld)
   const sprites = []
 
   // ******* HACK HERE **********

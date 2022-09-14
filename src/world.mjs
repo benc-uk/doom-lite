@@ -1,8 +1,6 @@
-import { map, MAP_SIZE } from './map.mjs'
-import { wallBufferInfo } from './geometry.mjs'
+import { buildFlat, buildWall } from './geometry.mjs'
 
 import * as twgl from '../lib/twgl/dist/4.x/twgl-full.module.js'
-import { mat4 } from '../lib/gl-matrix/esm/index.js'
 import * as Cannon from '../lib/cannon-es/dist/cannon-es.js'
 
 const baseUniforms = {
@@ -10,10 +8,11 @@ const baseUniforms = {
 
   u_lightAmbient: [0.3, 0.3, 0.3, 1],
   u_specular: [1, 1, 1, 1],
-  u_shininess: 150,
-  u_specularFactor: 0.6,
+  u_shininess: 350,
+  u_specularFactor: 0.4,
 }
 
+/*
 export function buildInstances(gl, physWorld) {
   const wallsBufferInfo = twgl.primitives.createCubeBufferInfo(gl, MAP_SIZE)
   const floorBufferInfo = twgl.primitives.createPlaneBufferInfo(gl, MAP_SIZE, MAP_SIZE)
@@ -125,6 +124,7 @@ export function buildInstances(gl, physWorld) {
     sprites,
   }
 }
+*/
 
 //
 // Create an object with the given name, uniforms, buffers and texture
@@ -139,44 +139,49 @@ function createObject(name, uniforms, buffers, textures, animSpeed) {
   }
 }
 
-export function testWallsInstance(gl) {
-  const s = 40
-  const wallBuff1 = wallBufferInfo(gl, { x: 0, y: 0 }, { x: s * 2, y: 0 }, 0, 10)
-  const wallBuff2 = wallBufferInfo(gl, { x: s * 2, y: 0 }, { x: s, y: s }, 0, 10)
-  const wallBuff3 = wallBufferInfo(gl, { x: s, y: s }, { x: 0, y: s * 1.5 }, 0, 10)
-  const wallBuff4 = wallBufferInfo(gl, { x: 0, y: s * 1.5 }, { x: 0, y: 0 }, -3, 16)
+export function parseMap(map, gl, physWorld) {
+  const instances = []
+  let wallIndex = 0
 
-  const wallTexture = twgl.createTexture(gl, {
-    src: 'textures/STARG2.png',
+  for (const sector of map.sectors) {
+    for (const wall of sector.walls) {
+      wallIndex++
+
+      const tr = wall.texRatio ? wall.texRatio : 1
+      const { bufferInfo, shape } = buildWall(gl, wall.x1, wall.y1, wall.x2, wall.y2, sector.floorHeight, sector.ceilingHeight, tr)
+      const wallTexture = twgl.createTexture(gl, {
+        src: `textures/${wall.texture}.png`,
+      })
+
+      const wallObj = createObject('wall' + wallIndex, baseUniforms, bufferInfo, [wallTexture], 0.0)
+
+      physWorld.addBody(new Cannon.Body({ mass: 1000, shape }))
+
+      instances.push({
+        object: wallObj,
+        location: [0, 0, 0],
+        textureIndex: 0,
+      })
+    }
+  }
+
+  const bufferInfoFloor = buildFlat(gl, 0, 0, 60, 0, 60, 60, 0, 60, 0)
+  const floorTexture = twgl.createTexture(gl, { src: 'textures/FLOOR4_8.png' })
+  const floorObj = createObject('floor', baseUniforms, bufferInfoFloor, [floorTexture], 0.0)
+  instances.push({
+    object: floorObj,
+    location: [0, 0, 0],
+    textureIndex: 0,
   })
 
-  const wallObjNew1 = createObject('wallNew', baseUniforms, wallBuff1, [wallTexture], 0.0)
-  const wallObjNew2 = createObject('wallNew', baseUniforms, wallBuff2, [wallTexture], 0.0)
-  const wallObjNew3 = createObject('wallNew', baseUniforms, wallBuff3, [wallTexture], 0.0)
-  const wallObjNew4 = createObject('wallNew', baseUniforms, wallBuff4, [wallTexture], 0.0)
-
-  const instances = [
-    {
-      object: wallObjNew1,
-      location: [0, 0, 0],
-      textureIndex: 0,
-    },
-    {
-      object: wallObjNew2,
-      location: [0, 0, 0],
-      textureIndex: 0,
-    },
-    {
-      object: wallObjNew3,
-      location: [0, 0, 0],
-      textureIndex: 0,
-    },
-    {
-      object: wallObjNew4,
-      location: [0, 0, 0],
-      textureIndex: 0,
-    },
-  ]
+  const bufferInfoCeil = buildFlat(gl, 0, 0, 60, 0, 60, 60, 0, 60, 10, false)
+  const ceilTexture = twgl.createTexture(gl, { src: 'textures/FLOOR5_4.png' })
+  const ceilObj = createObject('ceil', baseUniforms, bufferInfoCeil, [ceilTexture], 0.0)
+  instances.push({
+    object: ceilObj,
+    location: [0, 0, 0],
+    textureIndex: 0,
+  })
 
   return instances
 }

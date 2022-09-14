@@ -47,7 +47,7 @@ void main(void) {
   vec2 l = light(normalN, surfaceToLightN, halfVector, u_shininess);
 
   float attenuation = 1.0 / (1.0 + 8.00 * v_lightDist + 1.3 * (v_lightDist * v_lightDist));
-  attenuation = clamp(attenuation * 881500.0, 0.0, 1.0);
+  attenuation = clamp(attenuation * 1900.0, 0.0, 1.0);
 
   vec4 outColor = vec4(
     (texel * u_lightAmbient * attenuation + (u_lightColor * (texel * l.x * attenuation + u_specular * l.y * u_specularFactor * attenuation))).rgb, 
