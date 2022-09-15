@@ -1,6 +1,6 @@
 import * as twgl from '../lib/twgl/dist/4.x/twgl-full.module.js'
-import { vec3 } from '../lib/gl-matrix/esm/index.js'
 import * as Cannon from '../lib/cannon-es/dist/cannon-es.js'
+import { vec3 } from '../lib/gl-matrix/esm/index.js'
 
 export const TEX_SCALE = 10
 
@@ -16,6 +16,7 @@ export function buildWall(gl, p1x, p1y, p2x, p2y, floorHeight, ceilingHeight, wi
      p1x, floorHeight, p1y,
      p2x, floorHeight, p2y,
   ]
+
   const indices = [0, 2, 1, 1, 2, 3]
   const bufferInfo = makeFlatBuffer(gl, positions, indices, widthRatio)
   const shape = new Cannon.Trimesh(positions, indices)
@@ -31,10 +32,12 @@ export function buildFlat(gl, p1x, p1y, p2x, p2y, p3x, p3y, p4x, p4y, height, up
      p4x, height, p4y,
      p3x, height, p3y,
   ]
+
   const indices = [0, 2, 1, 1, 2, 3]
   if (!up) {
     indices.reverse()
   }
+
   const bufferInfo = makeFlatBuffer(gl, positions, indices, 1)
 
   return bufferInfo

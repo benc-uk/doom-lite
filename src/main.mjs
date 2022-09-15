@@ -1,10 +1,10 @@
 import { fetchShaders, hideOverlay, setOverlay } from './utils.mjs'
 import { parseMap } from './world.mjs'
-import { mapNew } from './map.mjs'
-import * as twgl from '../lib/twgl/dist/4.x/twgl-full.module.js'
-import { mat4 } from '../lib/gl-matrix/esm/index.js'
+// import { mapNew } from './map.mjs'
 
 import * as Cannon from '../lib/cannon-es/dist/cannon-es.js'
+import * as twgl from '../lib/twgl/dist/4.x/twgl-full.module.js'
+import { mat4 } from '../lib/gl-matrix/esm/index.js'
 
 const VERSION = '0.1.4'
 const FOV = 45
@@ -65,13 +65,15 @@ window.onload = async () => {
   })
   physWorld.addBody(playerBody)
   console.log('🧪 Physics initialized')
-  physWorld.re
 
   // build everything we are going to render
-  //let { instances, sprites } = buildInstances(gl, physWorld)
+  const mapString = localStorage.getItem('map')
+  const map = JSON.parse(mapString)
+  const { instances, playerStart } = parseMap(map, gl, physWorld)
+  const sprites = []
 
   // Setup player position and camera
-  const playerStart = { x: 25, y: 5.1, z: 25 }
+  //const playerStart = { x: 25, y: 5.1, z: 25 }
   camera = mat4.targetTo(mat4.create(), [0, 0, 0], [0, 0, -1], [0, 1, 0])
   mat4.translate(camera, camera, [playerStart.x, playerStart.y, playerStart.z])
   mat4.rotateY(camera, camera, 3)
@@ -81,15 +83,6 @@ window.onload = async () => {
 
   gl.enable(gl.DEPTH_TEST)
   gl.enable(gl.CULL_FACE)
-
-  // ******* HACK HERE **********
-  // ******* HACK HERE **********
-
-  const instances = parseMap(mapNew, gl, physWorld)
-  const sprites = []
-
-  // ******* HACK HERE **********
-  // ******* HACK HERE **********
 
   // Draw the scene repeatedly every frame
   console.log('♻️ Starting render loop with', instances.length + sprites.length, 'instances')

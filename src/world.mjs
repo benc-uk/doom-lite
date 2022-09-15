@@ -145,6 +145,7 @@ export function parseMap(map, gl, physWorld) {
 
   for (const sector of map.sectors) {
     for (const wall of sector.walls) {
+      console.log('wall', wallIndex, wall)
       wallIndex++
 
       const tr = wall.texRatio ? wall.texRatio : 1
@@ -183,5 +184,5 @@ export function parseMap(map, gl, physWorld) {
     textureIndex: 0,
   })
 
-  return instances
+  return { instances, playerStart: { x: map.playerStart.x, y: 5.1, z: map.playerStart.y } }
 }

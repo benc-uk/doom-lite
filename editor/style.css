@@ -1,5 +1,7 @@
 canvas {
-  background-color: rgb(39, 39, 39);
+  background-color: rgb(20, 20, 20);
+  cursor: none;
+  width: 1000px;
 }
 
 #output {
@@ -9,4 +11,26 @@ canvas {
   font-family: 'Courier New', Courier, monospace;
   padding: 10px;
   color: white;
+}
+
+button {
+  background-color: rgb(60, 80, 100);
+  color: white;
+  border: 1px solid white;
+  border-radius: 5px;
+  font-size: 20px;
+  padding: 5px;
+  margin: 5px;
+  font-family: 'Courier New', Courier, monospace;
+}
+
+button:hover {
+  background-color: rgb(110, 144, 179);
+  color: white;
+  border: 1px solid white;
+  border-radius: 5px;
+  font-size: 20px;
+  padding: 5px;
+  margin: 5px;
+  font-family: 'Courier New', Courier, monospace;
 }
