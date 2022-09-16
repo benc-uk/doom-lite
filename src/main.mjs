@@ -6,7 +6,7 @@ import * as Cannon from '../lib/cannon-es/dist/cannon-es.js'
 import * as twgl from '../lib/twgl/dist/4.x/twgl-full.module.js'
 import { mat4 } from '../lib/gl-matrix/esm/index.js'
 
-const VERSION = '0.1.4'
+const VERSION = '0.1.5'
 const FOV = 45
 const FAR_CLIP = 300
 
@@ -50,7 +50,7 @@ window.onload = async () => {
     setOverlay('Map error: ' + e)
     return
   }
-  console.log('🗺️ Map loaded')
+  console.log(`🗺️ Map '${map.name}' was loaded`)
 
   initInput(gl)
 
@@ -89,6 +89,7 @@ window.onload = async () => {
 
   // build everything we are going to render
   const { instances, playerStart } = parseMap(map, gl, physWorld)
+  console.log(`🗺️ Map '${map.name}' was parsed into ${instances.length} instances`)
   const sprites = []
 
   // Setup player position and camera
@@ -104,13 +105,17 @@ window.onload = async () => {
   gl.enable(gl.CULL_FACE)
 
   // Draw the scene repeatedly every frame
-  console.log('♻️ Starting render loop with', instances.length + sprites.length, 'instances')
+  console.log(`♻️ Starting render loop with ${instances.length + sprites.length} instances`)
   let prevTime = 0
 
+  //
+  // Main render loop, called once per frame
+  //
   async function render(now) {
     now *= 0.001
     const deltaTime = now - prevTime // Get smoothed time difference
     prevTime = now
+
     // Process inputs and controls
     handleInputs(deltaTime)
 
