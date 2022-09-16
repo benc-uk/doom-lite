@@ -31,6 +31,27 @@ window.onload = async () => {
     return
   }
 
+  let map
+  // Load cached map data
+  try {
+    let mapData = localStorage.getItem('map')
+    // fetch demo map from file if not in local storage
+    if (!mapData) {
+      const mapResp = await fetch('levels/map.json')
+      if (!mapResp.ok) {
+        throw new Error('Unable to load levels/map.json')
+      }
+      mapData = await mapResp.text()
+    }
+    // parse map data
+    map = JSON.parse(mapData)
+    localStorage.setItem('map', mapData)
+  } catch (e) {
+    setOverlay('Map error: ' + e)
+    return
+  }
+  console.log('🗺️ Map loaded')
+
   initInput(gl)
 
   // Use TWLG to set up the shaders and programs
@@ -67,8 +88,6 @@ window.onload = async () => {
   console.log('🧪 Physics initialized')
 
   // build everything we are going to render
-  const mapString = localStorage.getItem('map')
-  const map = JSON.parse(mapString)
   const { instances, playerStart } = parseMap(map, gl, physWorld)
   const sprites = []
 

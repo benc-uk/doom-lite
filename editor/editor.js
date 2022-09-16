@@ -20,7 +20,7 @@ window.addEventListener('load', () => {
 
   const mapString = localStorage.getItem('map')
   if (!mapString) {
-    newMap()
+    window.newMap()
   } else {
     map = JSON.parse(mapString)
   }
