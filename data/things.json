@@ -1,0 +1,15 @@
+[
+  {
+    "name": "imp",
+    "size": 6,
+    "animSpeed": 0.3,
+    "textures": ["TROOA1", "TROOB1", "TROOC1", "TROOD1"]
+  },
+
+  {
+    "name": "shotgun_guy",
+    "size": 5.5,
+    "animSpeed": 0.3,
+    "textures": ["SPOSA1", "SPOSB1", "SPOSC1", "SPOSD1"]
+  }
+]

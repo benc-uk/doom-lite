@@ -6,6 +6,7 @@ export const mapNew = {
     {
       floorHeight: 0,
       ceilingHeight: 10,
+      things: [],
       walls: [],
     },
   ],

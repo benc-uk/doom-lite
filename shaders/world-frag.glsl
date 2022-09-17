@@ -20,6 +20,9 @@ uniform float u_specularFactor;
 
 uniform sampler2D u_texture;
 
+// uniform vec3 u_lightWorldPos;
+// uniform mat4 u_identity;
+
 // Light function returns two floats (packed into a vec2)
 // One for diffuse component of lighting, the second for specular
 // - normalN:          Surface normal (normalized)
@@ -46,13 +49,15 @@ void main(void) {
 
   vec2 l = light(normalN, surfaceToLightN, halfVector, u_shininess);
 
-  float attenuation = 1.0 / (1.0 + 8.00 * v_lightDist + 1.3 * (v_lightDist * v_lightDist));
-  attenuation = clamp(attenuation * 1900.0, 0.0, 1.0);
+  float lightDist = length(v_surfaceToLight);
+  float attenuation = 1.0 / (1.0 + 8.00 * lightDist + 1.3 * (lightDist * lightDist));
+  attenuation = clamp(attenuation * 2000.0, 0.0, 1.0);
 
   vec4 outColor = vec4(
     (texel * u_lightAmbient * attenuation + (u_lightColor * (texel * l.x * attenuation + u_specular * l.y * u_specularFactor * attenuation))).rgb, 
     texel.a 
   );
 
+  //gl_FragColor = vec4(v_position.x/100.0, v_position.y/100.0, v_position.z/100.0, 1.0);//outColor;
   gl_FragColor = outColor;
 }

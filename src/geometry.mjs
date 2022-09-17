@@ -32,6 +32,8 @@ export function buildFlat(gl, p1x, p1y, p2x, p2y, p3x, p3y, p4x, p4y, height, up
      p4x, height, p4y,
      p3x, height, p3y,
   ]
+  // let f = twgl.primitives.createPlaneVertices(200, 200, 5, 5)
+  // console.log(f)
 
   const indices = [0, 2, 1, 1, 2, 3]
   if (!up) {
