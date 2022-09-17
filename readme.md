@@ -5,7 +5,7 @@ A spin off repo from https://github.com/benc-uk/webgl-sandbox
 
 ## Screenshots
 
-![screenshot](etc/Screenshot%202022-09-11%20140457.png)
+![screenshot](etc/Screenshot%202022-09-17%20122123.png)
 
 ## Running Locally
 
