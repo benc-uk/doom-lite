@@ -6,7 +6,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Level Editor</title>
     <link rel="stylesheet" href="style.css" />
-    <script src="./editor.js" type="module"></script>
+    <script src="./editor.mjs" type="module"></script>
   </head>
 
   <body>
@@ -22,7 +22,9 @@
         <button onClick="setMode('player')">PLAYER START</button>
       </div>
 
-      <canvas id="canvas" width="500" height="350"></canvas>
+      <div id="main">
+        <canvas id="canvas" width="500" height="500"></canvas>
+      </div>
     </div>
     <img src="player.png" id="player" />
   </body>

@@ -45,7 +45,7 @@ window.onload = async () => {
   let map
   // Load cached map data
   try {
-    let mapData = null //localStorage.getItem('map')
+    let mapData = localStorage.getItem('map')
     // fetch demo map from file if not in local storage
     if (!mapData) {
       const mapResp = await fetch('levels/map.json')
