@@ -107,7 +107,7 @@ window.onload = async () => {
   player.body = new Cannon.Body({
     mass: 0.001,
     shape: new Cannon.Sphere(2.5),
-    linearDamping: 0.999,
+    linearDamping: 0.99998,
   })
   physWorld.addBody(player.body)
   console.log('🧪 Physics initialized')
