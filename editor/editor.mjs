@@ -1,24 +1,53 @@
-const LINE_THICKNESS = 2
-const DOTSIZE = 6
+import './files.mjs'
+import { drawMap, drawCrosshair, drawLine } from './drawing.mjs'
 
 let map = {}
-let mode = 'addwall'
-let wallStartX = null
-let wallStartY = null
-let movingWall = null
-let movingEnd = 0
-let ctx
-let canvas
-let zoom = 1
-let gridSize = 8
 
-window.setMode = function setMode(m) {
-  mode = m
+const BASE_SIZE = 800
+
+// Shared state between modules
+export let state = {
+  zoom: 1,
+  gridSize: 8,
+  newSector: null,
+  cursorX: 0,
+  cursorY: 0,
+  mode: 'drawsector',
+  movingVert: null,
 }
 
-window.addEventListener('keydown', function (e) {
-  if (e.key === 'w') {
-    setMode('addwall')
+window.setMode = function setMode(m) {
+  state.mode = m
+  drawCrosshair()
+}
+
+window.addEventListener('keydown', handleKey)
+
+window.addEventListener('load', () => {
+  const canvas = document.getElementById('canvas')
+  canvas.width = BASE_SIZE * state.zoom
+  canvas.height = BASE_SIZE * state.zoom
+
+  const mapString = localStorage.getItem('map')
+  if (!mapString) {
+    window.newMap()
+  } else {
+    map = JSON.parse(mapString)
+  }
+
+  drawMap(map)
+
+  canvas.addEventListener('click', handleClick)
+  canvas.addEventListener('mousemove', handleMove)
+  canvas.addEventListener('wheel', handleWheel)
+})
+
+//
+//
+//
+function handleKey(e) {
+  if (e.key === 's') {
+    setMode('drawsector')
   }
   if (e.key === 'd') {
     setMode('delete')
@@ -29,330 +58,228 @@ window.addEventListener('keydown', function (e) {
   if (e.key === 'm') {
     setMode('move')
   }
-  if (e.key === 'f') {
-    setMode('flip')
-  }
   if (e.key === ']') {
-    if (gridSize >= 128) return
-    gridSize *= 2
-    drawMap()
+    if (state.gridSize >= 128) return
+    state.gridSize *= 2
+    drawMap(map)
   }
   if (e.key === '[') {
-    if (gridSize <= 4) return
-    gridSize /= 2
-    drawMap()
+    if (state.gridSize <= 4) return
+    state.gridSize /= 2
+    drawMap(map)
   }
-})
-
-window.addEventListener('load', () => {
-  canvas = document.getElementById('canvas')
-  ctx = canvas.getContext('2d')
-  canvas.width = 1500 * zoom
-  canvas.height = 1500 * zoom
-  ctx.scale(zoom, zoom)
-  ctx.lineWidth = LINE_THICKNESS / zoom
-
-  const mapString = localStorage.getItem('map')
-  if (!mapString) {
-    window.newMap()
-  } else {
-    map = JSON.parse(mapString)
+  if (e.key === 'Escape') {
+    setMode('drawsector')
+    state.newSector = null
   }
+}
 
-  drawMap()
+//
+//
+//
+function handleClick(e) {
+  e.preventDefault()
+  const { x, y } = snap(e)
 
-  //
-  //
-  //
-  canvas.addEventListener('click', function (e) {
-    e.preventDefault()
-    const { x, y } = snap(e)
-
-    if (mode === 'addwall') {
-      if (wallStartX === null) {
-        wallStartX = x
-        wallStartY = y
-      } else {
-        addWall(wallStartX, wallStartY, x, y)
-        wallStartX = null
-        wallStartY = null
-        drawMap()
-        drawCrosshair(x, y)
+  if (state.mode === 'drawsector') {
+    // Start a new sector
+    if (state.newSector === null) {
+      const sid = map.sectorInc++
+      state.newSector = {
+        id: sid,
+        vertices: [],
       }
-    }
-
-    if (mode === 'player') {
-      map.playerStart.x = x
-      map.playerStart.y = y
-      drawMap()
-      drawCrosshair(x, y)
-    }
-
-    if (mode === 'delete') {
-      const walls = map.sectors[0].walls
-      for (let i = 0; i < walls.length; i++) {
-        const wall = walls[i]
-        if ((wall.x1 === x && wall.y1 === y) || (wall.x2 === x && wall.y2 === y)) {
-          walls.splice(i, 1)
-          drawMap()
-          drawCrosshair(x, y)
-          return
-        }
-      }
-    }
-
-    if (mode === 'move') {
-      const walls = map.sectors[0].walls
-      for (let i = 0; i < walls.length; i++) {
-        const wall = walls[i]
-        if (movingWall === null) {
-          if (wall.x1 === x && wall.y1 === y) {
-            movingWall = wall
-            movingEnd = 1
-            return
-          }
-          if (wall.x2 === x && wall.y2 === y) {
-            movingWall = wall
-            movingEnd = 2
-            return
-          }
-        } else {
-          movingWall = null
-          movingEnd = 0
-          return
-        }
-      }
-    }
-
-    if (mode === 'flip') {
-      const walls = map.sectors[0].walls
-      for (let i = 0; i < walls.length; i++) {
-        const wall = walls[i]
-        if ((wall.x1 === x && wall.y1 === y) || (wall.x2 === x && wall.y2 === y)) {
-          const tempX = wall.x1
-          const tempY = wall.y1
-          wall.x1 = wall.x2
-          wall.y1 = wall.y2
-          wall.x2 = tempX
-          wall.y2 = tempY
-
-          drawMap()
-          drawCrosshair(x, y)
-          //return
-        }
-      }
-    }
-
-    return false
-  })
-
-  //
-  //
-  //
-  canvas.addEventListener('mousemove', function (e) {
-    drawMap()
-
-    const { x, y } = snap(e) //e.offsetX * zoom, e.offsetY * zoom)
-    drawCrosshair(x, y)
-
-    if (x > canvas.width || y > canvas.height || x < 0 || y < 0) {
-      wallStartX = null
-      wallStartY = null
+      state.newSector.vertices.push({ x, y })
       return
     }
 
-    if (mode === 'addwall') {
-      if (wallStartX !== null) {
-        ctx.strokeStyle = 'green'
-        ctx.fillStyle = 'white'
-        ctx.beginPath()
-        ctx.moveTo(wallStartX, wallStartY)
-        ctx.lineTo(x, y)
-        ctx.stroke()
-
-        ctx.fillRect(wallStartX - 1, wallStartY - 1, 3, 3)
+    // Complete the sector
+    if (state.newSector.vertices[0].x === x && state.newSector.vertices[0].y === y) {
+      map.sectors[state.newSector.id] = {
+        id: state.newSector.id,
+        floor: 0,
+        ceiling: 10,
       }
-    }
 
-    if (mode === 'move') {
-      if (movingWall) {
-        if (movingEnd === 1) {
-          movingWall.x1 = x
-          movingWall.y1 = y
-        } else {
-          movingWall.x2 = x
-          movingWall.y2 = y
+      // push lines & vertices into map
+      for (let i = 0; i < state.newSector.vertices.length; i++) {
+        const v1 = state.newSector.vertices[i]
+        const v2 = state.newSector.vertices[(i + 1) % state.newSector.vertices.length]
+        const v1Id = addVertex(v1.x, v1.y)
+        const v2Id = addVertex(v2.x, v2.y)
+
+        const lid = map.lineInc++
+        map.lines[lid] = {
+          id: lid,
+          start: v1Id,
+          end: v2Id,
+          front: {
+            sector: state.newSector.id,
+            textureMiddle: 'STARG2',
+          },
+          back: {},
         }
       }
-    }
-  })
 
-  //
-  canvas.addEventListener('wheel', function (e) {
-    e.preventDefault()
-    if (e.deltaY > 0) {
-      zoom -= 0.1
-    } else {
-      zoom += 0.1
+      // Reset
+      state.newSector = null
+      drawMap(map)
+      return
     }
-    if (zoom < 1.0) {
-      zoom = 1.0
-    }
-    canvas.width = 1500 * zoom
-    canvas.height = 1500 * zoom
-    ctx.scale(zoom, zoom)
-    drawMap()
-  })
-})
 
+    // Otherwise, add a vertex to existing new sector
+    state.newSector.vertices.push({ x, y })
+  }
+
+  if (state.mode === 'player') {
+    map.playerStart.x = x
+    map.playerStart.y = y
+    drawMap(map)
+  }
+
+  // Move a vertex
+  if (state.mode === 'move') {
+    // Click to finish and "put down" moving vertex
+    if (state.movingVert) {
+      state.movingVert = null
+      drawMap(map)
+      return
+    }
+
+    // Otherwise, click to "pickup" a vertex
+    let vId = findVertexId(x, y)
+    if (vId) {
+      state.movingVert = vId
+    }
+  }
+
+  // TODO: Implement finer-grained deletion, currently only deletes sectors
+  if (state.mode === 'delete') {
+    let vId = findVertexId(x, y)
+    if (!vId) return
+    for (const [_, line] of Object.entries(map.lines)) {
+      if (line.start == vId || line.end == vId) {
+        deleteSector(line.front.sector)
+        deleteSector(line.back.sector)
+
+        drawMap(map)
+      }
+    }
+  }
+
+  return false
+}
+
+//
+//
+//
+function handleWheel(e) {
+  const ctx = document.getElementById('canvas').getContext('2d')
+  e.preventDefault()
+  if (e.deltaY > 0) {
+    state.zoom -= 0.2
+  } else {
+    state.zoom += 0.2
+  }
+  state.zoom = state.zoom < 1.0 ? 1.0 : state.zoom
+  state.zoom = state.zoom > 5.0 ? 5.0 : state.zoom
+
+  canvas.width = BASE_SIZE * state.zoom
+  canvas.height = BASE_SIZE * state.zoom
+  ctx.scale(state.zoom, state.zoom)
+  drawMap(map)
+}
+
+//
+//
+//
+function handleMove(e) {
+  drawMap(map)
+
+  const { x, y } = snap(e)
+  drawCrosshair()
+
+  if (state.mode === 'drawsector' && state.newSector !== null) {
+    const lastVertex = state.newSector.vertices[state.newSector.vertices.length - 1]
+    drawLine(lastVertex.x, lastVertex.y, x, y, 'green')
+  }
+
+  if (state.mode === 'move' && state.movingVert) {
+    map.vertices[state.movingVert] = { x, y }
+  }
+}
+
+//
+//
+//
 function snap(e) {
-  const x = e.offsetX
-  const y = e.offsetY
+  const x = Math.floor(e.offsetX / state.gridSize) * state.gridSize
+  const y = Math.floor(e.offsetY / state.gridSize) * state.gridSize
 
-  const xs = Math.floor(x / gridSize) * gridSize
-  const ys = Math.floor(y / gridSize) * gridSize
-  console.log(x, y, xs, ys)
-  return { x: xs, y: ys }
+  state.cursorX = x
+  state.cursorY = y
+
+  return { x, y }
 }
 
-function addWall(x1, y1, x2, y2) {
-  if (x1 === x2 && y1 === y2) {
-    return
+//
+//
+//
+function findVertexId(x, y) {
+  for (const [id, v] of Object.entries(map.vertices)) {
+    if (v.x === x && v.y === y) return id
   }
-  const wall = { x1, y1, x2, y2, texture: 'STARGR2' }
-  map.sectors[0].walls.push(wall)
+
+  return null
 }
 
-function drawMap() {
-  ctx.clearRect(0, 0, canvas.width, canvas.height)
-  ctx.lineWidth = 1 / zoom
+//
+//
+//
+function deleteSector(id) {
+  if (!id) return
 
-  // draw grid
-  ctx.strokeStyle = '#222'
-  for (let x = 0; x < canvas.width; x += gridSize) {
-    ctx.beginPath()
-    ctx.moveTo(x, 0)
-    ctx.lineTo(x, canvas.height)
-    ctx.stroke()
-  }
-  for (let y = 0; y < canvas.height; y += gridSize) {
-    ctx.beginPath()
-    ctx.moveTo(0, y)
-    ctx.lineTo(canvas.width, y)
-    ctx.stroke()
+  console.log(`### Deleting sector ${id}`)
+  for (const [_, line] of Object.entries(map.lines)) {
+    if (line.front.sector === id || line.back.sector === id) {
+      delete map.vertices[line.start]
+      delete map.vertices[line.end]
+      delete map.lines[line.id]
+    }
   }
 
-  ctx.lineWidth = LINE_THICKNESS / zoom
-
-  if (map.playerStart.x !== null) {
-    const img = document.getElementById('player')
-    ctx.drawImage(img, map.playerStart.x - 8, map.playerStart.y - 8)
-  }
-
-  for (const wall of map.sectors[0].walls) {
-    ctx.strokeStyle = 'white'
-    ctx.fillStyle = 'white'
-    ctx.beginPath()
-    ctx.moveTo(wall.x1, wall.y1)
-    ctx.lineTo(wall.x2, wall.y2)
-    ctx.stroke()
-
-    // draw line at right angle to show wall facing in middle
-    const dx = wall.x2 - wall.x1
-    const dy = wall.y2 - wall.y1
-    const length = Math.sqrt(dx * dx + dy * dy)
-    const midX = (wall.x1 + wall.x2) / 2
-    const midY = (wall.y1 + wall.y2) / 2
-    ctx.beginPath()
-    ctx.moveTo(midX, midY)
-    ctx.lineTo(midX - (dy / length) * 8, midY + (dx / length) * 8)
-    ctx.strokeStyle = 'turquoise'
-    ctx.stroke()
-
-    drawDot(wall.x1, wall.y1)
-    drawDot(wall.x2, wall.y2)
-
-    // ctx.fillRect(wall.x1 - DOTSIZE / 2 / zoom, wall.y1 - DOTSIZE / 2 / zoom, DOTSIZE / zoom, DOTSIZE / zoom)
-    // ctx.fillRect(wall.x2 - DOTSIZE / 2 / zoom, wall.y2 - DOTSIZE / 2 / zoom, DOTSIZE / zoom, DOTSIZE / zoom)
-  }
-
-  localStorage.setItem('map', JSON.stringify(map))
+  delete map.sectors[id]
 }
 
-function drawDot(x, y, style = 'grey') {
-  ctx.fillStyle = style
-  ctx.fillRect(x - DOTSIZE / 2 / zoom, y - DOTSIZE / 2 / zoom, DOTSIZE / zoom, DOTSIZE / zoom)
+//
+//
+//
+function addVertex(x, y) {
+  const id = findVertexId(x, y)
+  if (id) return id
+
+  let newId = map.vertexInc++
+  map.vertices[newId] = { x, y }
+  return newId
 }
 
-function drawCrosshair(x, y) {
-  switch (mode) {
-    case 'addwall':
-      ctx.strokeStyle = 'turquoise'
-      break
-    case 'player':
-      ctx.strokeStyle = 'purple'
-      break
-    case 'delete':
-      ctx.strokeStyle = 'red'
-      break
-    case 'move':
-      ctx.strokeStyle = 'yellow'
-      break
-    case 'flip':
-      ctx.strokeStyle = 'orange'
-      break
-    default:
-      ctx.strokeStyle = 'white'
-  }
-
-  ctx.beginPath()
-  ctx.moveTo(x - 5, y)
-  ctx.lineTo(x + 5, y)
-  ctx.moveTo(x, y - 5)
-  ctx.lineTo(x, y + 5)
-  ctx.stroke()
-}
-
+//
+//
+//
 window.newMap = function () {
   map = {
     name: 'Demo Map',
     playerStart: { x: 150, y: 60 },
 
-    sectors: [
-      {
-        floorHeight: 0,
-        ceilingHeight: 10,
-        walls: [],
-      },
-    ],
-  }
-  drawMap()
-}
+    things: [],
+    vertices: {},
+    lines: {},
+    sectors: {},
 
-window.exportMap = function () {
-  const mapString = JSON.stringify(map, null, 2)
-  const blob = new Blob([mapString], { type: 'application/json' })
-  const url = URL.createObjectURL(blob)
-  const a = document.createElement('a')
-  a.href = url
-  a.download = 'map.json'
-  a.click()
-}
-
-window.importMap = function () {
-  const input = document.createElement('input')
-  input.type = 'file'
-  input.accept = '.json'
-  input.onchange = function (e) {
-    const file = e.target.files[0]
-    const reader = new FileReader()
-    reader.onload = function (e) {
-      const text = e.target.result
-      map = JSON.parse(text)
-      console.log(map)
-      drawMap()
-    }
-    reader.readAsText(file)
+    lineInc: 0,
+    sectorInc: 0,
+    vertexInc: 0,
   }
-  input.click()
+
+  drawMap(map)
 }

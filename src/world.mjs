@@ -25,30 +25,35 @@ export function parseMap(map, gl, physWorld, templates) {
   let maxX = -Infinity
   let minY = Infinity
   let maxY = -Infinity
-  for (const sector of map.sectors) {
-    for (const wall of sector.walls) {
-      const texRatio = wall.texRatio ? wall.texRatio : 1
-      const { bufferInfo, shape } = buildWall(gl, wall.x1, wall.y1, wall.x2, wall.y2, sector.floorHeight, sector.ceilingHeight, texRatio)
-      const texture = twgl.createTexture(gl, {
-        src: `textures/${wall.texture}.png`,
-      })
+  // eslint-disable-next-line no-unused-vars
+  for (const [_, line] of Object.entries(map.lines)) {
+    const sector = map.sectors[line.front.sector]
 
-      if (wall.x1 < minX) minX = wall.x1
-      if (wall.x2 < minX) minX = wall.x2
-      if (wall.x1 > maxX) maxX = wall.x1
-      if (wall.x2 > maxX) maxX = wall.x2
-      if (wall.y1 < minY) minY = wall.y1
-      if (wall.y2 < minY) minY = wall.y2
-      if (wall.y1 > maxY) maxY = wall.y1
-      if (wall.y2 > maxY) maxY = wall.y2
+    const v1 = map.vertices[line.start]
+    const v2 = map.vertices[line.end]
+    const texName = 'STONE3'
 
-      physWorld.addBody(new Cannon.Body({ mass: 100000, shape }))
+    const texRatio = 1 //wall.texRatio ? wall.texRatio : 1
+    const { bufferInfo, shape } = buildWall(gl, v1.x, v1.y, v2.x, v2.y, sector.floor, sector.ceiling, texRatio)
+    const texture = twgl.createTexture(gl, {
+      src: `textures/${texName}.png`,
+    })
 
-      worldObjs.push({
-        bufferInfo,
-        texture,
-      })
-    }
+    if (v1.x < minX) minX = v1.x
+    if (v1.x > maxX) maxX = v1.x
+    if (v1.y < minY) minY = v1.y
+    if (v1.y > maxY) maxY = v1.y
+    if (v2.x < minX) minX = v2.x
+    if (v2.x > maxX) maxX = v2.x
+    if (v2.y < minY) minY = v2.y
+    if (v2.y > maxY) maxY = v2.y
+
+    physWorld.addBody(new Cannon.Body({ mass: 100000, shape }))
+
+    worldObjs.push({
+      bufferInfo,
+      texture,
+    })
   }
 
   // HACK: Remove this with proper floor/ceiling geometry

@@ -8,7 +8,7 @@ export const TEX_SCALE = 10
 // buildWall - creates a rectangle, how hard can that be?!
 // Returns a twgl BufferInfo https://twgljs.org/docs/module-twgl.html#.BufferInfo
 //
-export function buildWall(gl, p1x, p1y, p2x, p2y, floorHeight, ceilingHeight, widthRatio = 1) {
+export function buildWall(gl, p1x, p1y, p2x, p2y, floorHeight, ceilingHeight, widthRatio = 1, flip = false) {
   // prettier-ignore
   const positions = [
      p1x, ceilingHeight, p1y,
@@ -18,6 +18,8 @@ export function buildWall(gl, p1x, p1y, p2x, p2y, floorHeight, ceilingHeight, wi
   ]
 
   const indices = [0, 2, 1, 1, 2, 3]
+  if (flip) indices.reverse()
+
   const bufferInfo = makeFlatBuffer(gl, positions, indices, widthRatio)
   const shape = new Cannon.Trimesh(positions, indices)
 
@@ -36,9 +38,7 @@ export function buildFlat(gl, p1x, p1y, p2x, p2y, p3x, p3y, p4x, p4y, height, up
   // console.log(f)
 
   const indices = [0, 2, 1, 1, 2, 3]
-  if (!up) {
-    indices.reverse()
-  }
+  if (!up) indices.reverse()
 
   const bufferInfo = makeFlatBuffer(gl, positions, indices, 1)
 

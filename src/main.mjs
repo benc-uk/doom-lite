@@ -6,7 +6,7 @@ import * as Cannon from '../lib/cannon-es/dist/cannon-es.js'
 import * as twgl from '../lib/twgl/dist/4.x/twgl-full.module.js'
 import { mat4 } from '../lib/gl-matrix/esm/index.js'
 
-const VERSION = '0.2.0'
+const VERSION = '0.2.1'
 const FOV = 45
 const FAR_CLIP = 300
 
@@ -45,10 +45,11 @@ window.onload = async () => {
   let map
   // Load cached map data
   try {
-    let mapData = localStorage.getItem('map')
+    // HACK: Force reload of map data
+    let mapData = null //localStorage.getItem('map')
     // fetch demo map from file if not in local storage
     if (!mapData) {
-      const mapResp = await fetch('levels/map.json')
+      const mapResp = await fetch('levels/new.json')
       if (!mapResp.ok) {
         throw new Error('Unable to load levels/map.json')
       }
@@ -106,7 +107,7 @@ window.onload = async () => {
   const physWorld = new Cannon.World({})
   player.body = new Cannon.Body({
     mass: 0.001,
-    shape: new Cannon.Sphere(2.5),
+    shape: new Cannon.Sphere(0.5),
     linearDamping: 0.99998,
   })
   physWorld.addBody(player.body)
@@ -186,6 +187,7 @@ window.onload = async () => {
 // Draw the world geometry, which is pre-transformed into world space
 //
 function drawWorld(gl, programInfo, uniforms, worldObjs, viewPerspective) {
+  //gl.disable(gl.CULL_FACE)
   for (const obj of worldObjs) {
     uniforms = {
       ...uniforms,

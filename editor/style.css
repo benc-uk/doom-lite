@@ -31,3 +31,10 @@ button:hover {
   margin: 5px;
   font-family: 'Courier New', Courier, monospace;
 }
+
+#info {
+  font-family: 'Courier New', Courier, monospace;
+  font-size: 20px;
+  display: inline-block;
+  width: 100px;
+}
