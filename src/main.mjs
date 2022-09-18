@@ -107,7 +107,7 @@ window.onload = async () => {
   const physWorld = new Cannon.World({})
   player.body = new Cannon.Body({
     mass: 0.001,
-    shape: new Cannon.Sphere(0.5),
+    shape: new Cannon.Sphere(2.5),
     linearDamping: 0.99998,
   })
   physWorld.addBody(player.body)
