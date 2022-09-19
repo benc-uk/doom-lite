@@ -7,7 +7,7 @@ import * as twgl from '../lib/twgl/dist/4.x/twgl-full.module.js'
 import { mat4 } from '../lib/gl-matrix/esm/index.js'
 import { pointInPolygonNested } from '../lib/point-in-poly/pip.mjs'
 
-const VERSION = '0.2.1'
+const VERSION = '0.3.0'
 const FOV = 45
 const FAR_CLIP = 300
 
@@ -48,7 +48,7 @@ window.onload = async () => {
   // Load cached map data
   try {
     // HACK: Force reload of map data
-    let mapData = localStorage.getItem('map')
+    let mapData = null //localStorage.getItem('map')
     // fetch demo map from file if not in local storage
     if (!mapData) {
       const mapResp = await fetch('levels/new.json')
