@@ -149,23 +149,23 @@ window.onload = async () => {
     // Check which sector player is in
     // HACK: This code is a fucking horror show, but it works (for now)
     for (const [sid, sector] of Object.entries(map.sectors)) {
-      const poly = []
-      const lid0 = sector.lines[0]
-      const line = map.lines[lid0]
-      const v1 = map.vertices[line.start]
-      const v2 = map.vertices[line.end]
-      poly.push([v1.x, v1.y])
-      poly.push([v2.x, v2.y])
-      for (let lix = 1; lix < sector.lines.length - 1; lix++) {
-        const lid = sector.lines[lix]
-        const line = map.lines[lid]
-        let v = map.vertices[line.end]
-        if (line.back == sid) v = map.vertices[line.start]
-        poly.push([v.x, v.y])
-      }
+      // const poly = []
+      // const lid0 = sector.lines[0]
+      // const line = map.lines[lid0]
+      // const v1 = map.vertices[line.start]
+      // const v2 = map.vertices[line.end]
+      // poly.push([v1.x, v1.y])
+      // poly.push([v2.x, v2.y])
+      // for (let lix = 1; lix < sector.lines.length - 1; lix++) {
+      //   const lid = sector.lines[lix]
+      //   const line = map.lines[lid]
+      //   let v = map.vertices[line.end]
+      //   if (line.back == sid) v = map.vertices[line.start]
+      //   poly.push([v.x, v.y])
+      // }
 
-      const inside = pointInPolygonNested([player.location[0], player.location[2]], poly)
-      if (inside) {
+      // const inside = pointInPolygonNested([player.location[0], player.location[2]], sector.poly)
+      if (pointInPolygonNested([player.location[0], player.location[2]], sector.poly)) {
         player.sector = sid
         break
       }

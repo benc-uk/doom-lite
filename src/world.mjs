@@ -28,6 +28,25 @@ export function parseMap(map, gl, physWorld, templates) {
     let minY = Infinity
     let maxY = -Infinity
 
+    // Build polygon for this sector, used for movement sector checks
+    const poly = []
+    const lid0 = sector.lines[0]
+    const line = map.lines[lid0]
+    const v1 = map.vertices[line.start]
+    const v2 = map.vertices[line.end]
+    poly.push([v1.x, v1.y])
+    poly.push([v2.x, v2.y])
+
+    for (let lix = 1; lix < sector.lines.length - 1; lix++) {
+      const lid = sector.lines[lix]
+      const line = map.lines[lid]
+      let v = map.vertices[line.end]
+      if (line.back == sid) v = map.vertices[line.start]
+      poly.push([v.x, v.y])
+    }
+
+    sector.poly = poly
+
     for (const lid of sector.lines) {
       // if (line.front.sector != sid) continue
       const line = map.lines[lid]
