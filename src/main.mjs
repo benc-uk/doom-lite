@@ -6,7 +6,7 @@ import * as Cannon from '../lib/cannon-es/dist/cannon-es.js'
 import * as twgl from '../lib/twgl/dist/4.x/twgl-full.module.js'
 import { mat4 } from '../lib/gl-matrix/esm/index.js'
 
-const VERSION = '0.3.1'
+const VERSION = '0.3.2'
 const FOV = 45
 const FAR_CLIP = 300
 
@@ -50,9 +50,9 @@ window.onload = async () => {
     let mapData = null //localStorage.getItem('map')
     // fetch demo map from file if not in local storage
     if (!mapData) {
-      const mapResp = await fetch('levels/new.json')
+      const mapResp = await fetch('levels/demo.json')
       if (!mapResp.ok) {
-        throw new Error('Unable to load levels/map.json')
+        throw new Error('Unable to load levels/demo.json')
       }
       mapData = await mapResp.text()
     }
