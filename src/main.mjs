@@ -5,7 +5,6 @@ import { initInput, handleInputs } from './controls.mjs'
 import * as Cannon from '../lib/cannon-es/dist/cannon-es.js'
 import * as twgl from '../lib/twgl/dist/4.x/twgl-full.module.js'
 import { mat4 } from '../lib/gl-matrix/esm/index.js'
-import { pointInPolygonNested } from '../lib/point-in-poly/pip.mjs'
 
 const VERSION = '0.3.0'
 const FOV = 45
@@ -122,6 +121,7 @@ window.onload = async () => {
   // Setup player position and camera
   camera = mat4.targetTo(mat4.create(), [0, 0, 0], [0, 0, -100], [0, 1, 0])
   mat4.translate(camera, camera, [playerStart.x, player.height, playerStart.z])
+  mat4.rotateY(camera, camera, map.playerStart.angle)
   player.body.position.set(camera[12], camera[13], camera[14])
 
   player.facing = [camera[8], camera[9], camera[10]]
@@ -144,36 +144,12 @@ window.onload = async () => {
     totalTime += deltaTime
 
     // Process inputs and controls
-    handleInputs(deltaTime, player, camera)
-
-    // Check which sector player is in
-    // HACK: This code is a fucking horror show, but it works (for now)
-    for (const [sid, sector] of Object.entries(map.sectors)) {
-      // const poly = []
-      // const lid0 = sector.lines[0]
-      // const line = map.lines[lid0]
-      // const v1 = map.vertices[line.start]
-      // const v2 = map.vertices[line.end]
-      // poly.push([v1.x, v1.y])
-      // poly.push([v2.x, v2.y])
-      // for (let lix = 1; lix < sector.lines.length - 1; lix++) {
-      //   const lid = sector.lines[lix]
-      //   const line = map.lines[lid]
-      //   let v = map.vertices[line.end]
-      //   if (line.back == sid) v = map.vertices[line.start]
-      //   poly.push([v.x, v.y])
-      // }
-
-      // const inside = pointInPolygonNested([player.location[0], player.location[2]], sector.poly)
-      if (pointInPolygonNested([player.location[0], player.location[2]], sector.poly)) {
-        player.sector = sid
-        break
-      }
-    }
+    handleInputs(deltaTime, player, camera, map)
 
     // Update physics
     physWorld.fixedStep()
-    camera[13] = player.sector ? map.sectors[player.sector].floor + player.height : player.height
+
+    // Update camera position
 
     if (now % 3 < deltaTime) {
       console.log(`🚀 FPS: ${Math.round(1 / deltaTime)}`)
@@ -217,6 +193,7 @@ function drawWorld(gl, programInfo, uniforms, worldObjs, viewPerspective) {
   for (const obj of worldObjs) {
     uniforms = {
       ...uniforms,
+      ...obj.uniforms,
       u_texture: obj.texture,
       u_worldInverseTranspose: mat4.create(), // For transforming normals
       u_world: mat4.create(), // For transforming vertices

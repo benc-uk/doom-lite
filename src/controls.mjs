@@ -1,4 +1,5 @@
 import { mat4 } from '../lib/gl-matrix/esm/index.js'
+import { pointInPolygonNested } from '../lib/point-in-poly/pip.mjs'
 
 let inputMap = {}
 
@@ -61,7 +62,7 @@ export function initInput(gl) {
 //
 // Handle any active input, called every frame
 //
-export function handleInputs(deltaTime, player, camera) {
+export function handleInputs(deltaTime, player, camera, map) {
   const moveSpeed = 72.0 // Don't understand why don't need to multiply by deltaTime here
   const turnSpeed = 3.9 * deltaTime
 
@@ -94,6 +95,16 @@ export function handleInputs(deltaTime, player, camera) {
     // update facing
     player.facing = [camera[8], camera[9], camera[10]]
   }
+
+  // Check which sector player is in
+  for (const [sid, sector] of Object.entries(map.sectors)) {
+    if (pointInPolygonNested([player.location[0], player.location[2]], sector.poly)) {
+      player.sector = sid
+      break
+    }
+  }
+
+  camera[13] = player.sector ? map.sectors[player.sector].floor + player.height : player.height
 
   // Move the camera & light to the player position
   player.location = [player.body.position.x, player.body.position.y, player.body.position.z]

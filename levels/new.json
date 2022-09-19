@@ -1,10 +1,35 @@
 {
   "name": "Demo Map",
   "playerStart": {
-    "x": 40,
-    "y": 32
+    "x": 52,
+    "y": 32,
+    "angle": 1.4
   },
-  "things": [],
+  "things": [
+    {
+      "x": 27,
+      "y": 22,
+      "type": "imp"
+    },
+    {
+      "x": 142,
+      "y": 22,
+      "type": "shotgun_guy",
+      "yOffset": -3
+    },
+    {
+      "x": 152,
+      "y": 32,
+      "type": "imp",
+      "yOffset": -3
+    },
+    {
+      "x": 160,
+      "y": 110,
+      "type": "shotgun_guy",
+      "yOffset": -11
+    }
+  ],
   "vertices": {
     "0": {
       "x": 8,
@@ -129,8 +154,8 @@
       "end": 2,
       "front": {
         "sector": 0,
-        "texMid": "STARG2",
-        "texRatio": 1
+        "texMid": "BROVINE",
+        "texRatio": 2
       },
       "back": {}
     },
@@ -140,9 +165,10 @@
       "end": 3,
       "front": {
         "sector": 0,
-        "texMid": "STARG2",
-        "texRatio": 1,
-        "texTop": "STARG2"
+        "texMid": "BROVINE",
+        "texRatio": 2,
+        "texTop": "BROVINE",
+        "xOffset": -0.105
       },
       "back": {
         "sector": 1,
@@ -155,8 +181,9 @@
       "end": 4,
       "front": {
         "sector": 0,
-        "texMid": "STARG2",
-        "texRatio": 1
+        "texMid": "BROVINE",
+        "texRatio": 2,
+        "xOffset": 0.2
       },
       "back": {}
     },
@@ -199,8 +226,10 @@
       "end": 8,
       "front": {
         "sector": 0,
-        "texMid": "STARG2",
-        "texRatio": 1
+        "texMid": "COMPSTA1",
+        "texRatio": 1,
+        "yOffset": 0.5,
+        "xOffset": -0.1
       },
       "back": {}
     },
@@ -210,8 +239,10 @@
       "end": 9,
       "front": {
         "sector": 0,
-        "texMid": "STARG2",
-        "texRatio": 1
+        "texMid": "COMPSTA1",
+        "texRatio": 1,
+        "yOffset": 0.5,
+        "xOffset": 0
       },
       "back": {}
     },
@@ -243,7 +274,7 @@
       "end": 12,
       "front": {
         "sector": 1,
-        "texMid": "STARG2",
+        "texMid": "BROVINE",
         "texRatio": 1
       },
       "back": {}
@@ -254,8 +285,8 @@
       "end": 13,
       "front": {
         "sector": 1,
-        "texMid": "STARG2",
-        "texRatio": 1
+        "texMid": "WOOD5",
+        "texRatio": 2
       },
       "back": {}
     },
@@ -265,8 +296,9 @@
       "end": 14,
       "front": {
         "sector": 1,
-        "texMid": "STARG2",
-        "texRatio": 1
+        "texMid": "WOOD5",
+        "texRatio": 2,
+        "xOffset": 0.444
       },
       "back": {}
     },
@@ -276,8 +308,9 @@
       "end": 15,
       "front": {
         "sector": 1,
-        "texMid": "STARG2",
-        "texRatio": 1
+        "texMid": "WOOD5",
+        "texRatio": 2,
+        "xOffset": 0.248
       },
       "back": {}
     },
@@ -301,7 +334,7 @@
       "end": 17,
       "front": {
         "sector": 1,
-        "texMid": "STARG2",
+        "texMid": "STARBR2",
         "texRatio": 1
       },
       "back": {}
@@ -312,7 +345,7 @@
       "end": 3,
       "front": {
         "sector": 1,
-        "texMid": "STARG2",
+        "texMid": "BROVINE",
         "texRatio": 1
       },
       "back": {}
@@ -463,7 +496,7 @@
     "0": {
       "id": 0,
       "floor": 0,
-      "ceiling": 12,
+      "ceiling": 10,
       "lines": [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10],
       "texFloor": "FLOOR4_8",
       "texCeil": "FLAT1_2"
