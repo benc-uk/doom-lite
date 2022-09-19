@@ -11,6 +11,7 @@ export function drawMap(map) {
   const ctx = canvas.getContext('2d')
 
   localStorage.setItem('map', JSON.stringify(map))
+  document.getElementById('code').value = JSON.stringify(map, null, 2)
 
   ctx.clearRect(0, 0, canvas.width, canvas.height)
 
@@ -35,17 +36,21 @@ export function drawMap(map) {
 
   // fill sectors
   const colorList = ['rgba(255, 0, 0, 0.2)', 'rgba(0, 255, 0, 0.2)', 'rgba(0, 0, 255, 0.2)', 'rgba(255, 255, 0, 0.2)', 'rgba(0, 255, 255, 0.2)']
-  for (const [_, sector] of Object.entries(map.sectors)) {
+  for (const [sid, sector] of Object.entries(map.sectors)) {
     ctx.fillStyle = colorList[sector.id % colorList.length]
     ctx.beginPath()
     let lineCount = 0
-    for (const [_, line] of Object.entries(map.lines)) {
-      if (line.front.sector === sector.id) {
-        if (lineCount === 0) {
-          ctx.moveTo(map.vertices[line.start].x, map.vertices[line.start].y)
-        }
+    for (const lineId of sector.lines) {
+      const line = map.lines[lineId]
+      if (lineCount === 0) {
+        ctx.moveTo(map.vertices[line.start].x, map.vertices[line.start].y)
+      }
+      if (line.back.sector === sector.id) {
+        ctx.lineTo(map.vertices[line.start].x, map.vertices[line.end].y)
+      } else {
         ctx.lineTo(map.vertices[line.end].x, map.vertices[line.end].y)
       }
+
       lineCount++
     }
     ctx.closePath()
@@ -65,6 +70,11 @@ export function drawMap(map) {
     drawLine(v1.x, v1.y, v2.x, v2.y)
     drawDot(v1.x, v1.y)
     drawDot(v2.x, v2.y)
+
+    // draw line id
+    ctx.fillStyle = 'white'
+    ctx.font = `${16 / state.zoom}px monospace`
+    ctx.fillText(line.id, (v1.x + v2.x) / 2, (v1.y + v2.y) / 2)
   }
 
   // draw any new sector in progress

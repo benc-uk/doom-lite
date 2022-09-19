@@ -20,10 +20,14 @@
         <button onClick="setMode('drawsector')">DRAW SECTOR</button>
       </div>
 
-      <div id="main">
-        <canvas id="canvas" width="500" height="500"></canvas>
+      <div class="row">
+        <div id="main">
+          <canvas id="canvas" width="500" height="500" tabindex="1"></canvas>
+        </div>
+        <textarea id="code" onChange="updateCode(event)"></textarea>
       </div>
     </div>
-    <img src="player.png" id="player" />
+
+    <img src="player.png" id="player" style="display: none" />
   </body>
 </html>

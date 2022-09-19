@@ -62,8 +62,8 @@ export function initInput(gl) {
 // Handle any active input, called every frame
 //
 export function handleInputs(deltaTime, player, camera) {
-  const moveSpeed = 64.0 // Don't understand why don't need to multiply by deltaTime here
-  const turnSpeed = 3.8 * deltaTime
+  const moveSpeed = 72.0 // Don't understand why don't need to multiply by deltaTime here
+  const turnSpeed = 3.9 * deltaTime
 
   if (inputMap['w'] || inputMap['ArrowUp']) {
     player.body.velocity.set(-player.facing[0] * moveSpeed, -player.facing[1] * moveSpeed, -player.facing[2] * moveSpeed)

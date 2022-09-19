@@ -1,3 +1,7 @@
+# Data Structure reference
+
+Some vague attempt at documenting the data structures
+
 ## Overall Level Data
 ```ts
 interface Map {
@@ -41,24 +45,29 @@ interface Line {
   end: string       // Vertex id
   front: {
     sector: number
-    textureTop: string
-    textureMiddle: string
-    textureBottom: string
+    texTop: string
+    texMid: string
+    texBot: string
+    texRatio: number
   }
   back: {
     sector: number
-    textureTop: string
-    textureMiddle: string
-    textureBottom: string
+    texTop: string
+    texMid: string
+    texBot: string
+    texRatio: number
   }
 }
 ```
 
 ```ts
 interface Sector {
-  id: number      // Id number
-  floor: number   // Height of floor (Y axis)
-  ceiling: number // Height of ceiling (Y axis)
+  id: number           // Id number
+  floor: number        // Height of floor (Y axis)
+  ceiling: number      // Height of ceiling (Y axis)
+  texFloor: string     // Name of texture on floor
+  texCeil: string      // Name of texture on ceiling
+  lines: Array<number> // List of line ids that make up this sector
 }
 ```
 

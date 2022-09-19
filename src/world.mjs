@@ -21,58 +21,81 @@ export function parseMap(map, gl, physWorld, templates) {
     })
   }
 
-  let minX = Infinity
-  let maxX = -Infinity
-  let minY = Infinity
-  let maxY = -Infinity
   // eslint-disable-next-line no-unused-vars
-  for (const [_, line] of Object.entries(map.lines)) {
-    const sector = map.sectors[line.front.sector]
+  for (const [sid, sector] of Object.entries(map.sectors)) {
+    let minX = Infinity
+    let maxX = -Infinity
+    let minY = Infinity
+    let maxY = -Infinity
 
-    const v1 = map.vertices[line.start]
-    const v2 = map.vertices[line.end]
-    const texName = 'STONE3'
+    for (const lid of sector.lines) {
+      // if (line.front.sector != sid) continue
+      const line = map.lines[lid]
 
-    const texRatio = 1 //wall.texRatio ? wall.texRatio : 1
-    const { bufferInfo, shape } = buildWall(gl, v1.x, v1.y, v2.x, v2.y, sector.floor, sector.ceiling, texRatio)
-    const texture = twgl.createTexture(gl, {
-      src: `textures/${texName}.png`,
+      const frontSec = map.sectors[line.front.sector]
+      const backSec = map.sectors[line.back.sector]
+
+      const v1 = map.vertices[line.start]
+      const v2 = map.vertices[line.end]
+
+      if (backSec) {
+        // Bottom section facing front
+        if (backSec.floor > frontSec.floor) {
+          const { bufferInfo, shape } = buildWall(gl, v1.x, v1.y, v2.x, v2.y, frontSec.floor, backSec.floor, line.front.textureRatio)
+          const texture = twgl.createTexture(gl, { src: `textures/${line.front.texBot}.png` })
+          physWorld.addBody(new Cannon.Body({ mass: 100000, shape }))
+          worldObjs.push({ bufferInfo, texture })
+        }
+        // Bottom section facing back
+        if (backSec.floor < frontSec.floor) {
+          const { bufferInfo, shape } = buildWall(gl, v1.x, v1.y, v2.x, v2.y, backSec.floor, frontSec.floor, line.back.textureRatio, true)
+          const texture = twgl.createTexture(gl, { src: `textures/${line.back.texBot}.png` })
+          physWorld.addBody(new Cannon.Body({ mass: 100000, shape }))
+          worldObjs.push({ bufferInfo, texture })
+        }
+        // Top section facing front
+        if (backSec.ceiling < frontSec.ceiling) {
+          const { bufferInfo, shape } = buildWall(gl, v1.x, v1.y, v2.x, v2.y, backSec.ceiling, frontSec.ceiling, line.front.textureRatio)
+          const texture = twgl.createTexture(gl, { src: `textures/${line.front.texTop}.png` })
+          physWorld.addBody(new Cannon.Body({ mass: 100000, shape }))
+          worldObjs.push({ bufferInfo, texture })
+        }
+      } else {
+        // Middle section
+        const { bufferInfo, shape } = buildWall(gl, v1.x, v1.y, v2.x, v2.y, frontSec.floor, frontSec.ceiling, line.front.textureRatio)
+        const texture = twgl.createTexture(gl, { src: `textures/${line.front.texMid}.png` })
+        physWorld.addBody(new Cannon.Body({ mass: 100000, shape }))
+        worldObjs.push({ bufferInfo, texture })
+      }
+
+      if (v1.x < minX) minX = v1.x
+      if (v1.x > maxX) maxX = v1.x
+      if (v1.y < minY) minY = v1.y
+      if (v1.y > maxY) maxY = v1.y
+      if (v2.x < minX) minX = v2.x
+      if (v2.x > maxX) maxX = v2.x
+      if (v2.y < minY) minY = v2.y
+      if (v2.y > maxY) maxY = v2.y
+    }
+
+    // HACK: Remove this with proper floor/ceiling geometry
+    const floorFlat = buildFlat(gl, minX, minY, maxX, minY, maxX, maxY, minX, maxY, sector.floor)
+    const floorTex = twgl.createTexture(gl, {
+      src: `textures/${sector.texFloor}.png`,
     })
-
-    if (v1.x < minX) minX = v1.x
-    if (v1.x > maxX) maxX = v1.x
-    if (v1.y < minY) minY = v1.y
-    if (v1.y > maxY) maxY = v1.y
-    if (v2.x < minX) minX = v2.x
-    if (v2.x > maxX) maxX = v2.x
-    if (v2.y < minY) minY = v2.y
-    if (v2.y > maxY) maxY = v2.y
-
-    physWorld.addBody(new Cannon.Body({ mass: 100000, shape }))
-
     worldObjs.push({
-      bufferInfo,
-      texture,
+      bufferInfo: floorFlat,
+      texture: floorTex,
+    })
+    const ceilFlat = buildFlat(gl, minX, minY, maxX, minY, maxX, maxY, minX, maxY, sector.ceiling, false)
+    const ceilTex = twgl.createTexture(gl, {
+      src: `textures/${sector.texCeil}.png`,
+    })
+    worldObjs.push({
+      bufferInfo: ceilFlat,
+      texture: ceilTex,
     })
   }
-
-  // HACK: Remove this with proper floor/ceiling geometry
-  const floorFlat = buildFlat(gl, minX, minY, maxX, minY, maxX, maxY, minX, maxY, 0)
-  const floorTex = twgl.createTexture(gl, {
-    src: `textures/FLOOR4_8.png`,
-  })
-  worldObjs.push({
-    bufferInfo: floorFlat,
-    texture: floorTex,
-  })
-  const ceilFlat = buildFlat(gl, minX, minY, maxX, minY, maxX, maxY, minX, maxY, 10, false)
-  const ceilTex = twgl.createTexture(gl, {
-    src: `textures/FLOOR5_4.png`,
-  })
-  worldObjs.push({
-    bufferInfo: ceilFlat,
-    texture: ceilTex,
-  })
 
   return { worldObjs, thingInstances, playerStart: { x: map.playerStart.x, y: 0, z: map.playerStart.y } }
 }

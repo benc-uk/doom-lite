@@ -5,6 +5,7 @@ import { initInput, handleInputs } from './controls.mjs'
 import * as Cannon from '../lib/cannon-es/dist/cannon-es.js'
 import * as twgl from '../lib/twgl/dist/4.x/twgl-full.module.js'
 import { mat4 } from '../lib/gl-matrix/esm/index.js'
+import { pointInPolygonNested } from '../lib/point-in-poly/pip.mjs'
 
 const VERSION = '0.2.1'
 const FOV = 45
@@ -18,6 +19,7 @@ const player = {
   facing: [0, 0, 0],
   body: null,
   height: 4,
+  sector: 0,
 }
 
 const baseUniforms = {
@@ -46,7 +48,7 @@ window.onload = async () => {
   // Load cached map data
   try {
     // HACK: Force reload of map data
-    let mapData = null //localStorage.getItem('map')
+    let mapData = localStorage.getItem('map')
     // fetch demo map from file if not in local storage
     if (!mapData) {
       const mapResp = await fetch('levels/new.json')
@@ -118,9 +120,8 @@ window.onload = async () => {
   console.log(`🗺️ Map '${map.name}' was parsed into ${worldObjs.length} parts and ${thingInstances.length} things`)
 
   // Setup player position and camera
-  camera = mat4.targetTo(mat4.create(), [0, 0, 0], [0, 0, -1], [0, 1, 0])
+  camera = mat4.targetTo(mat4.create(), [0, 0, 0], [0, 0, -100], [0, 1, 0])
   mat4.translate(camera, camera, [playerStart.x, player.height, playerStart.z])
-  mat4.rotateY(camera, camera, 3)
   player.body.position.set(camera[12], camera[13], camera[14])
 
   player.facing = [camera[8], camera[9], camera[10]]
@@ -145,8 +146,34 @@ window.onload = async () => {
     // Process inputs and controls
     handleInputs(deltaTime, player, camera)
 
+    // Check which sector player is in
+    // HACK: This code is a fucking horror show, but it works (for now)
+    for (const [sid, sector] of Object.entries(map.sectors)) {
+      const poly = []
+      const lid0 = sector.lines[0]
+      const line = map.lines[lid0]
+      const v1 = map.vertices[line.start]
+      const v2 = map.vertices[line.end]
+      poly.push([v1.x, v1.y])
+      poly.push([v2.x, v2.y])
+      for (let lix = 1; lix < sector.lines.length - 1; lix++) {
+        const lid = sector.lines[lix]
+        const line = map.lines[lid]
+        let v = map.vertices[line.end]
+        if (line.back == sid) v = map.vertices[line.start]
+        poly.push([v.x, v.y])
+      }
+
+      const inside = pointInPolygonNested([player.location[0], player.location[2]], poly)
+      if (inside) {
+        player.sector = sid
+        break
+      }
+    }
+
     // Update physics
     physWorld.fixedStep()
+    camera[13] = player.sector ? map.sectors[player.sector].floor + player.height : player.height
 
     if (now % 3 < deltaTime) {
       console.log(`🚀 FPS: ${Math.round(1 / deltaTime)}`)
@@ -163,7 +190,7 @@ window.onload = async () => {
     const view = mat4.invert(mat4.create(), camera)
 
     // Do this in every frame since the window and therefore the aspect ratio of projection matrix might change
-    const perspective = mat4.perspective(mat4.create(), (FOV * Math.PI) / 180, gl.canvas.clientWidth / gl.canvas.clientHeight, 0.1, FAR_CLIP)
+    const perspective = mat4.perspective(mat4.create(), (FOV * Math.PI) / 150, gl.canvas.clientWidth / gl.canvas.clientHeight, 0.1, FAR_CLIP)
     const viewPerspective = mat4.multiply(mat4.create(), perspective, view)
 
     // Note we place the light at the camera & player position
@@ -187,7 +214,6 @@ window.onload = async () => {
 // Draw the world geometry, which is pre-transformed into world space
 //
 function drawWorld(gl, programInfo, uniforms, worldObjs, viewPerspective) {
-  //gl.disable(gl.CULL_FACE)
   for (const obj of worldObjs) {
     uniforms = {
       ...uniforms,

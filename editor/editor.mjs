@@ -21,7 +21,7 @@ window.setMode = function setMode(m) {
   drawCrosshair()
 }
 
-window.addEventListener('keydown', handleKey)
+canvas.addEventListener('keydown', handleKey)
 
 window.addEventListener('load', () => {
   const canvas = document.getElementById('canvas')
@@ -95,13 +95,8 @@ function handleClick(e) {
 
     // Complete the sector
     if (state.newSector.vertices[0].x === x && state.newSector.vertices[0].y === y) {
-      map.sectors[state.newSector.id] = {
-        id: state.newSector.id,
-        floor: 0,
-        ceiling: 10,
-      }
-
       // push lines & vertices into map
+      const lineIds = []
       for (let i = 0; i < state.newSector.vertices.length; i++) {
         const v1 = state.newSector.vertices[i]
         const v2 = state.newSector.vertices[(i + 1) % state.newSector.vertices.length]
@@ -109,16 +104,28 @@ function handleClick(e) {
         const v2Id = addVertex(v2.x, v2.y)
 
         const lid = map.lineInc++
+
         map.lines[lid] = {
           id: lid,
           start: v1Id,
           end: v2Id,
           front: {
             sector: state.newSector.id,
-            textureMiddle: 'STARG2',
+            texMid: 'STARG2',
+            texRatio: 1,
           },
           back: {},
         }
+        lineIds.push(lid)
+      }
+
+      map.sectors[state.newSector.id] = {
+        id: state.newSector.id,
+        floor: 0,
+        ceiling: 10,
+        lines: lineIds,
+        texFloor: 'FLOOR4_8',
+        texCeil: 'FLAT1_2',
       }
 
       // Reset
@@ -227,7 +234,7 @@ function snap(e) {
 //
 function findVertexId(x, y) {
   for (const [id, v] of Object.entries(map.vertices)) {
-    if (v.x === x && v.y === y) return id
+    if (v.x === x && v.y === y) return parseInt(id)
   }
 
   return null
@@ -282,4 +289,11 @@ window.newMap = function () {
   }
 
   drawMap(map)
+}
+
+window.updateCode = function (e) {
+  localStorage.setItem('map', e.target.value)
+  map = JSON.parse(e.target.value)
+  drawMap(map)
+  drawCrosshair()
 }
