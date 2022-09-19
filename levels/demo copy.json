@@ -8,7 +8,7 @@
   "things": [
     {
       "x": 27,
-      "y": 18,
+      "y": 22,
       "type": "imp"
     },
     {
@@ -70,7 +70,7 @@
       "y": 40
     },
     "8": {
-      "x": 24,
+      "x": 32,
       "y": 32
     },
     "9": {
@@ -236,22 +236,6 @@
     "49": {
       "x": 80,
       "y": 168
-    },
-    "53": {
-      "x": 16,
-      "y": 20
-    },
-    "54": {
-      "x": 28,
-      "y": 20
-    },
-    "55": {
-      "x": 28,
-      "y": 44
-    },
-    "56": {
-      "x": 16,
-      "y": 44
     }
   },
   "lines": {
@@ -346,7 +330,7 @@
         "sector": 0,
         "texMid": "COMPSTA1",
         "texRatio": 1,
-        "yOffset": -0.4,
+        "yOffset": 0.5,
         "xOffset": -0.1
       },
       "back": {}
@@ -359,7 +343,7 @@
         "sector": 0,
         "texMid": "COMPSTA1",
         "texRatio": 1,
-        "yOffset": -0.4,
+        "yOffset": 0.5,
         "xOffset": 0
       },
       "back": {}
@@ -886,53 +870,6 @@
         "texRatio": 1
       },
       "front": {}
-    },
-    "64": {
-      "id": 64,
-      "start": 53,
-      "end": 54,
-      "back": {
-        "sector": 11,
-        "texMid": "",
-        "texBot": "CONS1_1",
-        "texRatio": 1
-      },
-      "front": {}
-    },
-    "65": {
-      "id": 65,
-      "start": 54,
-      "end": 55,
-      "back": {
-        "sector": 11,
-        "texMid": "",
-        "texBot": "CONS1_1",
-        "texRatio": 1
-      },
-      "front": {}
-    },
-    "66": {
-      "id": 66,
-      "start": 55,
-      "end": 56,
-      "back": {
-        "sector": 11,
-        "texMid": "",
-        "texBot": "CONS1_1",
-        "texRatio": 1
-      },
-      "front": {}
-    },
-    "67": {
-      "id": 67,
-      "start": 56,
-      "end": 53,
-      "front": {
-        "sector": 11,
-        "texMid": "STARG2",
-        "texRatio": 1
-      },
-      "back": {}
     }
   },
   "sectors": {
@@ -999,17 +936,9 @@
       "lines": [55, 56, 57, 58, 59, 60],
       "texFloor": "FLOOR4_8",
       "texCeil": "FLAT1_2"
-    },
-    "11": {
-      "id": 11,
-      "floor": 2,
-      "ceiling": 11,
-      "lines": [64, 65, 66, 67],
-      "texFloor": "CONS1_1",
-      "texCeil": "FLAT1_2"
     }
   },
-  "lineInc": 68,
-  "sectorInc": 12,
-  "vertexInc": 57
+  "lineInc": 61,
+  "sectorInc": 10,
+  "vertexInc": 50
 }

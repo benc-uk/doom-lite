@@ -86,11 +86,19 @@ export function parseMap(map, gl, physWorld, templates) {
         }
       } else {
         if (backSec) {
-          // Bottom section
-          const { bufferInfo, shape } = buildWall(gl, v2.x, v2.y, v1.x, v1.y, backSec.floor, backSec.ceiling, line.back.texRatio)
-          const texture = twgl.createTexture(gl, { src: `textures/${line.back.texMid}.png` })
-          physWorld.addBody(new Cannon.Body({ mass: 100000, shape }))
-          worldObjs.push({ bufferInfo, texture, uniforms })
+          if (line.back.texMid) {
+            // Middle section facing back
+            const { bufferInfo, shape } = buildWall(gl, v2.x, v2.y, v1.x, v1.y, backSec.floor, backSec.ceiling, line.back.texRatio)
+            const texture = twgl.createTexture(gl, { src: `textures/${line.back.texMid}.png` })
+            physWorld.addBody(new Cannon.Body({ mass: 100000, shape }))
+            worldObjs.push({ bufferInfo, texture, uniforms })
+          }
+          if (line.back.texBot) {
+            const { bufferInfo, shape } = buildWall(gl, v2.x, v2.y, v1.x, v1.y, 0, backSec.floor, line.back.texRatio)
+            const texture = twgl.createTexture(gl, { src: `textures/${line.back.texBot}.png` })
+            physWorld.addBody(new Cannon.Body({ mass: 100000, shape }))
+            worldObjs.push({ bufferInfo, texture, uniforms })
+          }
         } else {
           // Middle section
           const { bufferInfo, shape } = buildWall(gl, v1.x, v1.y, v2.x, v2.y, frontSec.floor, frontSec.ceiling, line.front.texRatio)
