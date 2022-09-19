@@ -41,7 +41,6 @@ vec2 light(vec3 normalN, vec3 surfaceToLightN, vec3 halfVector, float shininess)
 }
 
 void main(void) {
-  // v_texCoord.x = v_texCoord.x + xOffset;
   vec4 texel = texture2D(u_texture, vec2(v_texCoord.x + u_xOffset, v_texCoord.y + u_yOffset));
 
   vec3 normalN = normalize(v_normal);

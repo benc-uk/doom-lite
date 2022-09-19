@@ -6,7 +6,7 @@ import * as Cannon from '../lib/cannon-es/dist/cannon-es.js'
 import * as twgl from '../lib/twgl/dist/4.x/twgl-full.module.js'
 import { mat4 } from '../lib/gl-matrix/esm/index.js'
 
-const VERSION = '0.3.0'
+const VERSION = '0.3.1'
 const FOV = 45
 const FAR_CLIP = 300
 
@@ -34,7 +34,7 @@ const baseUniforms = {
 // Start here when the page is loaded.
 //
 window.onload = async () => {
-  console.log(`🌍 Starting up... \n⚒️ v${VERSION}`)
+  console.log(`🌍 Starting up... \n⚓ v${VERSION}`)
   document.querySelector('#version').innerText = VERSION
 
   const gl = document.querySelector('canvas').getContext('webgl2')
@@ -105,10 +105,10 @@ window.onload = async () => {
   }, 5000)
 
   // Physics for the world and player body
-  const physWorld = new Cannon.World({})
+  const physWorld = new Cannon.World({ gravity: new Cannon.Vec3(0, 0, 0) })
   player.body = new Cannon.Body({
     mass: 0.001,
-    shape: new Cannon.Sphere(2.5),
+    shape: new Cannon.Sphere(1.5),
     linearDamping: 0.99998,
   })
   physWorld.addBody(player.body)
@@ -149,8 +149,6 @@ window.onload = async () => {
     // Update physics
     physWorld.fixedStep()
 
-    // Update camera position
-
     if (now % 3 < deltaTime) {
       console.log(`🚀 FPS: ${Math.round(1 / deltaTime)}`)
     }
@@ -166,7 +164,7 @@ window.onload = async () => {
     const view = mat4.invert(mat4.create(), camera)
 
     // Do this in every frame since the window and therefore the aspect ratio of projection matrix might change
-    const perspective = mat4.perspective(mat4.create(), (FOV * Math.PI) / 150, gl.canvas.clientWidth / gl.canvas.clientHeight, 0.1, FAR_CLIP)
+    const perspective = mat4.perspective(mat4.create(), (FOV * Math.PI) / 180, gl.canvas.clientWidth / gl.canvas.clientHeight, 0.1, FAR_CLIP)
     const viewPerspective = mat4.multiply(mat4.create(), perspective, view)
 
     // Note we place the light at the camera & player position

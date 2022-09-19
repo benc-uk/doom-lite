@@ -104,10 +104,15 @@ export function handleInputs(deltaTime, player, camera, map) {
     }
   }
 
-  camera[13] = player.sector ? map.sectors[player.sector].floor + player.height : player.height
+  // camera[13] =
+
+  // We don't have gravity so move the player body Y axis too
+  const playerY = player.sector ? map.sectors[player.sector].floor + player.height : player.height
+  player.body.position.y = playerY
 
   // Move the camera & light to the player position
-  player.location = [player.body.position.x, player.body.position.y, player.body.position.z]
+  player.location = [player.body.position.x, playerY, player.body.position.z]
   camera[12] = player.body.position.x
+  camera[13] = player.body.position.y
   camera[14] = player.body.position.z
 }
