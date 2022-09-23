@@ -42,13 +42,14 @@ export function drawMap(map) {
     let lineCount = 0
     for (const lineId of sector.lines) {
       const line = map.lines[lineId]
+      if (line.front.sector != sid) continue
       if (lineCount === 0) {
-        ctx.moveTo(map.vertices[line.start].x, map.vertices[line.start].y)
+        ctx.moveTo(map.vertices[line.start][0], map.vertices[line.start][1])
       }
       if (line.back.sector === sector.id) {
-        ctx.lineTo(map.vertices[line.start].x, map.vertices[line.end].y)
+        ctx.lineTo(map.vertices[line.start][0], map.vertices[line.end][1])
       } else {
-        ctx.lineTo(map.vertices[line.end].x, map.vertices[line.end].y)
+        ctx.lineTo(map.vertices[line.end][0], map.vertices[line.end][1])
       }
 
       lineCount++
@@ -67,14 +68,14 @@ export function drawMap(map) {
     const v1 = map.vertices[line.start]
     const v2 = map.vertices[line.end]
     if (!v1 || !v2) continue
-    drawLine(v1.x, v1.y, v2.x, v2.y)
-    drawDot(v1.x, v1.y)
-    drawDot(v2.x, v2.y)
+    drawLine(v1[0], v1[1], v2[0], v2[1])
+    drawDot(v1[0], v1[1])
+    drawDot(v2[0], v2[1])
 
     // draw line id
     ctx.fillStyle = 'white'
     ctx.font = `${16 / state.zoom}px monospace`
-    ctx.fillText(line.id, (v1.x + v2.x) / 2, (v1.y + v2.y) / 2)
+    ctx.fillText(line.id, (v1[0] + v2[0]) / 2, (v1[1] + v2[1]) / 2)
   }
 
   // draw any new sector in progress
@@ -134,5 +135,17 @@ export function drawLine(x1, y1, x2, y2, style = 'white') {
   ctx.beginPath()
   ctx.moveTo(x1, y1)
   ctx.lineTo(x2, y2)
+  ctx.stroke()
+
+  // draw line facing
+  const dx = x2 - x1
+  const dy = y2 - y1
+  const angle = Math.atan2(dy, dx)
+  const x = x1 + dx / 2
+  const y = y1 + dy / 2
+  ctx.strokeStyle = 'rgba(255, 255, 255, 0.4)'
+  ctx.beginPath()
+  ctx.moveTo(x, y)
+  ctx.lineTo(x + Math.cos(angle + Math.PI / 2) * (3 + state.zoom), y + Math.sin(angle + Math.PI / 2) * (3 + state.zoom))
   ctx.stroke()
 }

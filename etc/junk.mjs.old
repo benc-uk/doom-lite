@@ -1,0 +1,29 @@
+if (backSec && frontSec) {
+  // // Bottom section facing front
+  // if (backSec.floor > frontSec.floor) {
+  //   const { bufferInfo, shape } = buildWall(gl, v1.x, v1.y, v2.x, v2.y, frontSec.floor, backSec.floor, line.front.texRatio)
+  //   const texture = twgl.createTexture(gl, { src: `textures/${line.front.texBot}.png` })
+  //   physWorld.addBody(new Cannon.Body({ mass: 100000, shape }))
+  //   worldObjs.push({ bufferInfo, texture, uniforms })
+  // }
+  // // Bottom section facing back
+  // if (backSec.floor < frontSec.floor) {
+  //   const { bufferInfo, shape } = buildWall(gl, v2.x, v2.y, v1.x, v1.y, backSec.floor, frontSec.floor, line.back.texRatio)
+  //   const texture = twgl.createTexture(gl, { src: `textures/${line.back.texBot}.png` })
+  //   physWorld.addBody(new Cannon.Body({ mass: 100000, shape }))
+  //   worldObjs.push({ bufferInfo, texture, uniforms })
+  // }
+  // // Top section facing front
+  // if (backSec.ceiling < frontSec.ceiling) {
+  //   const { bufferInfo, shape } = buildWall(gl, v1.x, v1.y, v2.x, v2.y, backSec.ceiling, frontSec.ceiling, line.front.texRatio)
+  //   const texture = twgl.createTexture(gl, { src: `textures/${line.front.texTop}.png` })
+  //   physWorld.addBody(new Cannon.Body({ mass: 100000, shape }))
+  //   worldObjs.push({ bufferInfo, texture, uniforms })
+  // }
+} else {
+  // Middle section
+  const { bufferInfo, shape } = buildWall(gl, v1[X], v1[Y], v2[X], v2[Y], frontSec.floor, frontSec.ceiling, line.front.texRatio)
+  const texture = twgl.createTexture(gl, { src: `textures/${line.front.texMid}.png` })
+  physWorld.addBody(new Cannon.Body({ mass: 100000, shape }))
+  worldObjs.push({ bufferInfo, texture, uniforms })
+}

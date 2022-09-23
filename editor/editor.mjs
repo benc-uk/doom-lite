@@ -87,9 +87,8 @@ function handleClick(e) {
       const sid = map.sectorInc++
       state.newSector = {
         id: sid,
-        vertices: [],
+        vertices: [{ x, y }],
       }
-      state.newSector.vertices.push({ x, y })
       return
     }
 
@@ -97,27 +96,19 @@ function handleClick(e) {
     if (state.newSector.vertices[0].x === x && state.newSector.vertices[0].y === y) {
       // push lines & vertices into map
       const lineIds = []
-      for (let i = 0; i < state.newSector.vertices.length; i++) {
+      for (let i = 0; i < state.newSector.vertices.length - 1; i++) {
         const v1 = state.newSector.vertices[i]
-        const v2 = state.newSector.vertices[(i + 1) % state.newSector.vertices.length]
+        const v2 = state.newSector.vertices[i + 1]
         const v1Id = addVertex(v1.x, v1.y)
         const v2Id = addVertex(v2.x, v2.y)
-
-        const lid = map.lineInc++
-
-        map.lines[lid] = {
-          id: lid,
-          start: v1Id,
-          end: v2Id,
-          front: {
-            sector: state.newSector.id,
-            texMid: 'STARG2',
-            texRatio: 1,
-          },
-          back: {},
-        }
-        lineIds.push(lid)
+        lineIds.push(addLine(v1Id, v2Id, state.newSector.id))
       }
+      // add last line
+      const v1 = state.newSector.vertices[state.newSector.vertices.length - 1]
+      const v2 = state.newSector.vertices[0]
+      const v1Id = addVertex(v1.x, v1.y)
+      const v2Id = addVertex(v2.x, v2.y)
+      lineIds.push(addLine(v1Id, v2Id, state.newSector.id))
 
       map.sectors[state.newSector.id] = {
         id: state.newSector.id,
@@ -136,6 +127,7 @@ function handleClick(e) {
 
     // Otherwise, add a vertex to existing new sector
     state.newSector.vertices.push({ x, y })
+    console.log(state.newSector.vertices)
   }
 
   if (state.mode === 'player') {
@@ -177,6 +169,26 @@ function handleClick(e) {
   return false
 }
 
+function addLine(v1Id, v2Id, sectorId) {
+  const lid = map.lineInc++
+
+  map.lines[lid] = {
+    id: lid,
+    start: v1Id,
+    end: v2Id,
+    doubleSided: false,
+    impassable: true,
+    front: {
+      sector: sectorId,
+      texMid: 'STARG2',
+      texRatio: 1,
+    },
+    back: {},
+  }
+
+  return lid
+}
+
 //
 //
 //
@@ -208,11 +220,12 @@ function handleMove(e) {
 
   if (state.mode === 'drawsector' && state.newSector !== null) {
     const lastVertex = state.newSector.vertices[state.newSector.vertices.length - 1]
+
     drawLine(lastVertex.x, lastVertex.y, x, y, 'green')
   }
 
   if (state.mode === 'move' && state.movingVert) {
-    map.vertices[state.movingVert] = { x, y }
+    map.vertices[state.movingVert] = [x, y]
   }
 }
 
@@ -233,10 +246,11 @@ function snap(e) {
 //
 //
 function findVertexId(x, y) {
-  for (const [id, v] of Object.entries(map.vertices)) {
-    if (v.x === x && v.y === y) return parseInt(id)
+  for (const [vId, v] of Object.entries(map.vertices)) {
+    if (v[0] == x && v[1] == y) {
+      return parseInt(vId)
+    }
   }
-
   return null
 }
 
@@ -263,10 +277,12 @@ function deleteSector(id) {
 //
 function addVertex(x, y) {
   const id = findVertexId(x, y)
-  if (id) return id
+  if (id) {
+    return id
+  }
 
   let newId = map.vertexInc++
-  map.vertices[newId] = { x, y }
+  map.vertices[newId] = [x, y]
   return newId
 }
 
@@ -276,7 +292,7 @@ function addVertex(x, y) {
 window.newMap = function () {
   map = {
     name: 'Demo Map',
-    playerStart: { x: 150, y: 60 },
+    playerStart: { x: 150, y: 60, angle: 0 },
 
     things: [],
     vertices: {},

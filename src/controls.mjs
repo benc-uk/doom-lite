@@ -1,5 +1,5 @@
 import { mat4 } from '../lib/gl-matrix/esm/index.js'
-import { pointInPolygonNested } from '../lib/point-in-poly/pip.mjs'
+import { pointInPolygonFlat } from '../lib/point-in-poly/pip.mjs'
 
 let inputMap = {}
 
@@ -98,13 +98,12 @@ export function handleInputs(deltaTime, player, camera, map) {
 
   // Check which sector player is in
   for (const [sid, sector] of Object.entries(map.sectors)) {
-    if (pointInPolygonNested([player.location[0], player.location[2]], sector.poly)) {
+    if (pointInPolygonFlat([player.location[0], player.location[2]], sector.poly)) {
+      console.log('Player is in sector', sid)
       player.sector = sid
       break
     }
   }
-
-  // camera[13] =
 
   // We don't have gravity so move the player body Y axis too
   const playerY = player.sector ? map.sectors[player.sector].floor + player.height : player.height
@@ -115,4 +114,7 @@ export function handleInputs(deltaTime, player, camera, map) {
   camera[12] = player.body.position.x
   camera[13] = player.body.position.y
   camera[14] = player.body.position.z
+
+  // lower the body so we bump into low steps
+  player.body.position.y = playerY - 1
 }

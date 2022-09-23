@@ -5,10 +5,13 @@ import { initInput, handleInputs } from './controls.mjs'
 import * as Cannon from '../lib/cannon-es/dist/cannon-es.js'
 import * as twgl from '../lib/twgl/dist/4.x/twgl-full.module.js'
 import { mat4 } from '../lib/gl-matrix/esm/index.js'
+import { parse as parseJSONC } from '../lib/jsonc/index.js'
 
-const VERSION = '0.3.2'
+const VERSION = '0.3.3'
 const FOV = 45
 const FAR_CLIP = 300
+const FORCE_LOAD_MAP = true
+const DEMO_MAP = 'levels/temp.json'
 
 let camera
 let totalTime = 0
@@ -47,23 +50,26 @@ window.onload = async () => {
   // Load cached map data
   try {
     // HACK: Force reload of map data
-    let mapData = null //localStorage.getItem('map')
+    let mapData = localStorage.getItem('map')
+    if (FORCE_LOAD_MAP) mapData = null
     // fetch demo map from file if not in local storage
     if (!mapData) {
-      const mapResp = await fetch('levels/demo.json')
+      console.log(`💾 Loading map from ${DEMO_MAP} not local storage`)
+      const mapResp = await fetch(DEMO_MAP)
       if (!mapResp.ok) {
-        throw new Error('Unable to load levels/demo.json')
+        throw new Error(`Unable to load ${DEMO_MAP} ${mapResp.status}`)
       }
       mapData = await mapResp.text()
     }
-    // parse map data
-    map = JSON.parse(mapData)
+    // Parse map raw JSON data
+    //parse(mapData
+    map = parseJSONC(mapData)
     localStorage.setItem('map', mapData)
+    console.log(`🗺️ Map '${map.name}' was loaded`)
   } catch (e) {
-    setOverlay('Map error: ' + e)
-    return
+    setOverlay(`Map loading error: ${e.message}`)
+    return // Give up here!
   }
-  console.log(`🗺️ Map '${map.name}' was loaded`)
 
   // Register input & controls handlers
   initInput(gl)
@@ -84,8 +90,7 @@ window.onload = async () => {
   } catch (err) {
     console.error(err)
     setOverlay(err.message)
-    // We give up, no point in continuing if we can't load the shaders!
-    return
+    return // Give up here!
   }
 
   // Set up all thing templates
@@ -96,8 +101,7 @@ window.onload = async () => {
   } catch (err) {
     console.error(err)
     setOverlay(`Loading thing templates failed ${err.message}`)
-    // We give up, no point in continuing if we can't load the templates!
-    return
+    return // Give up here!
   }
 
   setTimeout(() => {

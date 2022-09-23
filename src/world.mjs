@@ -4,6 +4,12 @@ import * as twgl from '../lib/twgl/dist/4.x/twgl-full.module.js'
 import * as Cannon from '../lib/cannon-es/dist/cannon-es.js'
 import { mat4 } from '../lib/gl-matrix/esm/index.js'
 
+// Readability help
+const X = 0
+const Y = 1
+
+const WALL_MASS = 100000
+
 //
 // Main function to build all world geometry, physics and things
 //
@@ -30,31 +36,31 @@ export function parseMap(map, gl, physWorld, templates) {
 
     // Build polygon for this sector, used for movement sector checks
     // HACK: This code is a fucking horror show, but it seems to work (for now)
-    const poly = []
+    const polyFlat = []
     const lid0 = sector.lines[0]
     const line = map.lines[lid0]
     const v1 = map.vertices[line.start]
     const v2 = map.vertices[line.end]
-    poly.push([v1.x, v1.y])
-    poly.push([v2.x, v2.y])
+    polyFlat.push(v1[X], v1[Y])
+    polyFlat.push(v2[X], v2[Y])
 
     for (let lix = 1; lix < sector.lines.length - 1; lix++) {
       const lid = sector.lines[lix]
       const line = map.lines[lid]
-      let v = map.vertices[line.end]
-      if (line.back == sid) v = map.vertices[line.start]
-      poly.push([v.x, v.y])
+      const v = map.vertices[line.end]
+      // Needed?
+      //if (line.back == sid) v = map.vertices[line.start]
+      polyFlat.push(v[X], v[Y])
     }
 
-    sector.poly = poly
+    // Mutate sector adding the new poly
+    sector.poly = polyFlat
+    //var triangles = earcut(polyFlat)
 
     for (const lid of sector.lines) {
-      // if (line.front.sector != sid) continue
       const line = map.lines[lid]
-
       const frontSec = map.sectors[line.front.sector]
       const backSec = map.sectors[line.back.sector]
-
       const v1 = map.vertices[line.start]
       const v2 = map.vertices[line.end]
 
@@ -62,60 +68,52 @@ export function parseMap(map, gl, physWorld, templates) {
         u_xOffset: line.front.xOffset ? line.front.xOffset : 0,
         u_yOffset: line.front.yOffset ? line.front.yOffset : 0,
       }
-      if (backSec && frontSec) {
-        // Bottom section facing front
-        if (backSec.floor > frontSec.floor) {
-          const { bufferInfo, shape } = buildWall(gl, v1.x, v1.y, v2.x, v2.y, frontSec.floor, backSec.floor, line.front.texRatio)
-          const texture = twgl.createTexture(gl, { src: `textures/${line.front.texBot}.png` })
-          physWorld.addBody(new Cannon.Body({ mass: 100000, shape }))
-          worldObjs.push({ bufferInfo, texture, uniforms })
-        }
-        // Bottom section facing back
-        if (backSec.floor < frontSec.floor) {
-          const { bufferInfo, shape } = buildWall(gl, v2.x, v2.y, v1.x, v1.y, backSec.floor, frontSec.floor, line.back.texRatio)
-          const texture = twgl.createTexture(gl, { src: `textures/${line.back.texBot}.png` })
-          physWorld.addBody(new Cannon.Body({ mass: 100000, shape }))
-          worldObjs.push({ bufferInfo, texture, uniforms })
-        }
-        // Top section facing front
-        if (backSec.ceiling < frontSec.ceiling) {
-          const { bufferInfo, shape } = buildWall(gl, v1.x, v1.y, v2.x, v2.y, backSec.ceiling, frontSec.ceiling, line.front.texRatio)
-          const texture = twgl.createTexture(gl, { src: `textures/${line.front.texTop}.png` })
-          physWorld.addBody(new Cannon.Body({ mass: 100000, shape }))
-          worldObjs.push({ bufferInfo, texture, uniforms })
-        }
-      } else {
-        if (backSec) {
-          if (line.back.texMid) {
-            // Middle section facing back
-            const { bufferInfo, shape } = buildWall(gl, v2.x, v2.y, v1.x, v1.y, backSec.floor, backSec.ceiling, line.back.texRatio)
-            const texture = twgl.createTexture(gl, { src: `textures/${line.back.texMid}.png` })
-            physWorld.addBody(new Cannon.Body({ mass: 100000, shape }))
-            worldObjs.push({ bufferInfo, texture, uniforms })
-          }
-          if (line.back.texBot) {
-            const { bufferInfo, shape } = buildWall(gl, v2.x, v2.y, v1.x, v1.y, 0, backSec.floor, line.back.texRatio)
-            const texture = twgl.createTexture(gl, { src: `textures/${line.back.texBot}.png` })
-            physWorld.addBody(new Cannon.Body({ mass: 100000, shape }))
-            worldObjs.push({ bufferInfo, texture, uniforms })
-          }
-        } else {
-          // Middle section
-          const { bufferInfo, shape } = buildWall(gl, v1.x, v1.y, v2.x, v2.y, frontSec.floor, frontSec.ceiling, line.front.texRatio)
+
+      // eslint-disable-next-line
+      const impassable = line.hasOwnProperty('impassable') ? line.impassable : true
+      // eslint-disable-next-line
+      const doubleSided = line.hasOwnProperty('doubleSided') ? line.doubleSided : false
+
+      // FRONT
+      if (frontSec) {
+        if (line.front.texMid) {
+          const { bufferInfo, shape } = buildWall(gl, v1[X], v1[Y], v2[X], v2[Y], frontSec.floor, frontSec.ceiling, line.front.texRatio, false)
           const texture = twgl.createTexture(gl, { src: `textures/${line.front.texMid}.png` })
-          physWorld.addBody(new Cannon.Body({ mass: 100000, shape }))
+          if (impassable) physWorld.addBody(new Cannon.Body({ mass: WALL_MASS, shape }))
           worldObjs.push({ bufferInfo, texture, uniforms })
         }
       }
 
-      if (v1.x < minX) minX = v1.x
-      if (v1.x > maxX) maxX = v1.x
-      if (v1.y < minY) minY = v1.y
-      if (v1.y > maxY) maxY = v1.y
-      if (v2.x < minX) minX = v2.x
-      if (v2.x > maxX) maxX = v2.x
-      if (v2.y < minY) minY = v2.y
-      if (v2.y > maxY) maxY = v2.y
+      // BACK
+      if (backSec) {
+        if (line.back.texMid) {
+          const { bufferInfo, shape } = buildWall(gl, v1[X], v1[Y], v2[X], v2[Y], backSec.floor, backSec.ceiling, line.back.texRatio, true)
+          const texture = twgl.createTexture(gl, { src: `textures/${line.back.texMid}.png` })
+          if (impassable) physWorld.addBody(new Cannon.Body({ mass: WALL_MASS, shape }))
+          worldObjs.push({ bufferInfo, texture, uniforms })
+        }
+        if (line.back.texBot) {
+          const { bufferInfo, shape } = buildWall(gl, v1[X], v1[Y], v2[X], v2[Y], backSec.floor, frontSec.floor, line.back.texRatio, true)
+          const texture = twgl.createTexture(gl, { src: `textures/${line.back.texBot}.png` })
+          if (impassable) physWorld.addBody(new Cannon.Body({ mass: WALL_MASS, shape }))
+          worldObjs.push({ bufferInfo, texture, uniforms })
+        }
+        if (line.back.texTop) {
+          const { bufferInfo, shape } = buildWall(gl, v1[X], v1[Y], v2[X], v2[Y], frontSec.ceiling, backSec.ceiling, line.back.texRatio, true)
+          const texture = twgl.createTexture(gl, { src: `textures/${line.back.texTop}.png` })
+          if (impassable) physWorld.addBody(new Cannon.Body({ mass: WALL_MASS, shape }))
+          worldObjs.push({ bufferInfo, texture, uniforms })
+        }
+      }
+
+      if (v1[X] < minX) minX = v1[X]
+      if (v1[X] > maxX) maxX = v1[X]
+      if (v1[Y] < minY) minY = v1[Y]
+      if (v1[Y] > maxY) maxY = v1[Y]
+      if (v2[X] < minX) minX = v2[X]
+      if (v2[X] > maxX) maxX = v2[X]
+      if (v2[Y] < minY) minY = v2[Y]
+      if (v2[Y] > maxY) maxY = v2[Y]
     }
 
     // HACK: Remove this with proper floor/ceiling geometry
