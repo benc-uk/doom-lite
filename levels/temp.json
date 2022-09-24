@@ -8,8 +8,8 @@
   "things": [],
   "vertices": {
     "0": [128, 32],
-    "1": [288, 32],
-    "2": [288, 144],
+    "1": [232, 56],
+    "2": [232, 120],
     "3": [128, 144],
     "4": [128, 32],
     "5": [224, 72],
@@ -17,11 +17,11 @@
     "7": [200, 96],
     "8": [224, 96],
     "9": [200, 112],
-    "10": [213, 112],
+    "10": [203, 112],
     "11": [213, 120],
     "12": [200, 120],
-    "13": [336, 32],
-    "14": [336, 144]
+    "13": [272, 32],
+    "14": [296, 200]
   },
   "lines": {
     "0": {
@@ -45,10 +45,14 @@
       "impassable": false,
       "front": {
         "sector": 0,
-        "texMid": "",
+        "texTop": "BROWN1",
         "texRatio": 1
       },
-      "back": {}
+      "back": {
+        "sector": 5,
+        "texBot": "STARG2",
+        "texRatio": 1
+      }
     },
     "2": {
       "id": 2,
@@ -204,7 +208,7 @@
       "impassable": true,
       "front": {
         "sector": 5,
-        "texMid": "STARG2",
+        "texMid": "STARGR2",
         "texRatio": 1
       },
       "back": {}
@@ -217,7 +221,7 @@
       "impassable": true,
       "front": {
         "sector": 5,
-        "texMid": "STARG2",
+        "texMid": "STARGR2",
         "texRatio": 1
       },
       "back": {}
@@ -230,30 +234,17 @@
       "impassable": true,
       "front": {
         "sector": 5,
-        "texMid": "STARG2",
+        "texMid": "STARGR2",
         "texRatio": 1
       },
       "back": {}
     }
-    // "15": {
-    //   "id": 15,
-    //   "start": 2,
-    //   "end": 1,
-    //   "doubleSided": false,
-    //   "impassable": true,
-    //   "front": {
-    //     "sector": 5,
-    //     "texMid": "STARG2",
-    //     "texRatio": 1
-    //   },
-    //   "back": {}
-    // }
   },
   "sectors": {
     "0": {
       "id": 0,
       "floor": 0,
-      "ceiling": 10,
+      "ceiling": 20,
       "lines": [0, 1, 2, 3, 4, 5, 6, 7],
       "texFloor": "FLOOR4_8",
       "texCeil": "FLAT1_2"
@@ -263,7 +254,7 @@
       "floor": 3,
       "ceiling": 8,
       "lines": [8, 9, 10, 11],
-      "texFloor": "CEIL1_2",
+      "texFloor": "FLAT1_2",
       "texCeil": "FLAT3"
     },
     "5": {
@@ -276,6 +267,6 @@
     }
   },
   "lineInc": 16,
-  "sectorInc": 6,
+  "sectorInc": 8,
   "vertexInc": 15
 }

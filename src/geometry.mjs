@@ -22,13 +22,13 @@ export function buildWall(gl, p1x, p1y, p2x, p2y, floorHeight, ceilingHeight, wi
   const indices = [0, 2, 1, 1, 2, 3]
   if (flip) indices.reverse()
 
-  const bufferInfo = makeFlatBuffer(gl, positions, indices, widthRatio)
+  const bufferInfo = makeRectBuffer(gl, positions, indices, widthRatio, flip)
   const shape = new Cannon.Trimesh(positions, [0, 1, 2, 1, 3, 2])
 
   return { bufferInfo, shape }
 }
 
-export function buildFlat(gl, p1x, p1y, p2x, p2y, p3x, p3y, p4x, p4y, height, up = true) {
+export function buildFlatOLDNOTUSED(gl, p1x, p1y, p2x, p2y, p3x, p3y, p4x, p4y, height, up = true) {
   // prettier-ignore
   const positions = [
      p1x, height, p1y,
@@ -40,12 +40,12 @@ export function buildFlat(gl, p1x, p1y, p2x, p2y, p3x, p3y, p4x, p4y, height, up
   const indices = [0, 2, 1, 1, 2, 3]
   if (!up) indices.reverse()
 
-  const bufferInfo = makeFlatBuffer(gl, positions, indices, 1)
+  const bufferInfo = makeRectBuffer(gl, positions, indices, 1)
 
   return bufferInfo
 }
 
-function makeFlatBuffer(gl, positions, indices, widthRatio) {
+function makeRectBuffer(gl, positions, indices, widthRatio, flip = false) {
   // Work out normal with classic cross product method
   const v1 = vec3.fromValues(positions[0] - positions[3], positions[1] - positions[4], positions[2] - positions[5])
   const v2 = vec3.fromValues(positions[0] - positions[6], positions[1] - positions[7], positions[2] - positions[8])
@@ -54,12 +54,53 @@ function makeFlatBuffer(gl, positions, indices, widthRatio) {
   const v2Len = (vec3.length(v2) / (TEX_SCALE * widthRatio)) * widthRatio
 
   const norm = vec3.normalize(vec3.create(), vec3.cross(vec3.create(), v2, v1))
+  if (flip) {
+    vec3.negate(norm, norm)
+  }
 
   const arrays = {
     position: positions,
     texcoord: [0, 0, v1Len, 0, 0, v2Len, v1Len, v2Len],
     normal: [norm[0], norm[1], norm[2], norm[0], norm[1], norm[2], norm[0], norm[1], norm[2], norm[0], norm[1], norm[2]],
     indices,
+  }
+  return twgl.createBufferInfoFromArrays(gl, arrays)
+}
+
+export function buildFlatNew(gl, poly, indices, height, up = true) {
+  const position = []
+  const texcoord = []
+  const indicesCopy = []
+  let minX = Infinity
+  let maxX = -Infinity
+  let minY = Infinity
+  let maxY = -Infinity
+
+  for (let ix = 0; ix < poly.length; ix += 2) {
+    position.push(poly[ix], height, poly[ix + 1])
+    minX = Math.min(minX, poly[ix])
+    maxX = Math.max(maxX, poly[ix])
+    minY = Math.min(minY, poly[ix + 1])
+    maxY = Math.max(maxY, poly[ix + 1])
+  }
+
+  for (let ix = 0; ix < poly.length; ix += 2) {
+    texcoord.push((poly[ix] - minX) / TEX_SCALE, (poly[ix + 1] - minY) / TEX_SCALE)
+  }
+
+  // Copy indices, in case we need to reverse them
+  for (let ix = 0; ix < indices.length; ix++) {
+    indicesCopy[ix] = indices[ix]
+  }
+  if (up) indicesCopy.reverse()
+
+  const normalY = up ? 1 : -1
+
+  const arrays = {
+    position,
+    texcoord,
+    normal: [0, normalY, 0, 0, normalY, 0, 0, normalY, 0, 0, normalY, 0],
+    indices: indicesCopy,
   }
   return twgl.createBufferInfoFromArrays(gl, arrays)
 }

@@ -63,7 +63,7 @@ export function initInput(gl) {
 // Handle any active input, called every frame
 //
 export function handleInputs(deltaTime, player, camera, map) {
-  const moveSpeed = 72.0 // Don't understand why don't need to multiply by deltaTime here
+  const moveSpeed = 52.0 // Don't understand why don't need to multiply by deltaTime here
   const turnSpeed = 3.9 * deltaTime
 
   if (inputMap['w'] || inputMap['ArrowUp']) {
@@ -99,7 +99,7 @@ export function handleInputs(deltaTime, player, camera, map) {
   // Check which sector player is in
   for (const [sid, sector] of Object.entries(map.sectors)) {
     if (pointInPolygonFlat([player.location[0], player.location[2]], sector.poly)) {
-      console.log('Player is in sector', sid)
+      //console.log('Player is in sector', sid)
       player.sector = sid
       break
     }
@@ -107,7 +107,7 @@ export function handleInputs(deltaTime, player, camera, map) {
 
   // We don't have gravity so move the player body Y axis too
   const playerY = player.sector ? map.sectors[player.sector].floor + player.height : player.height
-  player.body.position.y = playerY
+  player.body.position.y = playerY + 1.5
 
   // Move the camera & light to the player position
   player.location = [player.body.position.x, playerY, player.body.position.z]

@@ -1,4 +1,4 @@
-import { buildFlat, buildWall } from './geometry.mjs'
+import { buildFlatNew, buildWall } from './geometry.mjs'
 
 import * as twgl from '../lib/twgl/dist/4.x/twgl-full.module.js'
 import * as Cannon from '../lib/cannon-es/dist/cannon-es.js'
@@ -29,11 +29,6 @@ export function parseMap(map, gl, physWorld, templates) {
 
   // eslint-disable-next-line no-unused-vars
   for (const [sid, sector] of Object.entries(map.sectors)) {
-    let minX = Infinity
-    let maxX = -Infinity
-    let minY = Infinity
-    let maxY = -Infinity
-
     // Build polygon for this sector, used for movement sector checks
     // HACK: This code is a fucking horror show, but it seems to work (for now)
     const polyFlat = []
@@ -44,8 +39,8 @@ export function parseMap(map, gl, physWorld, templates) {
     polyFlat.push(v1[X], v1[Y])
     polyFlat.push(v2[X], v2[Y])
 
-    for (let lix = 1; lix < sector.lines.length - 1; lix++) {
-      const lid = sector.lines[lix]
+    for (let lineIx = 1; lineIx < sector.lines.length - 1; lineIx++) {
+      const lid = sector.lines[lineIx]
       const line = map.lines[lid]
       const v = map.vertices[line.end]
       // Needed?
@@ -53,9 +48,8 @@ export function parseMap(map, gl, physWorld, templates) {
       polyFlat.push(v[X], v[Y])
     }
 
-    // Mutate sector adding the new poly
+    // Mutate sector adding the poly
     sector.poly = polyFlat
-    //var triangles = earcut(polyFlat)
 
     for (const lid of sector.lines) {
       const line = map.lines[lid]
@@ -82,6 +76,18 @@ export function parseMap(map, gl, physWorld, templates) {
           if (impassable) physWorld.addBody(new Cannon.Body({ mass: WALL_MASS, shape }))
           worldObjs.push({ bufferInfo, texture, uniforms })
         }
+        if (line.front.texBot) {
+          const { bufferInfo, shape } = buildWall(gl, v1[X], v1[Y], v2[X], v2[Y], backSec.floor, frontSec.floor, line.back.texRatio, true)
+          const texture = twgl.createTexture(gl, { src: `textures/${line.front.texBot}.png` })
+          if (impassable) physWorld.addBody(new Cannon.Body({ mass: WALL_MASS, shape }))
+          worldObjs.push({ bufferInfo, texture, uniforms })
+        }
+        if (line.front.texTop) {
+          const { bufferInfo, shape } = buildWall(gl, v1[X], v1[Y], v2[X], v2[Y], frontSec.ceiling, backSec.ceiling, line.back.texRatio, true)
+          const texture = twgl.createTexture(gl, { src: `textures/${line.front.texTop}.png` })
+          if (impassable) physWorld.addBody(new Cannon.Body({ mass: WALL_MASS, shape }))
+          worldObjs.push({ bufferInfo, texture, uniforms })
+        }
       }
 
       // BACK
@@ -105,19 +111,11 @@ export function parseMap(map, gl, physWorld, templates) {
           worldObjs.push({ bufferInfo, texture, uniforms })
         }
       }
-
-      if (v1[X] < minX) minX = v1[X]
-      if (v1[X] > maxX) maxX = v1[X]
-      if (v1[Y] < minY) minY = v1[Y]
-      if (v1[Y] > maxY) maxY = v1[Y]
-      if (v2[X] < minX) minX = v2[X]
-      if (v2[X] > maxX) maxX = v2[X]
-      if (v2[Y] < minY) minY = v2[Y]
-      if (v2[Y] > maxY) maxY = v2[Y]
     }
 
-    // HACK: Remove this with proper floor/ceiling geometry
-    const floorFlat = buildFlat(gl, minX, minY, maxX, minY, maxX, maxY, minX, maxY, sector.floor)
+    // Floor and ceiling polys build from earcut
+    const floorCeilIndices = earcut(polyFlat)
+    const floorFlat = buildFlatNew(gl, polyFlat, floorCeilIndices, sector.floor)
     const floorTex = twgl.createTexture(gl, {
       src: `textures/${sector.texFloor}.png`,
     })
@@ -125,7 +123,7 @@ export function parseMap(map, gl, physWorld, templates) {
       bufferInfo: floorFlat,
       texture: floorTex,
     })
-    const ceilFlat = buildFlat(gl, minX, minY, maxX, minY, maxX, maxY, minX, maxY, sector.ceiling, false)
+    const ceilFlat = buildFlatNew(gl, polyFlat, floorCeilIndices, sector.ceiling, false)
     const ceilTex = twgl.createTexture(gl, {
       src: `textures/${sector.texCeil}.png`,
     })

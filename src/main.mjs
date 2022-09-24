@@ -10,8 +10,10 @@ import { parse as parseJSONC } from '../lib/jsonc/index.js'
 const VERSION = '0.3.3'
 const FOV = 45
 const FAR_CLIP = 300
+
 const FORCE_LOAD_MAP = true
 const DEMO_MAP = 'levels/temp.json'
+const NO_CLIP = false
 
 let camera
 let totalTime = 0
@@ -30,7 +32,7 @@ const baseUniforms = {
   u_lightAmbient: [0.3, 0.3, 0.3, 1],
   u_specular: [1, 1, 1, 1],
   u_shininess: 350,
-  u_specularFactor: 0.4,
+  u_specularFactor: 0.9,
 }
 
 //
@@ -115,6 +117,7 @@ window.onload = async () => {
     shape: new Cannon.Sphere(1.5),
     linearDamping: 0.99998,
   })
+  if (NO_CLIP) player.body.collisionFilterGroup = 0
   physWorld.addBody(player.body)
   console.log('🧪 Physics initialized')
 
@@ -124,8 +127,8 @@ window.onload = async () => {
 
   // Setup player position and camera
   camera = mat4.targetTo(mat4.create(), [0, 0, 0], [0, 0, -100], [0, 1, 0])
-  mat4.translate(camera, camera, [playerStart.x, player.height, playerStart.z])
   mat4.rotateY(camera, camera, map.playerStart.angle)
+  mat4.translate(camera, camera, [playerStart.x, player.height, playerStart.z])
   player.body.position.set(camera[12], camera[13], camera[14])
 
   player.facing = [camera[8], camera[9], camera[10]]
