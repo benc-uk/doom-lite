@@ -1,14 +1,17 @@
 import './files.mjs'
 import { drawMap, drawCrosshair, drawLine } from './drawing.mjs'
+import { parse as parseJSONC } from '../../lib/jsonc/index.js'
 
 let map = {}
 
 const BASE_SIZE = 800
+const FORCE_LOAD_MAP = true
+const DEMO_MAP = '../levels/temp.json'
 
 // Shared state between modules
 export let state = {
   zoom: 1,
-  gridSize: 8,
+  gridSize: 4,
   newSector: null,
   cursorX: 0,
   cursorY: 0,
@@ -21,20 +24,24 @@ window.setMode = function setMode(m) {
   drawCrosshair()
 }
 
-canvas.addEventListener('keydown', handleKey)
+window.addEventListener('keydown', handleKey)
 
-window.addEventListener('load', () => {
+window.addEventListener('load', async () => {
   const canvas = document.getElementById('canvas')
   canvas.width = BASE_SIZE * state.zoom
   canvas.height = BASE_SIZE * state.zoom
 
-  const mapString = localStorage.getItem('map')
-  if (!mapString) {
-    window.newMap()
-  } else {
-    map = JSON.parse(mapString)
+  let mapData = localStorage.getItem('map')
+  if (FORCE_LOAD_MAP) mapData = null
+  if (!mapData) {
+    console.log(`💾 Loading map from ${DEMO_MAP} not local storage`)
+    const mapResp = await fetch(DEMO_MAP)
+    if (!mapResp.ok) {
+      throw new Error(`Unable to load ${DEMO_MAP} ${mapResp.status}`)
+    }
+    mapData = await mapResp.text()
   }
-
+  map = parseJSONC(mapData)
   drawMap(map)
 
   canvas.addEventListener('click', handleClick)
@@ -64,7 +71,7 @@ function handleKey(e) {
     drawMap(map)
   }
   if (e.key === '[') {
-    if (state.gridSize <= 4) return
+    if (state.gridSize <= 2) return
     state.gridSize /= 2
     drawMap(map)
   }
@@ -108,6 +115,7 @@ function handleClick(e) {
       const v2 = state.newSector.vertices[0]
       const v1Id = addVertex(v1.x, v1.y)
       const v2Id = addVertex(v2.x, v2.y)
+
       lineIds.push(addLine(v1Id, v2Id, state.newSector.id))
 
       map.sectors[state.newSector.id] = {
@@ -248,6 +256,7 @@ function snap(e) {
 function findVertexId(x, y) {
   for (const [vId, v] of Object.entries(map.vertices)) {
     if (v[0] == x && v[1] == y) {
+      console.log(`### Vertex already exists at ${x}, ${y}`)
       return parseInt(vId)
     }
   }
@@ -276,8 +285,9 @@ function deleteSector(id) {
 //
 //
 function addVertex(x, y) {
+  console.log(`### Adding vertex at ${x}, ${y}`)
   const id = findVertexId(x, y)
-  if (id) {
+  if (id != null) {
     return id
   }
 
@@ -308,7 +318,7 @@ window.newMap = function () {
 }
 
 window.updateCode = function (e) {
-  localStorage.setItem('map', e.target.value)
+  //localStorage.setItem('map', e.target.value)
   map = JSON.parse(e.target.value)
   drawMap(map)
   drawCrosshair()

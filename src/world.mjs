@@ -27,24 +27,21 @@ export function parseMap(map, gl, physWorld, templates) {
     })
   }
 
-  // eslint-disable-next-line no-unused-vars
   for (const [sid, sector] of Object.entries(map.sectors)) {
-    // Build polygon for this sector, used for movement sector checks
-    // HACK: This code is a fucking horror show, but it seems to work (for now)
+    // Build polygon for this sector
+    // ARGH: This code is a fucking horror show
     const polyFlat = []
-    const lid0 = sector.lines[0]
-    const line = map.lines[lid0]
-    const v1 = map.vertices[line.start]
-    const v2 = map.vertices[line.end]
-    polyFlat.push(v1[X], v1[Y])
-    polyFlat.push(v2[X], v2[Y])
-
-    for (let lineIx = 1; lineIx < sector.lines.length - 1; lineIx++) {
+    console.log(`------ sector ${sid} ------`)
+    for (let lineIx = 0; lineIx < sector.lines.length; lineIx++) {
       const lid = sector.lines[lineIx]
       const line = map.lines[lid]
-      const v = map.vertices[line.end]
-      // Needed?
-      //if (line.back == sid) v = map.vertices[line.start]
+      let v = map.vertices[line.end]
+
+      if (line.back.sector == sid) {
+        v = map.vertices[line.start]
+      }
+
+      console.log(`  line id: ${lid}, v: ${v} back: ${line.back.sector == sid}`)
       polyFlat.push(v[X], v[Y])
     }
 
@@ -58,18 +55,16 @@ export function parseMap(map, gl, physWorld, templates) {
       const v1 = map.vertices[line.start]
       const v2 = map.vertices[line.end]
 
-      const uniforms = {
-        u_xOffset: line.front.xOffset ? line.front.xOffset : 0,
-        u_yOffset: line.front.yOffset ? line.front.yOffset : 0,
-      }
+      const uniforms = {}
 
-      // eslint-disable-next-line
       const impassable = line.hasOwnProperty('impassable') ? line.impassable : true
       // eslint-disable-next-line
-      const doubleSided = line.hasOwnProperty('doubleSided') ? line.doubleSided : false
+      //const doubleSided = line.hasOwnProperty('doubleSided') ? line.doubleSided : false
 
       // FRONT
       if (frontSec) {
+        uniforms.u_xOffset = line.front.xOffset ? line.front.xOffset : 0
+        uniforms.u_yOffset = line.front.yOffset ? line.front.yOffset : 0
         if (line.front.texMid) {
           const { bufferInfo, shape } = buildWall(gl, v1[X], v1[Y], v2[X], v2[Y], frontSec.floor, frontSec.ceiling, line.front.texRatio, false)
           const texture = twgl.createTexture(gl, { src: `textures/${line.front.texMid}.png` })
@@ -79,7 +74,7 @@ export function parseMap(map, gl, physWorld, templates) {
         if (line.front.texBot) {
           const { bufferInfo, shape } = buildWall(gl, v1[X], v1[Y], v2[X], v2[Y], backSec.floor, frontSec.floor, line.back.texRatio, true)
           const texture = twgl.createTexture(gl, { src: `textures/${line.front.texBot}.png` })
-          if (impassable) physWorld.addBody(new Cannon.Body({ mass: WALL_MASS, shape }))
+          physWorld.addBody(new Cannon.Body({ mass: WALL_MASS, shape }))
           worldObjs.push({ bufferInfo, texture, uniforms })
         }
         if (line.front.texTop) {
@@ -92,6 +87,8 @@ export function parseMap(map, gl, physWorld, templates) {
 
       // BACK
       if (backSec) {
+        uniforms.u_xOffset = line.back.xOffset ? line.back.xOffset : 0
+        uniforms.u_yOffset = line.back.yOffset ? line.back.yOffset : 0
         if (line.back.texMid) {
           const { bufferInfo, shape } = buildWall(gl, v1[X], v1[Y], v2[X], v2[Y], backSec.floor, backSec.ceiling, line.back.texRatio, true)
           const texture = twgl.createTexture(gl, { src: `textures/${line.back.texMid}.png` })
@@ -101,7 +98,7 @@ export function parseMap(map, gl, physWorld, templates) {
         if (line.back.texBot) {
           const { bufferInfo, shape } = buildWall(gl, v1[X], v1[Y], v2[X], v2[Y], backSec.floor, frontSec.floor, line.back.texRatio, true)
           const texture = twgl.createTexture(gl, { src: `textures/${line.back.texBot}.png` })
-          if (impassable) physWorld.addBody(new Cannon.Body({ mass: WALL_MASS, shape }))
+          physWorld.addBody(new Cannon.Body({ mass: WALL_MASS, shape }))
           worldObjs.push({ bufferInfo, texture, uniforms })
         }
         if (line.back.texTop) {
@@ -113,8 +110,12 @@ export function parseMap(map, gl, physWorld, templates) {
       }
     }
 
+    const uniforms = {}
+
     // Floor and ceiling polys build from earcut
-    const floorCeilIndices = earcut(polyFlat)
+    const holes = sector.holes ? sector.holes : []
+    const floorCeilIndices = earcut(polyFlat, holes)
+
     const floorFlat = buildFlatNew(gl, polyFlat, floorCeilIndices, sector.floor)
     const floorTex = twgl.createTexture(gl, {
       src: `textures/${sector.texFloor}.png`,
@@ -122,15 +123,19 @@ export function parseMap(map, gl, physWorld, templates) {
     worldObjs.push({
       bufferInfo: floorFlat,
       texture: floorTex,
+      uniforms,
     })
-    const ceilFlat = buildFlatNew(gl, polyFlat, floorCeilIndices, sector.ceiling, false)
-    const ceilTex = twgl.createTexture(gl, {
-      src: `textures/${sector.texCeil}.png`,
-    })
-    worldObjs.push({
-      bufferInfo: ceilFlat,
-      texture: ceilTex,
-    })
+
+    if (sector.ceiling) {
+      const ceilFlat = buildFlatNew(gl, polyFlat, floorCeilIndices, sector.ceiling, false)
+      const ceilTex = twgl.createTexture(gl, {
+        src: `textures/${sector.texCeil}.png`,
+      })
+      worldObjs.push({
+        bufferInfo: ceilFlat,
+        texture: ceilTex,
+      })
+    }
   }
 
   return { worldObjs, thingInstances, playerStart: { x: map.playerStart.x, y: 0, z: map.playerStart.y } }

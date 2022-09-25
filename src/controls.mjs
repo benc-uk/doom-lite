@@ -63,7 +63,7 @@ export function initInput(gl) {
 // Handle any active input, called every frame
 //
 export function handleInputs(deltaTime, player, camera, map) {
-  const moveSpeed = 52.0 // Don't understand why don't need to multiply by deltaTime here
+  const moveSpeed = 62.0 // Don't understand why don't need to multiply by deltaTime here
   const turnSpeed = 3.9 * deltaTime
 
   if (inputMap['w'] || inputMap['ArrowUp']) {
@@ -96,6 +96,10 @@ export function handleInputs(deltaTime, player, camera, map) {
     player.facing = [camera[8], camera[9], camera[10]]
   }
 
+  updatePlayer(map, player, camera)
+}
+
+export function updatePlayer(map, player, camera) {
   // Check which sector player is in
   for (const [sid, sector] of Object.entries(map.sectors)) {
     if (pointInPolygonFlat([player.location[0], player.location[2]], sector.poly)) {
@@ -116,5 +120,5 @@ export function handleInputs(deltaTime, player, camera, map) {
   camera[14] = player.body.position.z
 
   // lower the body so we bump into low steps
-  player.body.position.y = playerY - 1
+  player.body.position.y = playerY - 0.5
 }

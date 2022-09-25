@@ -68,24 +68,36 @@ function makeRectBuffer(gl, positions, indices, widthRatio, flip = false) {
 }
 
 export function buildFlatNew(gl, poly, indices, height, up = true) {
+  console.log('=== buildFlatNew ===')
+  console.log('  poly:', JSON.stringify(poly))
+  console.log('  indices:', JSON.stringify(indices))
+
   const position = []
   const texcoord = []
   const indicesCopy = []
+  const normal = []
   let minX = Infinity
   let maxX = -Infinity
   let minY = Infinity
   let maxY = -Infinity
 
   for (let ix = 0; ix < poly.length; ix += 2) {
-    position.push(poly[ix], height, poly[ix + 1])
+    const pointX = poly[ix]
+    const pointY = poly[ix + 1]
+    position.push(pointX)
+    position.push(height)
+    position.push(pointY)
+
     minX = Math.min(minX, poly[ix])
     maxX = Math.max(maxX, poly[ix])
     minY = Math.min(minY, poly[ix + 1])
     maxY = Math.max(maxY, poly[ix + 1])
   }
 
+  const normalY = up ? -1 : 1
   for (let ix = 0; ix < poly.length; ix += 2) {
     texcoord.push((poly[ix] - minX) / TEX_SCALE, (poly[ix + 1] - minY) / TEX_SCALE)
+    normal.push(0, normalY, 0)
   }
 
   // Copy indices, in case we need to reverse them
@@ -94,12 +106,10 @@ export function buildFlatNew(gl, poly, indices, height, up = true) {
   }
   if (up) indicesCopy.reverse()
 
-  const normalY = up ? 1 : -1
-
   const arrays = {
     position,
     texcoord,
-    normal: [0, normalY, 0, 0, normalY, 0, 0, normalY, 0, 0, normalY, 0],
+    normal,
     indices: indicesCopy,
   }
   return twgl.createBufferInfoFromArrays(gl, arrays)

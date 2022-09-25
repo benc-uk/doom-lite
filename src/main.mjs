@@ -1,6 +1,6 @@
 import { fetchShaders, hideOverlay, setOverlay } from './utils.mjs'
 import { parseMap, buildTemplates } from './world.mjs'
-import { initInput, handleInputs } from './controls.mjs'
+import { initInput, handleInputs, updatePlayer } from './controls.mjs'
 
 import * as Cannon from '../lib/cannon-es/dist/cannon-es.js'
 import * as twgl from '../lib/twgl/dist/4.x/twgl-full.module.js'
@@ -32,7 +32,7 @@ const baseUniforms = {
   u_lightAmbient: [0.3, 0.3, 0.3, 1],
   u_specular: [1, 1, 1, 1],
   u_shininess: 350,
-  u_specularFactor: 0.9,
+  u_specularFactor: 0.3,
 }
 
 //
@@ -66,7 +66,7 @@ window.onload = async () => {
     // Parse map raw JSON data
     //parse(mapData
     map = parseJSONC(mapData)
-    localStorage.setItem('map', mapData)
+    //localStorage.setItem('map', mapData)
     console.log(`🗺️ Map '${map.name}' was loaded`)
   } catch (e) {
     setOverlay(`Map loading error: ${e.message}`)
@@ -127,13 +127,14 @@ window.onload = async () => {
 
   // Setup player position and camera
   camera = mat4.targetTo(mat4.create(), [0, 0, 0], [0, 0, -100], [0, 1, 0])
-  mat4.rotateY(camera, camera, map.playerStart.angle)
   mat4.translate(camera, camera, [playerStart.x, player.height, playerStart.z])
+  mat4.rotateY(camera, camera, map.playerStart.angle)
   player.body.position.set(camera[12], camera[13], camera[14])
 
   player.facing = [camera[8], camera[9], camera[10]]
   player.location = [camera[12], camera[13], camera[14]]
 
+  updatePlayer(map, player, camera)
   gl.enable(gl.DEPTH_TEST)
   gl.enable(gl.CULL_FACE)
 
@@ -157,7 +158,7 @@ window.onload = async () => {
     physWorld.fixedStep()
 
     if (now % 3 < deltaTime) {
-      console.log(`🚀 FPS: ${Math.round(1 / deltaTime)}`)
+      //console.log(`🚀 FPS: ${Math.round(1 / deltaTime)}`)
     }
     if (totalTime > 5) {
       setOverlay(`PLAYER: ${Math.round(player.location[0])}, ${Math.round(player.location[2])} &nbsp;&nbsp; FPS: ${Math.round(1 / deltaTime)}`)
@@ -196,8 +197,11 @@ window.onload = async () => {
 //
 function drawWorld(gl, programInfo, uniforms, worldObjs, viewPerspective) {
   for (const obj of worldObjs) {
-    uniforms = {
+    const drawUniforms = {
       ...uniforms,
+      u_debugColor: [0, 0, 0, 0],
+      u_yOffset: 0,
+      u_xOffset: 0,
       ...obj.uniforms,
       u_texture: obj.texture,
       u_worldInverseTranspose: mat4.create(), // For transforming normals
@@ -208,8 +212,8 @@ function drawWorld(gl, programInfo, uniforms, worldObjs, viewPerspective) {
     // Actual drawing
     gl.useProgram(programInfo.program)
     twgl.setBuffersAndAttributes(gl, programInfo, obj.bufferInfo)
-    twgl.setUniforms(programInfo, uniforms)
-    twgl.drawBufferInfo(gl, obj.bufferInfo)
+    twgl.setUniforms(programInfo, drawUniforms)
+    twgl.drawBufferInfo(gl, obj.bufferInfo, gl.TRIANGLES)
   }
 }
 

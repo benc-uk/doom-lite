@@ -5,11 +5,52 @@
     "animSpeed": 0.3,
     "textures": ["TROOA1", "TROOB1", "TROOC1", "TROOD1"]
   },
-
   {
     "name": "shotgun_guy",
     "size": 5.5,
     "animSpeed": 0.3,
     "textures": ["SPOSA1", "SPOSB1", "SPOSC1", "SPOSD1"]
+  },
+  {
+    "name": "demon",
+    "size": 5.5,
+    "animSpeed": 0.3,
+    "textures": ["SARGA1", "SARGB1", "SARGC1", "SARGD1"]
+  },
+  {
+    "name": "armour",
+    "size": 4,
+    "animSpeed": 0.3,
+    "textures": ["ARM1A0", "ARM1B0"]
+  },
+  {
+    "name": "medi_lg",
+    "size": 4,
+    "animSpeed": 0.3,
+    "textures": ["MEDIA0"]
+  },
+  {
+    "name": "shotgun",
+    "size": 5,
+    "animSpeed": 0.3,
+    "textures": ["SHOTA0"]
+  },
+  {
+    "name": "shells",
+    "size": 4,
+    "animSpeed": 0.3,
+    "textures": ["SBOXA0"]
+  },
+  {
+    "name": "ammo",
+    "size": 4,
+    "animSpeed": 0.3,
+    "textures": ["AMMOA0"]
+  },
+  {
+    "name": "armour_sm",
+    "size": 2,
+    "animSpeed": 0.15,
+    "textures": ["BON2A0", "BON2B0", "BON2C0", "BON2D0", "BON2C0", "BON2B0"]
   }
 ]

@@ -23,6 +23,7 @@ uniform sampler2D u_texture;
 // per object uniforms
 uniform float u_xOffset;
 uniform float u_yOffset;
+uniform vec4 u_debugColor;
 
 // Light function returns two floats (packed into a vec2)
 // One for diffuse component of lighting, the second for specular
@@ -48,7 +49,7 @@ void main(void) {
   vec3 surfaceToViewN = normalize(v_surfaceToView);
   vec3 halfVector = normalize(surfaceToLightN + surfaceToViewN);
 
-  vec2 l = light(normalN, surfaceToLightN, halfVector, u_shininess);
+   vec2 l = light(normalN, surfaceToLightN, halfVector, u_shininess);
 
   float lightDist = length(v_surfaceToLight);
   float attenuation = 1.0 / (1.0 + 8.00 * lightDist + 1.3 * (lightDist * lightDist));
@@ -59,5 +60,10 @@ void main(void) {
     texel.a 
   );
 
-  gl_FragColor = outColor;
+  if (u_debugColor.a > 0.0) {
+    gl_FragColor = u_debugColor;
+  } else {
+    gl_FragColor = outColor;
+  }
+  //gl_FragColor = outColor;
 }

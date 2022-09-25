@@ -2,6 +2,9 @@ import { state } from './editor.mjs'
 
 const LINE_THICKNESS = 2.5
 const DOTSIZE = 6
+// Readability help
+const X = 0
+const Y = 1
 
 //
 //
@@ -10,7 +13,7 @@ export function drawMap(map) {
   const canvas = document.getElementById('canvas')
   const ctx = canvas.getContext('2d')
 
-  localStorage.setItem('map', JSON.stringify(map))
+  //localStorage.setItem('map', JSON.stringify(map))
   document.getElementById('code').value = JSON.stringify(map, null, 2)
 
   ctx.clearRect(0, 0, canvas.width, canvas.height)
@@ -35,27 +38,53 @@ export function drawMap(map) {
   drawCrosshair()
 
   // fill sectors
-  const colorList = ['rgba(255, 0, 0, 0.2)', 'rgba(0, 255, 0, 0.2)', 'rgba(0, 0, 255, 0.2)', 'rgba(255, 255, 0, 0.2)', 'rgba(0, 255, 255, 0.2)']
+  const colorList = [
+    'rgba(255, 0, 0, 0.2)',
+    'rgba(0, 255, 0, 0.2)',
+    'rgba(0, 0, 255, 0.2)',
+    'rgba(0, 255, 255, 0.3)',
+    'rgba(255, 0, 255, 0.2)',
+    'rgba(255, 255, 0, 0.2)',
+  ]
+  let sIx = 0
   for (const [sid, sector] of Object.entries(map.sectors)) {
-    ctx.fillStyle = colorList[sector.id % colorList.length]
-    ctx.beginPath()
-    let lineCount = 0
-    for (const lineId of sector.lines) {
-      const line = map.lines[lineId]
-      if (line.front.sector != sid) continue
-      if (lineCount === 0) {
-        ctx.moveTo(map.vertices[line.start][0], map.vertices[line.start][1])
+    const polyFlat = []
+    for (let lineIx = 0; lineIx < sector.lines.length; lineIx++) {
+      const lid = sector.lines[lineIx]
+      const line = map.lines[lid]
+      let v = map.vertices[line.end]
+      if (line.back.sector == sid) {
+        v = map.vertices[line.start]
       }
-      if (line.back.sector === sector.id) {
-        ctx.lineTo(map.vertices[line.start][0], map.vertices[line.end][1])
-      } else {
-        ctx.lineTo(map.vertices[line.end][0], map.vertices[line.end][1])
-      }
-
-      lineCount++
+      polyFlat.push(v[X], v[Y])
     }
-    ctx.closePath()
-    ctx.fill()
+
+    const holes = sector.holes ? sector.holes : []
+    const triangleIndices = earcut(polyFlat, holes)
+    // loop over triangle indices and draw each triangle
+    for (let i = 0; i < triangleIndices.length; i += 3) {
+      console.log()
+      const x1 = polyFlat[triangleIndices[i] * 2]
+      const y1 = polyFlat[triangleIndices[i] * 2 + 1]
+      const x2 = polyFlat[triangleIndices[i + 1] * 2]
+      const y2 = polyFlat[triangleIndices[i + 1] * 2 + 1]
+      const x3 = polyFlat[triangleIndices[i + 2] * 2]
+      const y3 = polyFlat[triangleIndices[i + 2] * 2 + 1]
+
+      ctx.fillStyle = colorList[sIx % colorList.length]
+      ctx.beginPath()
+      ctx.moveTo(x1, y1)
+      ctx.lineTo(x2, y2)
+      ctx.lineTo(x3, y3)
+      ctx.closePath()
+      ctx.fill()
+    }
+    // draw sector id text
+    ctx.fillStyle = 'pink'
+    ctx.font = '9px Arial'
+    ctx.fillText(sid, polyFlat[0], polyFlat[1])
+
+    sIx++
   }
 
   if (map.playerStart.x !== null) {
