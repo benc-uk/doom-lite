@@ -58,9 +58,18 @@ function makeRectBuffer(gl, positions, indices, widthRatio, flip = false) {
     vec3.negate(norm, norm)
   }
 
+  const texcoord = [0, 0, v1Len, 0, 0, v2Len, v1Len, v2Len]
+  // flip the texture coords if we are flipped
+  if (flip) {
+    texcoord[1] = v2Len
+    texcoord[3] = v2Len
+    texcoord[5] = 0
+    texcoord[7] = 0
+  }
+
   const arrays = {
     position: positions,
-    texcoord: [0, 0, v1Len, 0, 0, v2Len, v1Len, v2Len],
+    texcoord,
     normal: [norm[0], norm[1], norm[2], norm[0], norm[1], norm[2], norm[0], norm[1], norm[2], norm[0], norm[1], norm[2]],
     indices,
   }

@@ -126,7 +126,7 @@ export function parseMap(map, gl, physWorld, templates) {
       uniforms,
     })
 
-    if (sector.ceiling) {
+    if (sector.ceiling !== false) {
       const ceilFlat = buildFlatNew(gl, polyFlat, floorCeilIndices, sector.ceiling, false)
       const ceilTex = twgl.createTexture(gl, {
         src: `textures/${sector.texCeil}.png`,

@@ -1,9 +1,9 @@
 {
   "name": "Demo Map",
   "playerStart": {
-    "x": 240,
-    "y": 143,
-    "angle": -1
+    "x": 224,
+    "y": 145,
+    "angle": 1.8
   },
   "things": [
     {
@@ -147,7 +147,7 @@
     "130": [340, 180],
     "131": [348, 192],
     "132": [344, 212],
-    "133": [320, 216],
+    "133": [312, 216],
     "134": [296, 200],
     "135": [296, 184],
     "136": [304, 176],
@@ -167,7 +167,46 @@
     "150": [248, 140],
     "151": [256, 140],
     "152": [256, 124],
-    "153": [256, 128]
+    "153": [256, 128],
+    "154": [156, 144],
+    "155": [164, 148],
+    "156": [168, 156],
+    "157": [168, 160],
+    "158": [156, 172],
+    "159": [168, 148],
+    "160": [172, 154],
+    "161": [174, 158],
+    "162": [174, 160],
+    "163": [172, 162],
+    "164": [166, 168],
+    "165": [154, 180],
+    "166": [152, 136],
+    "167": [226, 160],
+    "168": [228, 164],
+    "169": [232, 164],
+    "170": [238, 158],
+    "171": [234, 156],
+    "172": [228, 156],
+    "173": [178, 178],
+    "174": [180, 176],
+    "175": [184, 176],
+    "176": [190, 178],
+    "177": [192, 180],
+    "178": [192, 184],
+    "179": [184, 186],
+    "180": [180, 184],
+    "181": [196, 136],
+    "182": [204, 140],
+    "183": [208, 136],
+    "184": [204, 132],
+    "185": [200, 132],
+    "186": [220, 200],
+    "187": [240, 208],
+    "188": [232, 240],
+    "189": [212, 232],
+    "190": [180, 192],
+    "191": [188, 196],
+    "192": [192, 200]
   },
   "lines": {
     "0": {
@@ -229,12 +268,12 @@
       "doubleSided": false,
       "impassable": false,
       "front": {
-        "sector": 0,
-        "texMid": "",
-        "texRatio": 1
+        "sector": 0
       },
       "back": {
-        "sector": 1
+        "sector": 1,
+        "texBot": "CEMENT6",
+        "yOffset": 0.796
       }
     },
     "5": {
@@ -297,7 +336,7 @@
       "impassable": true,
       "front": {
         "sector": 0,
-        "texMid": "STARG2",
+        "texMid": "STARGR2",
         "texRatio": 1
       },
       "back": {}
@@ -310,7 +349,7 @@
       "impassable": true,
       "front": {
         "sector": 1,
-        "texMid": "STARG2",
+        "texMid": "STARGR2",
         "texRatio": 1
       },
       "back": {}
@@ -325,7 +364,9 @@
         "sector": 1
       },
       "back": {
-        "sector": 9
+        "sector": 9,
+        "texBot": "CEMENT6",
+        "texTop": "STARG2"
       }
     },
     "12": {
@@ -336,7 +377,7 @@
       "impassable": true,
       "front": {
         "sector": 1,
-        "texMid": "STARG2",
+        "texMid": "STARGR2",
         "texRatio": 1
       },
       "back": {}
@@ -349,7 +390,7 @@
       "impassable": true,
       "front": {
         "sector": 0,
-        "texMid": "STARG2",
+        "texMid": "STONE2",
         "texRatio": 1
       },
       "back": {}
@@ -362,7 +403,7 @@
       "impassable": true,
       "front": {
         "sector": 0,
-        "texMid": "STARG2",
+        "texMid": "STONE2",
         "texRatio": 1
       },
       "back": {}
@@ -375,7 +416,7 @@
       "impassable": true,
       "front": {
         "sector": 0,
-        "texMid": "STARG2",
+        "texMid": "STONE2",
         "texRatio": 1
       },
       "back": {}
@@ -388,7 +429,7 @@
       "impassable": true,
       "front": {
         "sector": 0,
-        "texMid": "STARG2",
+        "texMid": "STONE2",
         "texRatio": 1
       },
       "back": {}
@@ -699,7 +740,7 @@
       "impassable": false,
       "front": {
         "sector": 9,
-        "texMid": "",
+        "texTop": "STARG2",
         "texRatio": 1
       },
       "back": {
@@ -1224,7 +1265,8 @@
         "texRatio": 1
       },
       "back": {
-        "sector": 20
+        "sector": 20,
+        "texTop": "SP_ROCK1"
       }
     },
     "84": {
@@ -1248,7 +1290,7 @@
       "impassable": true,
       "front": {
         "sector": 20,
-        "texMid": "STARG2",
+        "texMid": "SP_ROCK1",
         "texRatio": 1
       },
       "back": {}
@@ -1276,7 +1318,7 @@
       "impassable": true,
       "front": {
         "sector": 20,
-        "texMid": "STARG2",
+        "texMid": "SP_ROCK1",
         "texRatio": 1
       },
       "back": {}
@@ -1289,7 +1331,7 @@
       "impassable": true,
       "front": {
         "sector": 20,
-        "texMid": "STARG2",
+        "texMid": "SP_ROCK1",
         "texRatio": 1
       },
       "back": {}
@@ -1302,7 +1344,7 @@
       "impassable": true,
       "front": {
         "sector": 20,
-        "texMid": "STARG2",
+        "texMid": "SP_ROCK1",
         "texRatio": 1
       },
       "back": {}
@@ -1315,7 +1357,7 @@
       "impassable": true,
       "front": {
         "sector": 20,
-        "texMid": "STARG2",
+        "texMid": "SP_ROCK1",
         "texRatio": 1
       },
       "back": {}
@@ -1328,7 +1370,7 @@
       "impassable": true,
       "front": {
         "sector": 20,
-        "texMid": "STARG2",
+        "texMid": "SP_ROCK1",
         "texRatio": 1
       },
       "back": {}
@@ -1341,7 +1383,7 @@
       "impassable": true,
       "front": {
         "sector": 20,
-        "texMid": "STARG2",
+        "texMid": "SP_ROCK1",
         "texRatio": 1
       },
       "back": {}
@@ -1354,7 +1396,7 @@
       "impassable": true,
       "front": {
         "sector": 20,
-        "texMid": "STARG2",
+        "texMid": "SP_ROCK1",
         "texRatio": 1
       },
       "back": {}
@@ -1367,7 +1409,7 @@
       "impassable": true,
       "front": {
         "sector": 20,
-        "texMid": "STARG2",
+        "texMid": "SP_ROCK1",
         "texRatio": 1
       },
       "back": {}
@@ -1380,7 +1422,7 @@
       "impassable": true,
       "front": {
         "sector": 20,
-        "texMid": "STARG2",
+        "texMid": "SP_ROCK1",
         "texRatio": 1
       },
       "back": {}
@@ -1393,7 +1435,7 @@
       "impassable": true,
       "front": {
         "sector": 20,
-        "texMid": "STARG2",
+        "texMid": "SP_ROCK1",
         "texRatio": 1
       },
       "back": {}
@@ -1406,7 +1448,7 @@
       "impassable": true,
       "front": {
         "sector": 20,
-        "texMid": "STARG2",
+        "texMid": "SP_ROCK1",
         "texRatio": 1
       },
       "back": {}
@@ -1419,7 +1461,7 @@
       "impassable": true,
       "front": {
         "sector": 20,
-        "texMid": "STARG2",
+        "texMid": "SP_ROCK1",
         "texRatio": 1
       },
       "back": {}
@@ -1432,7 +1474,7 @@
       "impassable": true,
       "front": {
         "sector": 20,
-        "texMid": "STARG2",
+        "texMid": "SP_ROCK1",
         "texRatio": 1
       },
       "back": {}
@@ -1445,8 +1487,8 @@
       "impassable": true,
       "front": {
         "sector": 20,
-        "texMid": "STARG2",
-        "texRatio": 1
+        "texMid": "METAL",
+        "texRatio": 0.5
       },
       "back": {}
     },
@@ -1458,8 +1500,8 @@
       "impassable": true,
       "front": {
         "sector": 20,
-        "texMid": "STARG2",
-        "texRatio": 1
+        "texMid": "METAL",
+        "texRatio": 0.5
       },
       "back": {}
     },
@@ -1471,8 +1513,8 @@
       "impassable": true,
       "front": {
         "sector": 20,
-        "texMid": "STARG2",
-        "texRatio": 1
+        "texMid": "METAL",
+        "texRatio": 0.5
       },
       "back": {}
     },
@@ -1484,7 +1526,7 @@
       "impassable": true,
       "front": {
         "sector": 20,
-        "texMid": "STARG2",
+        "texMid": "SP_ROCK1",
         "texRatio": 1
       },
       "back": {}
@@ -1497,7 +1539,7 @@
       "impassable": true,
       "front": {
         "sector": 20,
-        "texMid": "STARG2",
+        "texMid": "SP_ROCK1",
         "texRatio": 1
       },
       "back": {}
@@ -1510,7 +1552,7 @@
       "impassable": true,
       "front": {
         "sector": 20,
-        "texMid": "STARG2",
+        "texMid": "SP_ROCK1",
         "texRatio": 1
       },
       "back": {}
@@ -1523,7 +1565,7 @@
       "impassable": true,
       "front": {
         "sector": 20,
-        "texMid": "STARG2",
+        "texMid": "SP_ROCK1",
         "texRatio": 1
       },
       "back": {}
@@ -1536,7 +1578,7 @@
       "impassable": true,
       "front": {
         "sector": 20,
-        "texMid": "STARG2",
+        "texMid": "SP_ROCK1",
         "texRatio": 1
       },
       "back": {}
@@ -1549,7 +1591,7 @@
       "impassable": true,
       "front": {
         "sector": 20,
-        "texMid": "STARG2",
+        "texMid": "SP_ROCK1",
         "texRatio": 1
       },
       "back": {}
@@ -1562,7 +1604,7 @@
       "impassable": true,
       "front": {
         "sector": 20,
-        "texMid": "STARG2",
+        "texMid": "SP_ROCK1",
         "texRatio": 1
       },
       "back": {}
@@ -1575,7 +1617,7 @@
       "impassable": true,
       "front": {
         "sector": 20,
-        "texMid": "STARG2",
+        "texMid": "SP_ROCK1",
         "texRatio": 1
       },
       "back": {}
@@ -1588,7 +1630,7 @@
       "impassable": true,
       "front": {
         "sector": 20,
-        "texMid": "STARG2",
+        "texMid": "SP_ROCK1",
         "texRatio": 1
       },
       "back": {}
@@ -1601,7 +1643,7 @@
       "impassable": true,
       "front": {
         "sector": 20,
-        "texMid": "STARG2",
+        "texMid": "SP_ROCK1",
         "texRatio": 1
       },
       "back": {}
@@ -1614,7 +1656,7 @@
       "impassable": true,
       "front": {
         "sector": 20,
-        "texMid": "STARG2",
+        "texMid": "SP_ROCK1",
         "texRatio": 1
       },
       "back": {}
@@ -1627,7 +1669,7 @@
       "impassable": true,
       "front": {
         "sector": 20,
-        "texMid": "STARG2",
+        "texMid": "SP_ROCK1",
         "texRatio": 1
       },
       "back": {}
@@ -1640,7 +1682,7 @@
       "impassable": true,
       "front": {
         "sector": 20,
-        "texMid": "STARG2",
+        "texMid": "SP_ROCK1",
         "texRatio": 1
       },
       "back": {}
@@ -1654,6 +1696,7 @@
       "front": {
         "sector": 21,
         "texBot": "STONE3",
+        "texTop": "STONE3",
         "texRatio": 1
       },
       "back": {
@@ -1669,6 +1712,7 @@
       "front": {
         "sector": 21,
         "texBot": "STONE3",
+        "texTop": "STONE3",
         "texRatio": 1
       },
       "back": {
@@ -1684,6 +1728,7 @@
       "front": {
         "sector": 21,
         "texBot": "STONE3",
+        "texTop": "STONE3",
         "texRatio": 1
       },
       "back": {
@@ -1699,6 +1744,7 @@
       "front": {
         "sector": 21,
         "texBot": "STONE3",
+        "texTop": "STONE3",
         "texRatio": 1
       },
       "back": {
@@ -1714,6 +1760,7 @@
       "front": {
         "sector": 21,
         "texBot": "STONE3",
+        "texTop": "STONE3",
         "texRatio": 1
       },
       "back": {
@@ -1729,6 +1776,7 @@
       "front": {
         "sector": 21,
         "texBot": "STONE3",
+        "texTop": "STONE3",
         "texRatio": 1
       },
       "back": {
@@ -1744,6 +1792,7 @@
       "front": {
         "sector": 21,
         "texBot": "STONE3",
+        "texTop": "STONE3",
         "texRatio": 1
       },
       "back": {
@@ -1759,6 +1808,7 @@
       "front": {
         "sector": 21,
         "texBot": "STONE3",
+        "texTop": "STONE3",
         "texRatio": 1
       },
       "back": {
@@ -1774,6 +1824,7 @@
       "front": {
         "sector": 21,
         "texBot": "STONE3",
+        "texTop": "STONE3",
         "texRatio": 1
       },
       "back": {
@@ -2503,6 +2554,641 @@
       "back": {
         "sector": 44
       }
+    },
+    "203": {
+      "id": 203,
+      "start": 110,
+      "end": 111,
+      "doubleSided": false,
+      "impassable": true,
+      "front": {
+        "sector": 45
+      },
+      "back": {
+        "sector": 22,
+        "texMid": "BRNBIGC"
+      }
+    },
+    "204": {
+      "id": 204,
+      "start": 111,
+      "end": 116,
+      "doubleSided": false,
+      "impassable": true,
+      "front": {
+        "sector": 45
+      },
+      "back": {
+        "sector": 22,
+        "texMid": "BRNBIGC"
+      }
+    },
+    "205": {
+      "id": 205,
+      "start": 116,
+      "end": 117,
+      "doubleSided": false,
+      "impassable": true,
+      "front": {
+        "sector": 45
+      },
+      "back": {
+        "sector": 22,
+        "texMid": "BRNBIGC"
+      }
+    },
+    "206": {
+      "id": 206,
+      "start": 117,
+      "end": 110,
+      "doubleSided": false,
+      "impassable": true,
+      "front": {
+        "sector": 45
+      },
+      "back": {
+        "sector": 22,
+        "texMid": "BRNBIGC"
+      }
+    },
+    "207": {
+      "id": 207,
+      "start": 154,
+      "end": 155,
+      "doubleSided": false,
+      "impassable": true,
+      "front": {
+        "sector": 46
+      },
+      "back": {
+        "sector": 20,
+        "texBot": "STONE3"
+      }
+    },
+    "208": {
+      "id": 208,
+      "start": 155,
+      "end": 156,
+      "doubleSided": false,
+      "impassable": true,
+      "front": {
+        "sector": 46
+      },
+      "back": {
+        "sector": 20,
+        "texBot": "STONE3"
+      }
+    },
+    "209": {
+      "id": 209,
+      "start": 156,
+      "end": 157,
+      "doubleSided": false,
+      "impassable": true,
+      "front": {
+        "sector": 46
+      },
+      "back": {
+        "sector": 20,
+        "texBot": "STONE3"
+      }
+    },
+    "210": {
+      "id": 210,
+      "start": 157,
+      "end": 158,
+      "doubleSided": false,
+      "impassable": true,
+      "front": {
+        "sector": 46
+      },
+      "back": {
+        "sector": 20,
+        "texBot": "STONE3"
+      }
+    },
+    "211": {
+      "id": 211,
+      "start": 158,
+      "end": 154,
+      "doubleSided": false,
+      "impassable": true,
+      "front": {
+        "sector": 46
+      },
+      "back": {
+        "sector": 20,
+        "texBot": "STONE3"
+      }
+    },
+    "212": {
+      "id": 212,
+      "start": 159,
+      "end": 160,
+      "doubleSided": false,
+      "impassable": true,
+      "front": {
+        "sector": 48
+      },
+      "back": {
+        "sector": 20,
+        "texBot": "STONE3"
+      }
+    },
+    "213": {
+      "id": 213,
+      "start": 160,
+      "end": 161,
+      "doubleSided": false,
+      "impassable": true,
+      "front": {
+        "sector": 48
+      },
+      "back": {
+        "sector": 20,
+        "texBot": "STONE3"
+      }
+    },
+    "214": {
+      "id": 214,
+      "start": 161,
+      "end": 162,
+      "doubleSided": false,
+      "impassable": true,
+      "front": {
+        "sector": 48
+      },
+      "back": {
+        "sector": 20,
+        "texBot": "STONE3"
+      }
+    },
+    "215": {
+      "id": 215,
+      "start": 162,
+      "end": 163,
+      "doubleSided": false,
+      "impassable": true,
+      "front": {
+        "sector": 48
+      },
+      "back": {
+        "sector": 20,
+        "texBot": "STONE3"
+      }
+    },
+    "216": {
+      "id": 216,
+      "start": 163,
+      "end": 164,
+      "doubleSided": false,
+      "impassable": true,
+      "front": {
+        "sector": 48
+      },
+      "back": {
+        "sector": 20,
+        "texBot": "STONE3"
+      }
+    },
+    "217": {
+      "id": 217,
+      "start": 164,
+      "end": 165,
+      "doubleSided": false,
+      "impassable": true,
+      "front": {
+        "sector": 48
+      },
+      "back": {
+        "sector": 20,
+        "texBot": "STONE3"
+      }
+    },
+    "218": {
+      "id": 218,
+      "start": 165,
+      "end": 166,
+      "doubleSided": false,
+      "impassable": true,
+      "front": {
+        "sector": 48
+      },
+      "back": {
+        "sector": 20,
+        "texBot": "STONE3"
+      }
+    },
+    "219": {
+      "id": 219,
+      "start": 166,
+      "end": 159,
+      "doubleSided": false,
+      "impassable": true,
+      "front": {
+        "sector": 48
+      },
+      "back": {
+        "sector": 20,
+        "texBot": "STONE3"
+      }
+    },
+    "220": {
+      "id": 220,
+      "start": 167,
+      "end": 168,
+      "doubleSided": false,
+      "impassable": true,
+      "front": {
+        "sector": 51,
+        "texMid": "STARG2",
+        "texRatio": 1
+      },
+      "back": {}
+    },
+    "221": {
+      "id": 221,
+      "start": 168,
+      "end": 169,
+      "doubleSided": false,
+      "impassable": true,
+      "front": {
+        "sector": 51,
+        "texMid": "STARG2",
+        "texRatio": 1
+      },
+      "back": {}
+    },
+    "222": {
+      "id": 222,
+      "start": 169,
+      "end": 170,
+      "doubleSided": false,
+      "impassable": true,
+      "front": {
+        "sector": 51,
+        "texMid": "STARG2",
+        "texRatio": 1
+      },
+      "back": {}
+    },
+    "223": {
+      "id": 223,
+      "start": 170,
+      "end": 171,
+      "doubleSided": false,
+      "impassable": true,
+      "front": {
+        "sector": 51,
+        "texMid": "STARG2",
+        "texRatio": 1
+      },
+      "back": {}
+    },
+    "224": {
+      "id": 224,
+      "start": 171,
+      "end": 172,
+      "doubleSided": false,
+      "impassable": true,
+      "front": {
+        "sector": 51,
+        "texMid": "STARG2",
+        "texRatio": 1
+      },
+      "back": {}
+    },
+    "225": {
+      "id": 225,
+      "start": 172,
+      "end": 167,
+      "doubleSided": false,
+      "impassable": true,
+      "front": {
+        "sector": 51,
+        "texMid": "STARG2",
+        "texRatio": 1
+      },
+      "back": {}
+    },
+    "226": {
+      "id": 226,
+      "start": 173,
+      "end": 174,
+      "doubleSided": false,
+      "impassable": false,
+      "front": {
+        "sector": 52
+      },
+      "back": {
+        "sector": 20,
+        "texBot": "WOOD3"
+      }
+    },
+    "227": {
+      "id": 227,
+      "start": 174,
+      "end": 175,
+      "doubleSided": false,
+      "impassable": false,
+      "front": {
+        "sector": 52
+      },
+      "back": {
+        "sector": 20,
+        "texBot": "WOOD3"
+      }
+    },
+    "228": {
+      "id": 228,
+      "start": 175,
+      "end": 176,
+      "doubleSided": false,
+      "impassable": false,
+      "front": {
+        "sector": 52
+      },
+      "back": {
+        "sector": 20,
+        "texBot": "WOOD3"
+      }
+    },
+    "229": {
+      "id": 229,
+      "start": 176,
+      "end": 177,
+      "doubleSided": false,
+      "impassable": false,
+      "front": {
+        "sector": 52
+      },
+      "back": {
+        "sector": 20,
+        "texBot": "WOOD3"
+      }
+    },
+    "230": {
+      "id": 230,
+      "start": 177,
+      "end": 178,
+      "doubleSided": false,
+      "impassable": false,
+      "front": {
+        "sector": 52
+      },
+      "back": {
+        "sector": 20,
+        "texBot": "WOOD3"
+      }
+    },
+    "231": {
+      "id": 231,
+      "start": 178,
+      "end": 179,
+      "doubleSided": false,
+      "impassable": false,
+      "front": {
+        "sector": 52
+      },
+      "back": {
+        "sector": 20,
+        "texBot": "WOOD3"
+      }
+    },
+    "232": {
+      "id": 232,
+      "start": 179,
+      "end": 180,
+      "doubleSided": false,
+      "impassable": false,
+      "front": {
+        "sector": 52
+      },
+      "back": {
+        "sector": 20,
+        "texBot": "WOOD3"
+      }
+    },
+    "233": {
+      "id": 233,
+      "start": 180,
+      "end": 173,
+      "doubleSided": false,
+      "impassable": false,
+      "front": {
+        "sector": 52
+      },
+      "back": {
+        "sector": 20,
+        "texBot": "WOOD3"
+      }
+    },
+    "234": {
+      "id": 234,
+      "start": 181,
+      "end": 182,
+      "doubleSided": false,
+      "impassable": true,
+      "front": {
+        "sector": 20,
+        "texTop": "STARG2"
+      },
+      "back": {
+        "sector": 54
+      }
+    },
+    "235": {
+      "id": 235,
+      "start": 182,
+      "end": 183,
+      "doubleSided": false,
+      "impassable": true,
+      "front": {
+        "sector": 20,
+        "texTop": "STARG2"
+      },
+      "back": {
+        "sector": 54
+      }
+    },
+    "236": {
+      "id": 236,
+      "start": 183,
+      "end": 184,
+      "doubleSided": false,
+      "impassable": true,
+      "front": {
+        "sector": 20,
+        "texTop": "STARG2"
+      },
+      "back": {
+        "sector": 54
+      }
+    },
+    "237": {
+      "id": 237,
+      "start": 184,
+      "end": 185,
+      "doubleSided": false,
+      "impassable": true,
+      "front": {
+        "sector": 20,
+        "texTop": "STARG2"
+      },
+      "back": {
+        "sector": 54
+      }
+    },
+    "238": {
+      "id": 238,
+      "start": 185,
+      "end": 181,
+      "doubleSided": false,
+      "impassable": true,
+      "front": {
+        "sector": 20,
+        "texTop": "STARG2"
+      },
+      "back": {
+        "sector": 54
+      }
+    },
+    "239": {
+      "id": 239,
+      "start": 186,
+      "end": 187,
+      "doubleSided": false,
+      "impassable": true,
+      "front": {
+        "sector": 56
+      },
+      "back": {
+        "sector": 20,
+        "texBot": "COMPUTE2",
+        "texRatio": 4.5
+      }
+    },
+    "240": {
+      "id": 240,
+      "start": 187,
+      "end": 188,
+      "doubleSided": false,
+      "impassable": true,
+      "front": {
+        "sector": 56
+      },
+      "back": {
+        "sector": 20,
+        "texBot": "COMPUTE2",
+        "texRatio": 4.5
+      }
+    },
+    "241": {
+      "id": 241,
+      "start": 188,
+      "end": 189,
+      "doubleSided": false,
+      "impassable": true,
+      "front": {
+        "sector": 56
+      },
+      "back": {
+        "sector": 20,
+        "texBot": "COMPUTE2",
+        "texRatio": 4.5
+      }
+    },
+    "242": {
+      "id": 242,
+      "start": 189,
+      "end": 186,
+      "doubleSided": false,
+      "impassable": true,
+      "front": {
+        "sector": 56
+      },
+      "back": {
+        "sector": 20,
+        "texBot": "COMPUTE2",
+        "texRatio": 4.5
+      }
+    },
+    "243": {
+      "id": 243,
+      "start": 87,
+      "end": 190,
+      "doubleSided": false,
+      "impassable": false,
+      "front": {
+        "sector": 58
+      },
+      "back": { "sector": 20, "texBot": "NUKEDGE1", "texTop": "SP_ROCK2", "yOffset": -0.15 }
+    },
+    "244": {
+      "id": 244,
+      "start": 190,
+      "end": 191,
+      "doubleSided": false,
+      "impassable": false,
+      "front": {
+        "sector": 58
+      },
+      "back": { "sector": 20, "texBot": "NUKEDGE1", "texTop": "SP_ROCK2", "yOffset": -0.15 }
+    },
+    "245": {
+      "id": 245,
+      "start": 191,
+      "end": 192,
+      "doubleSided": false,
+      "impassable": false,
+      "front": {
+        "sector": 58
+      },
+      "back": { "sector": 20, "texBot": "NUKEDGE1", "texTop": "SP_ROCK2", "yOffset": -0.15 }
+    },
+    "246": {
+      "id": 246,
+      "start": 192,
+      "end": 84,
+      "doubleSided": false,
+      "impassable": false,
+      "front": {
+        "sector": 58
+      },
+      "back": { "sector": 20, "texBot": "NUKEDGE1", "texTop": "SP_ROCK2", "yOffset": -0.15 }
+    },
+    "247": {
+      "id": 247,
+      "start": 84,
+      "end": 85,
+      "doubleSided": false,
+      "impassable": false,
+      "front": {
+        "sector": 58
+      },
+      "back": { "sector": 20, "texBot": "NUKEDGE1", "texTop": "SP_ROCK2", "yOffset": -0.15 }
+    },
+    "248": {
+      "id": 248,
+      "start": 85,
+      "end": 86,
+      "doubleSided": false,
+      "impassable": false,
+      "front": {
+        "sector": 58
+      },
+      "back": { "sector": 20, "texBot": "NUKEDGE1", "texTop": "SP_ROCK2", "yOffset": -0.15 }
+    },
+    "249": {
+      "id": 249,
+      "start": 86,
+      "end": 87,
+      "doubleSided": false,
+      "impassable": false,
+      "front": {
+        "sector": 58
+      },
+      "back": { "sector": 20, "texBot": "NUKEDGE1", "texTop": "SP_ROCK2", "yOffset": -0.15 }
     }
   },
   "sectors": {
@@ -2520,8 +3206,8 @@
       "floor": -2,
       "ceiling": 10,
       "lines": [10, 11, 12, 4],
-      "texFloor": "FLOOR4_8",
-      "texCeil": "FLAT1_2"
+      "texFloor": "FLAT9",
+      "texCeil": "CEIL5_2"
     },
     "4": {
       "id": 4,
@@ -2607,12 +3293,13 @@
       "id": 20,
       "floor": -13.5,
       "ceiling": 10,
-      "holes": [32, 41, 45, 49],
+      "holes": [32, 41, 45, 49, 53, 61],
       "lines": [
         83, 86, 87, 88, 89, 90, 91, 92, 93, 94, 95, 96, 97, 98, 99, 100, 101, 102, 103, 104, 105, 106, 107, 108, 109, 110, 111, 112, 113, 114, 115,
-        116, 117, 118, 119, 120, 121, 122, 123, 124, 125, 183, 184, 185, 186, 187, 188, 189, 190, 191, 192, 193, 194
+        116, 117, 118, 119, 120, 121, 122, 123, 124, 125, 183, 184, 185, 186, 187, 188, 189, 190, 191, 192, 193, 194, 226, 227, 228, 229, 230, 231,
+        232, 233, 243, 244, 245, 246, 247, 248, 249
       ],
-      "texFloor": "FLOOR4_8",
+      "texFloor": "FLAT5_7",
       "texCeil": "FLAT1_2"
     },
     "21": {
@@ -2678,9 +3365,73 @@
       "lines": [199, 200, 201, 202],
       "texFloor": "FLOOR4_8",
       "texCeil": "FLAT1_2"
+    },
+    "45": {
+      "id": 45,
+      "floor": -6,
+      "ceiling": 6,
+      "lines": [203, 204, 205, 206],
+      "texFloor": "FLOOR4_8",
+      "texCeil": "FLAT1_2"
+    },
+    "46": {
+      "id": 46,
+      "floor": 1,
+      "ceiling": false,
+      "lines": [207, 208, 209, 210, 211],
+      "texFloor": "FLOOR4_8",
+      "texCeil": "FLAT1_2"
+    },
+    "48": {
+      "id": 48,
+      "floor": -5,
+      "ceiling": false,
+      "lines": [212, 213, 214, 215, 216, 217, 218, 219],
+      "texFloor": "FLOOR4_8",
+      "texCeil": "FLAT1_2"
+    },
+    "51": {
+      "id": 51,
+      "floor": -13.5,
+      "ceiling": 10,
+      "lines": [220, 221, 222, 223, 224, 225],
+      "texFloor": "FLOOR4_8",
+      "texCeil": "FLAT1_2"
+    },
+    "52": {
+      "id": 52,
+      "floor": -12,
+      "ceiling": 10,
+      "lines": [226, 227, 228, 229, 230, 231, 232, 233],
+      "texFloor": "WOOD3",
+      "texCeil": "FLAT1_2"
+    },
+    "54": {
+      "id": 54,
+      "floor": -13.6,
+      "ceiling": -2,
+      "lines": [234, 235, 236, 237, 238],
+      "texFloor": "FLOOR4_8",
+      "texCeil": "FLAT1_2"
+    },
+    "56": {
+      "id": 56,
+      "floor": -6,
+      "ceiling": false,
+      "lines": [239, 240, 241, 242],
+      "texFloor": "FLOOR4_8",
+      "texCeil": "FLAT1_2"
+    },
+    "58": {
+      "id": 58,
+      "floor": -15,
+      "ceiling": 2,
+      "lines": [243, 244, 245, 246, 247, 248, 249],
+      "texFloor": "NUKAGE1",
+      "texCeil": "FLAT1_2"
     }
   },
-  "lineInc": 203,
-  "sectorInc": 45,
-  "vertexInc": 154
+  "lineInc": 250,
+  "sectorInc": 59,
+  "vertexInc": 193
 }

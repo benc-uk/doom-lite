@@ -6,7 +6,7 @@ let map = {}
 
 const BASE_SIZE = 800
 const FORCE_LOAD_MAP = true
-const DEMO_MAP = '../levels/temp.json'
+const DEMO_MAP = '../levels/demo.json'
 
 // Shared state between modules
 export let state = {
@@ -41,7 +41,9 @@ window.addEventListener('load', async () => {
     }
     mapData = await mapResp.text()
   }
+
   map = parseJSONC(mapData)
+
   drawMap(map)
 
   canvas.addEventListener('click', handleClick)

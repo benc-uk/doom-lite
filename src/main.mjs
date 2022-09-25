@@ -12,7 +12,7 @@ const FOV = 45
 const FAR_CLIP = 300
 
 const FORCE_LOAD_MAP = true
-const DEMO_MAP = 'levels/temp.json'
+const DEMO_MAP = 'levels/demo.json'
 const NO_CLIP = false
 
 let camera
@@ -63,8 +63,8 @@ window.onload = async () => {
       }
       mapData = await mapResp.text()
     }
+
     // Parse map raw JSON data
-    //parse(mapData
     map = parseJSONC(mapData)
     //localStorage.setItem('map', mapData)
     console.log(`🗺️ Map '${map.name}' was loaded`)
@@ -135,6 +135,7 @@ window.onload = async () => {
   player.location = [camera[12], camera[13], camera[14]]
 
   updatePlayer(map, player, camera)
+
   gl.enable(gl.DEPTH_TEST)
   gl.enable(gl.CULL_FACE)
 
