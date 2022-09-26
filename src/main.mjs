@@ -7,7 +7,7 @@ import * as twgl from '../lib/twgl/dist/4.x/twgl-full.module.js'
 import { mat4 } from '../lib/gl-matrix/esm/index.js'
 import { parse as parseJSONC } from '../lib/jsonc/index.js'
 
-const VERSION = '0.3.3'
+const VERSION = '0.4.1'
 const FOV = 45
 const FAR_CLIP = 300
 

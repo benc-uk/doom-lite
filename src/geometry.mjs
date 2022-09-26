@@ -77,9 +77,9 @@ function makeRectBuffer(gl, positions, indices, widthRatio, flip = false) {
 }
 
 export function buildFlatNew(gl, poly, indices, height, up = true) {
-  console.log('=== buildFlatNew ===')
-  console.log('  poly:', JSON.stringify(poly))
-  console.log('  indices:', JSON.stringify(indices))
+  // console.log('=== buildFlatNew ===')
+  // console.log('  poly:', JSON.stringify(poly))
+  // console.log('  indices:', JSON.stringify(indices))
 
   const position = []
   const texcoord = []

@@ -17,8 +17,13 @@ export function parseMap(map, gl, physWorld, templates) {
   const worldObjs = []
   const thingInstances = []
 
+  // First pass, create all thing instances
   for (const thing of map.things) {
     const template = templates[thing.type]
+    if (!template) {
+      console.warn(`🔥🔥🔥 WARNING! No template for thing type ${thing.type}`)
+      continue
+    }
     thingInstances.push({
       template: template,
       location: [thing.x, template.yOffset + (thing.yOffset || 0), thing.y],
@@ -31,7 +36,7 @@ export function parseMap(map, gl, physWorld, templates) {
     // Build polygon for this sector
     // ARGH: This code is a fucking horror show
     const polyFlat = []
-    console.log(`------ sector ${sid} ------`)
+    //console.log(`------ sector ${sid} ------`)
     for (let lineIx = 0; lineIx < sector.lines.length; lineIx++) {
       const lid = sector.lines[lineIx]
       const line = map.lines[lid]
@@ -41,7 +46,7 @@ export function parseMap(map, gl, physWorld, templates) {
         v = map.vertices[line.start]
       }
 
-      console.log(`  line id: ${lid}, v: ${v} back: ${line.back.sector == sid}`)
+      //console.log(`  line id: ${lid}, v: ${v} back: ${line.back.sector == sid}`)
       polyFlat.push(v[X], v[Y])
     }
 

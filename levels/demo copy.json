@@ -720,8 +720,7 @@
       "back": {
         "sector": 9,
         "texBot": "CEMENT6",
-        "texTop": "STARTAN3",
-        "yOffset": 0.796
+        "texTop": "STARTAN3"
       }
     },
     "12": {

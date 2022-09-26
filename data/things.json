@@ -2,19 +2,19 @@
   {
     "name": "imp",
     "size": 6,
-    "animSpeed": 0.3,
+    "animSpeed": 0.25,
     "textures": ["TROOA1", "TROOB1", "TROOC1", "TROOD1"]
   },
   {
     "name": "shotgun_guy",
-    "size": 5.5,
-    "animSpeed": 0.3,
+    "size": 6,
+    "animSpeed": 0.25,
     "textures": ["SPOSA1", "SPOSB1", "SPOSC1", "SPOSD1"]
   },
   {
     "name": "demon",
-    "size": 5.5,
-    "animSpeed": 0.3,
+    "size": 6,
+    "animSpeed": 0.25,
     "textures": ["SARGA1", "SARGB1", "SARGC1", "SARGD1"]
   },
   {
@@ -25,7 +25,7 @@
   },
   {
     "name": "medi_lg",
-    "size": 4,
+    "size": 3,
     "animSpeed": 0.3,
     "textures": ["MEDIA0"]
   },
@@ -34,6 +34,18 @@
     "size": 5,
     "animSpeed": 0.3,
     "textures": ["SHOTA0"]
+  },
+  {
+    "name": "minigun",
+    "size": 5,
+    "animSpeed": 0.3,
+    "textures": ["MGUNA0"]
+  },
+  {
+    "name": "plasmagun",
+    "size": 5,
+    "animSpeed": 0.3,
+    "textures": ["PLASA0"]
   },
   {
     "name": "shells",
@@ -52,5 +64,65 @@
     "size": 2,
     "animSpeed": 0.15,
     "textures": ["BON2A0", "BON2B0", "BON2C0", "BON2D0", "BON2C0", "BON2B0"]
+  },
+  {
+    "name": "barrel",
+    "size": 4,
+    "animSpeed": 0.3,
+    "textures": ["BAR1A0", "BAR1B0"]
+  },
+  {
+    "name": "barrel_fire",
+    "size": 6,
+    "animSpeed": 0.3,
+    "textures": ["FCANA0", "FCANB0", "FCANC0"]
+  },
+  {
+    "name": "gore",
+    "size": 5,
+    "animSpeed": 0.3,
+    "textures": ["POL5A0"]
+  },
+  {
+    "name": "soldier_body",
+    "size": 5,
+    "animSpeed": 0.3,
+    "textures": ["POSSL0"]
+  },
+  {
+    "name": "torch",
+    "size": 7,
+    "animSpeed": 0.3,
+    "textures": ["SMRTA0", "SMRTB0", "SMRTC0", "SMRTD0"]
+  },
+  {
+    "name": "torch_metal",
+    "size": 7,
+    "animSpeed": 0.3,
+    "textures": ["TREDA0", "TREDB0", "TREDC0", "TREDD0"]
+  },
+  {
+    "name": "stalagmite",
+    "size": 7,
+    "animSpeed": 0.3,
+    "textures": ["SMT2A0"]
+  },
+  {
+    "name": "imp_body",
+    "size": 5,
+    "animSpeed": 0.3,
+    "textures": ["TROOM0"]
+  },
+  {
+    "name": "column",
+    "size": 5,
+    "animSpeed": 0.3,
+    "textures": ["COL1A0"]
+  },
+  {
+    "name": "candelabra",
+    "size": 5,
+    "animSpeed": 0.3,
+    "textures": ["CBRAA0"]
   }
 ]
