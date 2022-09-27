@@ -13,9 +13,10 @@ const WALL_MASS = 100000
 //
 // Main function to build all world geometry, physics and things
 //
-export function parseMap(map, gl, templates) {
+export async function parseMap(map, gl, templates) {
   const worldObjs = []
   const thingInstances = []
+  const textureRequestMap = {}
 
   let thingCount = 0
   // First pass, create all thing instances
@@ -33,6 +34,44 @@ export function parseMap(map, gl, templates) {
       textureIndex: Math.floor(Math.random() * template.textures.length),
     })
   }
+
+  // Build a hash map of all line/wall textures we need
+  // TODO: Maybe remove this extra pass of all the map lines?
+  for (const [_, line] of Object.entries(map.lines)) {
+    if (line.front.texMid) textureRequestMap[line.front.texMid] = { src: `textures/${line.front.texMid}.png` }
+    if (line.front.texBot) textureRequestMap[line.front.texBot] = { src: `textures/${line.front.texBot}.png` }
+    if (line.front.texTop) textureRequestMap[line.front.texTop] = { src: `textures/${line.front.texTop}.png` }
+    if (line.back.texMid) textureRequestMap[line.back.texMid] = { src: `textures/${line.back.texMid}.png` }
+    if (line.back.texBot) textureRequestMap[line.back.texBot] = { src: `textures/${line.back.texBot}.png` }
+    if (line.back.texTop) textureRequestMap[line.back.texTop] = { src: `textures/${line.back.texTop}.png` }
+  }
+  for (const [_, sector] of Object.entries(map.sectors)) {
+    if (sector.texFloor) textureRequestMap[sector.texFloor] = { src: `textures/${sector.texFloor}.png` }
+    if (sector.texCeil) textureRequestMap[sector.texCeil] = { src: `textures/${sector.texCeil}.png` }
+  }
+
+  // Load all line/wall textures synchronously
+  // This way we can get their width/height and use that to build the geometry
+  const textureCache = await new Promise((resolve, reject) => {
+    twgl.createTextures(gl, textureRequestMap, (err, textures, sources) => {
+      if (!err) {
+        for (const name in sources) {
+          // Mutate the texture object map, adding width and height
+          textures[name] = {
+            texture: textures[name],
+            width: sources[name].width,
+            height: sources[name].height,
+          }
+        }
+
+        resolve(textures)
+      } else {
+        reject(err)
+      }
+    })
+  })
+
+  console.log(`🖼️ Loaded ${Object.keys(textureCache).length} textures into cache`)
 
   for (const [sid, sector] of Object.entries(map.sectors)) {
     // Build polygon for this sector - this code is a total horror show, but seems to work
@@ -64,31 +103,31 @@ export function parseMap(map, gl, templates) {
       }
 
       // Weirdly impassable is now implicit where there are no textures
-      //const impassable = line.hasOwnProperty('impassable') ? line.impassable : true
+      const _impassable = line.hasOwnProperty('impassable') ? line.impassable : true
       // Not used currently
-      //const doubleSided = line.hasOwnProperty('doubleSided') ? line.doubleSided : false
+      const _doubleSided = line.hasOwnProperty('doubleSided') ? line.doubleSided : false
 
       // FRONT
       if (frontSec) {
         uniforms.u_xOffset = line.front.xOffset ? line.front.xOffset : 0
         uniforms.u_yOffset = line.front.yOffset ? line.front.yOffset : 0
         if (line.front.texMid) {
-          const { bufferInfo, shape } = buildWall(gl, v1[X], v1[Y], v2[X], v2[Y], frontSec.floor, frontSec.ceiling, line.front.texRatio, false)
-          const texture = twgl.createTexture(gl, { src: `textures/${line.front.texMid}.png` })
+          const tex = textureCache[line.front.texMid]
+          const { bufferInfo, shape } = buildWall(gl, v1[X], v1[Y], v2[X], v2[Y], frontSec.floor, frontSec.ceiling, tex.width / tex.height, false)
           const body = new Cannon.Body({ mass: WALL_MASS, shape })
-          worldObjs.push({ id: lid, type: 'line', bufferInfo, texture, uniforms, body })
+          worldObjs.push({ id: lid, type: 'line', bufferInfo, texture: tex.texture, uniforms, body })
         }
         if (line.front.texBot) {
-          const { bufferInfo, shape } = buildWall(gl, v1[X], v1[Y], v2[X], v2[Y], backSec.floor, frontSec.floor, line.back.texRatio, true)
-          const texture = twgl.createTexture(gl, { src: `textures/${line.front.texBot}.png` })
+          const tex = textureCache[line.front.texBot]
+          const { bufferInfo, shape } = buildWall(gl, v1[X], v1[Y], v2[X], v2[Y], backSec.floor, frontSec.floor, tex.width / tex.height, true)
           const body = new Cannon.Body({ mass: WALL_MASS, shape })
-          worldObjs.push({ id: lid, type: 'line', bufferInfo, texture, uniforms, body })
+          worldObjs.push({ id: lid, type: 'line', bufferInfo, texture: tex.texture, uniforms, body })
         }
         if (line.front.texTop) {
-          const { bufferInfo, shape } = buildWall(gl, v1[X], v1[Y], v2[X], v2[Y], frontSec.ceiling, backSec.ceiling, line.back.texRatio, true)
-          const texture = twgl.createTexture(gl, { src: `textures/${line.front.texTop}.png` })
+          const tex = textureCache[line.front.texTop]
+          const { bufferInfo, shape } = buildWall(gl, v1[X], v1[Y], v2[X], v2[Y], frontSec.ceiling, backSec.ceiling, tex.width / tex.height, true)
           const body = new Cannon.Body({ mass: WALL_MASS, shape })
-          worldObjs.push({ id: lid, type: 'line', bufferInfo, texture, uniforms, body })
+          worldObjs.push({ id: lid, type: 'line', bufferInfo, texture: tex.texture, uniforms, body })
         }
       }
 
@@ -97,66 +136,65 @@ export function parseMap(map, gl, templates) {
         uniforms.u_xOffset = line.back.xOffset ? line.back.xOffset : 0
         uniforms.u_yOffset = line.back.yOffset ? line.back.yOffset : 0
         if (line.back.texMid) {
-          const { bufferInfo, shape } = buildWall(gl, v1[X], v1[Y], v2[X], v2[Y], backSec.floor, backSec.ceiling, line.back.texRatio, true)
-          const texture = twgl.createTexture(gl, { src: `textures/${line.back.texMid}.png` })
+          const tex = textureCache[line.back.texMid]
+          const { bufferInfo, shape } = buildWall(gl, v1[X], v1[Y], v2[X], v2[Y], backSec.floor, backSec.ceiling, tex.width / tex.height, true)
           const body = new Cannon.Body({ mass: WALL_MASS, shape })
-          worldObjs.push({ id: lid, type: 'line', bufferInfo, texture, uniforms, body })
+          worldObjs.push({ id: lid, type: 'line', bufferInfo, texture: tex.texture, uniforms, body })
         }
         if (line.back.texBot) {
-          const { bufferInfo, shape } = buildWall(gl, v1[X], v1[Y], v2[X], v2[Y], backSec.floor, frontSec.floor, line.back.texRatio, true)
-          const texture = twgl.createTexture(gl, { src: `textures/${line.back.texBot}.png` })
+          const tex = textureCache[line.back.texBot]
+          const { bufferInfo, shape } = buildWall(gl, v1[X], v1[Y], v2[X], v2[Y], backSec.floor, frontSec.floor, tex.width / tex.height, true)
           const body = new Cannon.Body({ mass: WALL_MASS, shape })
-          worldObjs.push({ id: lid, type: 'line', bufferInfo, texture, uniforms, body })
+          worldObjs.push({ id: lid, type: 'line', bufferInfo, texture: tex.texture, uniforms, body })
         }
         if (line.back.texTop) {
-          const { bufferInfo, shape } = buildWall(gl, v1[X], v1[Y], v2[X], v2[Y], frontSec.ceiling, backSec.ceiling, line.back.texRatio, true)
-          const texture = twgl.createTexture(gl, { src: `textures/${line.back.texTop}.png` })
+          const tex = textureCache[line.back.texTop]
+          const { bufferInfo, shape } = buildWall(gl, v1[X], v1[Y], v2[X], v2[Y], frontSec.ceiling, backSec.ceiling, tex.width / tex.height, true)
           const body = new Cannon.Body({ mass: WALL_MASS, shape })
-          worldObjs.push({ id: lid, type: 'line', bufferInfo, texture, uniforms, body })
+          worldObjs.push({ id: lid, type: 'line', bufferInfo, texture: tex.texture, uniforms, body })
         }
       }
     }
 
     let flatId = 0
-    let uniforms = {}
-    if (sector.brightness) {
-      uniforms.u_brightness = sector.brightness
-    }
-
     // Floor and ceiling polys build using earcut
     const holes = sector.holes ? sector.holes : []
     const floorCeilIndices = earcut(polyFlat, holes)
 
-    const floorFlat = buildFlatNew(gl, polyFlat, floorCeilIndices, sector.floor)
-    const floorTex = twgl.createTexture(gl, {
-      src: `textures/${sector.texFloor}.png`,
-    })
-    // HACK: Separate brightness for floor and ceiling
-    if (sector.texFloor == 'NUKAGE1' || sector.texFloor == 'LAVA2') {
-      uniforms.u_brightness = 6.0
+    // Floors...
+    let uniforms = {}
+    if (sector.brightness) {
+      uniforms.u_brightness = sector.brightness
     }
+    if (sector.brightFloor) {
+      uniforms.u_brightness = sector.brightFloor
+    }
+
+    const floorFlat = buildFlatNew(gl, polyFlat, floorCeilIndices, sector.floor)
     worldObjs.push({
       id: ++flatId,
       type: 'floor',
       bufferInfo: floorFlat,
-      texture: floorTex,
+      texture: textureCache[sector.texFloor],
       uniforms,
     })
 
+    // Ceilings...
     uniforms = {}
     if (sector.brightness) {
       uniforms.u_brightness = sector.brightness
     }
+    if (sector.brightCeil) {
+      uniforms.u_brightness = sector.brightCeil
+    }
+
     if (sector.ceiling !== false || sector.ceiling == undefined) {
       const ceilFlat = buildFlatNew(gl, polyFlat, floorCeilIndices, sector.ceiling, false)
-      const ceilTex = twgl.createTexture(gl, {
-        src: `textures/${sector.texCeil}.png`,
-      })
       worldObjs.push({
         id: ++flatId,
         type: 'ceiling',
         bufferInfo: ceilFlat,
-        texture: ceilTex,
+        texture: textureCache[sector.texCeil],
         uniforms,
       })
     }

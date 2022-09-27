@@ -589,8 +589,7 @@
       "impassable": true,
       "front": {
         "sector": 0,
-        "texMid": "STARG2",
-        "texRatio": 1
+        "texMid": "STARG2"
       },
       "back": {}
     },
@@ -602,8 +601,7 @@
       "impassable": true,
       "front": {
         "sector": 0,
-        "texMid": "STARG2",
-        "texRatio": 1
+        "texMid": "STARG2"
       },
       "back": {}
     },
@@ -615,8 +613,7 @@
       "impassable": true,
       "front": {
         "sector": 0,
-        "texMid": "STARG2",
-        "texRatio": 1
+        "texMid": "STARG2"
       },
       "back": {}
     },
@@ -643,8 +640,7 @@
       "impassable": true,
       "front": {
         "sector": 0,
-        "texMid": "STARG2",
-        "texRatio": 1
+        "texMid": "STARG2"
       },
       "back": {}
     },
@@ -656,8 +652,7 @@
       "impassable": true,
       "front": {
         "sector": 0,
-        "texMid": "STARG2",
-        "texRatio": 1
+        "texMid": "STARG2"
       },
       "back": {}
     },
@@ -669,8 +664,7 @@
       "impassable": true,
       "front": {
         "sector": 0,
-        "texMid": "STARG2",
-        "texRatio": 1
+        "texMid": "STARG2"
       },
       "back": {}
     },
@@ -682,8 +676,7 @@
       "impassable": true,
       "front": {
         "sector": 0,
-        "texMid": "STARG2",
-        "texRatio": 1
+        "texMid": "STARG2"
       },
       "back": {}
     },
@@ -695,8 +688,7 @@
       "impassable": true,
       "front": {
         "sector": 0,
-        "texMid": "STARGR2",
-        "texRatio": 1
+        "texMid": "STARGR2"
       },
       "back": {}
     },
@@ -708,8 +700,7 @@
       "impassable": true,
       "front": {
         "sector": 1,
-        "texMid": "STARGR2",
-        "texRatio": 1
+        "texMid": "STARGR2"
       },
       "back": {}
     },
@@ -737,8 +728,7 @@
       "impassable": true,
       "front": {
         "sector": 1,
-        "texMid": "STARGR2",
-        "texRatio": 1
+        "texMid": "STARGR2"
       },
       "back": {}
     },
@@ -750,8 +740,7 @@
       "impassable": true,
       "front": {
         "sector": 0,
-        "texMid": "BROWN96",
-        "texRatio": 1
+        "texMid": "BROWN96"
       },
       "back": {}
     },
@@ -763,8 +752,7 @@
       "impassable": true,
       "front": {
         "sector": 0,
-        "texMid": "SW2BRCOM",
-        "texRatio": 1
+        "texMid": "SW2BRCOM"
       },
       "back": {}
     },
@@ -776,8 +764,7 @@
       "impassable": true,
       "front": {
         "sector": 0,
-        "texMid": "BROWN96",
-        "texRatio": 1
+        "texMid": "BROWN96"
       },
       "back": {}
     },
@@ -789,8 +776,7 @@
       "impassable": true,
       "front": {
         "sector": 0,
-        "texMid": "BROWN96",
-        "texRatio": 1
+        "texMid": "BROWN96"
       },
       "back": {}
     },
@@ -802,8 +788,7 @@
       "impassable": true,
       "front": {
         "sector": 0,
-        "texTop": "BROWN1",
-        "texRatio": 1
+        "texTop": "BROWN1"
       },
       "back": {
         "sector": 4,
@@ -818,8 +803,7 @@
       "impassable": true,
       "front": {
         "sector": 0,
-        "texTop": "BROWN1",
-        "texRatio": 1
+        "texTop": "BROWN1"
       },
       "back": {
         "sector": 4,
@@ -834,8 +818,7 @@
       "impassable": true,
       "front": {
         "sector": 0,
-        "texTop": "BROWN1",
-        "texRatio": 1
+        "texTop": "BROWN1"
       },
       "back": {
         "sector": 4,
@@ -850,8 +833,7 @@
       "impassable": true,
       "front": {
         "sector": 0,
-        "texTop": "BROWN1",
-        "texRatio": 1
+        "texTop": "BROWN1"
       },
       "back": {
         "sector": 4,
@@ -867,8 +849,7 @@
       "front": {
         "sector": 6,
         "yOffset": -0.2,
-        "texMid": "COMPSTA2",
-        "texRatio": 1
+        "texMid": "COMPSTA2"
       },
       "back": {}
     },
@@ -880,8 +861,7 @@
       "impassable": true,
       "front": {
         "sector": 6,
-        "texMid": "STARG2",
-        "texRatio": 1
+        "texMid": "STARG2"
       },
       "back": {}
     },
@@ -894,8 +874,7 @@
       "front": {
         "sector": 6,
         "yOffset": -0.2,
-        "texMid": "COMPSTA2",
-        "texRatio": 1
+        "texMid": "COMPSTA2"
       },
       "back": {}
     },
@@ -908,8 +887,7 @@
       "front": {
         "sector": 6,
         "yOffset": -0.2,
-        "texMid": "COMPSTA2",
-        "texRatio": 1
+        "texMid": "COMPSTA2"
       },
       "back": {}
     },
@@ -920,14 +898,12 @@
       "doubleSided": false,
       "impassable": true,
       "front": {
-        "sector": 8,
-        "texRatio": 1
+        "sector": 8
       },
       "back": {
         "sector": 0,
         "texBot": "COMPUTE2",
         "texTop": "STARGR2",
-        "texRatio": 4.5,
         "yOffset": 0.16
       }
     },
@@ -944,7 +920,7 @@
         "sector": 0,
         "texBot": "COMPUTE2",
         "texTop": "STARGR2",
-        "texRatio": 4.5,
+
         "yOffset": 0.16
       }
     },
@@ -955,14 +931,13 @@
       "doubleSided": false,
       "impassable": true,
       "front": {
-        "sector": 8,
-        "texRatio": 1
+        "sector": 8
       },
       "back": {
         "sector": 0,
         "texBot": "COMPUTE2",
         "texTop": "STARGR2",
-        "texRatio": 4.5,
+
         "yOffset": 0.16,
         "xOffset": -0.2
       }
@@ -974,8 +949,7 @@
       "doubleSided": false,
       "impassable": true,
       "front": {
-        "sector": 8,
-        "texRatio": 1
+        "sector": 8
       },
       "back": {
         "sector": 0,
@@ -990,8 +964,7 @@
       "doubleSided": false,
       "impassable": true,
       "front": {
-        "sector": 8,
-        "texRatio": 1
+        "sector": 8
       },
       "back": {
         "sector": 0,
@@ -1007,8 +980,7 @@
       "impassable": true,
       "front": {
         "sector": 9,
-        "texMid": "STARTAN3",
-        "texRatio": 1
+        "texMid": "STARTAN3"
       },
       "back": {}
     },
@@ -1020,8 +992,7 @@
       "impassable": true,
       "front": {
         "sector": 9,
-        "texMid": "STARTAN3",
-        "texRatio": 1
+        "texMid": "STARTAN3"
       },
       "back": {}
     },
@@ -1033,8 +1004,7 @@
       "impassable": true,
       "front": {
         "sector": 9,
-        "texMid": "STARTAN3",
-        "texRatio": 1
+        "texMid": "STARTAN3"
       },
       "back": {}
     },
@@ -1046,8 +1016,7 @@
       "impassable": true,
       "front": {
         "sector": 9,
-        "texMid": "STARTAN3",
-        "texRatio": 1
+        "texMid": "STARTAN3"
       },
       "back": {}
     },
@@ -1059,8 +1028,7 @@
       "impassable": false,
       "front": {
         "sector": 9,
-        "texTop": "STARTAN3",
-        "texRatio": 1
+        "texTop": "STARTAN3"
       },
       "back": {
         "sector": 10,
@@ -1075,8 +1043,7 @@
       "impassable": true,
       "front": {
         "sector": 9,
-        "texMid": "STARTAN3",
-        "texRatio": 1
+        "texMid": "STARTAN3"
       },
       "back": {}
     },
@@ -1088,8 +1055,7 @@
       "impassable": true,
       "front": {
         "sector": 9,
-        "texMid": "STARTAN3",
-        "texRatio": 1
+        "texMid": "STARTAN3"
       },
       "back": {}
     },
@@ -1101,8 +1067,7 @@
       "impassable": false,
       "front": {
         "sector": 9,
-        "texTop": "STARTAN3",
-        "texRatio": 1
+        "texTop": "STARTAN3"
       },
       "back": {
         "sector": 11,
@@ -1117,8 +1082,7 @@
       "impassable": true,
       "front": {
         "sector": 9,
-        "texMid": "STARTAN3",
-        "texRatio": 1
+        "texMid": "STARTAN3"
       },
       "back": {}
     },
@@ -1130,8 +1094,7 @@
       "impassable": true,
       "front": {
         "sector": 9,
-        "texMid": "STARTAN3",
-        "texRatio": 1
+        "texMid": "STARTAN3"
       },
       "back": {}
     },
@@ -1143,8 +1106,7 @@
       "impassable": true,
       "front": {
         "sector": 9,
-        "texMid": "STARTAN3",
-        "texRatio": 1
+        "texMid": "STARTAN3"
       },
       "back": {}
     },
@@ -1156,8 +1118,7 @@
       "impassable": true,
       "front": {
         "sector": 9,
-        "texMid": "STARTAN3",
-        "texRatio": 1
+        "texMid": "STARTAN3"
       },
       "back": {}
     },
@@ -1169,8 +1130,7 @@
       "impassable": true,
       "front": {
         "sector": 10,
-        "texMid": "BROVINE2",
-        "texRatio": 2
+        "texMid": "BROVINE2"
       },
       "back": {}
     },
@@ -1182,8 +1142,7 @@
       "impassable": true,
       "front": {
         "sector": 10,
-        "texMid": "BROVINE2",
-        "texRatio": 2
+        "texMid": "BROVINE2"
       },
       "back": {}
     },
@@ -1195,8 +1154,7 @@
       "impassable": true,
       "front": {
         "sector": 10,
-        "texMid": "BROVINE2",
-        "texRatio": 2
+        "texMid": "BROVINE2"
       },
       "back": {}
     },
@@ -1208,8 +1166,7 @@
       "impassable": true,
       "front": {
         "sector": 10,
-        "texMid": "BROVINE2",
-        "texRatio": 2
+        "texMid": "BROVINE2"
       },
       "back": {}
     },
@@ -1221,8 +1178,7 @@
       "impassable": true,
       "front": {
         "sector": 10,
-        "texMid": "BROVINE2",
-        "texRatio": 2
+        "texMid": "BROVINE2"
       },
       "back": {}
     },
@@ -1234,8 +1190,7 @@
       "impassable": true,
       "front": {
         "sector": 10,
-        "texMid": "BROVINE2",
-        "texRatio": 2
+        "texMid": "BROVINE2"
       },
       "back": {}
     },
@@ -1247,8 +1202,7 @@
       "impassable": true,
       "front": {
         "sector": 10,
-        "texMid": "BROVINE2",
-        "texRatio": 2
+        "texMid": "BROVINE2"
       },
       "back": {}
     },
@@ -1260,8 +1214,7 @@
       "impassable": true,
       "front": {
         "sector": 10,
-        "texMid": "BROVINE2",
-        "texRatio": 2
+        "texMid": "BROVINE2"
       },
       "back": {}
     },
@@ -1273,8 +1226,7 @@
       "impassable": true,
       "front": {
         "sector": 10,
-        "texMid": "BROVINE2",
-        "texRatio": 2
+        "texMid": "BROVINE2"
       },
       "back": {}
     },
@@ -1286,8 +1238,7 @@
       "impassable": true,
       "front": {
         "sector": 10,
-        "texMid": "BROVINE2",
-        "texRatio": 2
+        "texMid": "BROVINE2"
       },
       "back": {}
     },
@@ -1299,8 +1250,7 @@
       "impassable": false,
       "front": {
         "sector": 10,
-        "texMid": "",
-        "texRatio": 2
+        "texMid": ""
       },
       "back": {
         "sector": 22
@@ -1314,8 +1264,7 @@
       "impassable": true,
       "front": {
         "sector": 10,
-        "texMid": "BROVINE2",
-        "texRatio": 2
+        "texMid": "BROVINE2"
       },
       "back": {}
     },
@@ -1327,8 +1276,7 @@
       "impassable": true,
       "front": {
         "sector": 10,
-        "texMid": "BROVINE2",
-        "texRatio": 2
+        "texMid": "BROVINE2"
       },
       "back": {}
     },
@@ -1340,8 +1288,7 @@
       "impassable": true,
       "front": {
         "sector": 10,
-        "texMid": "BROVINE2",
-        "texRatio": 2
+        "texMid": "BROVINE2"
       },
       "back": {}
     },
@@ -1353,8 +1300,7 @@
       "impassable": true,
       "front": {
         "sector": 10,
-        "texMid": "BROVINE2",
-        "texRatio": 2
+        "texMid": "BROVINE2"
       },
       "back": {}
     },
@@ -1366,8 +1312,7 @@
       "impassable": true,
       "front": {
         "sector": 10,
-        "texMid": "BROVINE2",
-        "texRatio": 2
+        "texMid": "BROVINE2"
       },
       "back": {}
     },
@@ -1379,8 +1324,7 @@
       "impassable": true,
       "front": {
         "sector": 10,
-        "texMid": "BROVINE2",
-        "texRatio": 2
+        "texMid": "BROVINE2"
       },
       "back": {}
     },
@@ -1392,8 +1336,7 @@
       "impassable": true,
       "front": {
         "sector": 10,
-        "texMid": "BROVINE2",
-        "texRatio": 2
+        "texMid": "BROVINE2"
       },
       "back": {}
     },
@@ -1405,8 +1348,7 @@
       "impassable": true,
       "front": {
         "sector": 10,
-        "texMid": "BROVINE2",
-        "texRatio": 2
+        "texMid": "BROVINE2"
       },
       "back": {}
     },
@@ -1418,8 +1360,7 @@
       "impassable": true,
       "front": {
         "sector": 10,
-        "texMid": "BROVINE2",
-        "texRatio": 2
+        "texMid": "BROVINE2"
       },
       "back": {}
     },
@@ -1431,8 +1372,7 @@
       "impassable": true,
       "front": {
         "sector": 10,
-        "texMid": "BROVINE2",
-        "texRatio": 2
+        "texMid": "BROVINE2"
       },
       "back": {}
     },
@@ -1444,8 +1384,7 @@
       "impassable": true,
       "front": {
         "sector": 11,
-        "texMid": "TEKWALL2",
-        "texRatio": 1
+        "texMid": "TEKWALL2"
       },
       "back": {}
     },
@@ -1457,8 +1396,7 @@
       "impassable": false,
       "front": {
         "sector": 11,
-        "texTop": "STONE",
-        "texRatio": 2
+        "texTop": "STONE"
       },
       "back": {
         "sector": 12,
@@ -1473,8 +1411,7 @@
       "impassable": true,
       "front": {
         "sector": 11,
-        "texMid": "TEKWALL2",
-        "texRatio": 1
+        "texMid": "TEKWALL2"
       },
       "back": {}
     },
@@ -1486,8 +1423,7 @@
       "impassable": true,
       "front": {
         "sector": 12,
-        "texMid": "TEKWALL2",
-        "texRatio": 1
+        "texMid": "TEKWALL2"
       },
       "back": {
         "sector": 1
@@ -1501,8 +1437,7 @@
       "impassable": false,
       "front": {
         "sector": 12,
-        "texTop": "STONE",
-        "texRatio": 2
+        "texTop": "STONE"
       },
       "back": {
         "sector": 16,
@@ -1517,8 +1452,7 @@
       "impassable": true,
       "front": {
         "sector": 12,
-        "texMid": "TEKWALL2",
-        "texRatio": 1
+        "texMid": "TEKWALL2"
       },
       "back": {}
     },
@@ -1530,8 +1464,7 @@
       "impassable": true,
       "front": {
         "sector": 16,
-        "texMid": "TEKWALL2",
-        "texRatio": 1
+        "texMid": "TEKWALL2"
       },
       "back": {}
     },
@@ -1543,8 +1476,7 @@
       "impassable": false,
       "front": {
         "sector": 16,
-        "texTop": "STONE",
-        "texRatio": 2
+        "texTop": "STONE"
       },
       "back": {
         "sector": 18,
@@ -1559,8 +1491,7 @@
       "impassable": true,
       "front": {
         "sector": 16,
-        "texMid": "TEKWALL2",
-        "texRatio": 1
+        "texMid": "TEKWALL2"
       },
       "back": {}
     },
@@ -1572,8 +1503,7 @@
       "impassable": true,
       "front": {
         "sector": 18,
-        "texMid": "TEKWALL2",
-        "texRatio": 1
+        "texMid": "TEKWALL2"
       },
       "back": {}
     },
@@ -1585,8 +1515,7 @@
       "impassable": false,
       "front": {
         "sector": 18,
-        "texTop": "STONE",
-        "texRatio": 2
+        "texTop": "STONE"
       },
       "back": {
         "sector": 19,
@@ -1601,8 +1530,7 @@
       "impassable": true,
       "front": {
         "sector": 18,
-        "texMid": "TEKWALL2",
-        "texRatio": 1
+        "texMid": "TEKWALL2"
       },
       "back": {}
     },
@@ -1614,8 +1542,7 @@
       "impassable": true,
       "front": {
         "sector": 19,
-        "texMid": "TEKWALL2",
-        "texRatio": 1
+        "texMid": "TEKWALL2"
       },
       "back": {}
     },
@@ -1626,8 +1553,7 @@
       "doubleSided": false,
       "impassable": false,
       "front": {
-        "sector": 19,
-        "texRatio": 2
+        "sector": 19
       },
       "back": {
         "sector": 20,
@@ -1643,8 +1569,7 @@
       "impassable": true,
       "front": {
         "sector": 19,
-        "texMid": "TEKWALL2",
-        "texRatio": 1
+        "texMid": "TEKWALL2"
       },
       "back": {}
     },
@@ -1656,8 +1581,7 @@
       "impassable": true,
       "front": {
         "sector": 20,
-        "texMid": "SP_ROCK1",
-        "texRatio": 1
+        "texMid": "SP_ROCK1"
       },
       "back": {}
     },
@@ -1669,7 +1593,6 @@
       "impassable": false,
       "front": {
         "sector": 20,
-        "texRatio": 1,
         "texBot": "BROWN144"
       },
       "back": {
@@ -1685,8 +1608,7 @@
       "impassable": true,
       "front": {
         "sector": 20,
-        "texMid": "SP_ROCK1",
-        "texRatio": 1
+        "texMid": "SP_ROCK1"
       },
       "back": {}
     },
@@ -1698,8 +1620,7 @@
       "impassable": true,
       "front": {
         "sector": 20,
-        "texMid": "SP_ROCK1",
-        "texRatio": 1
+        "texMid": "SP_ROCK1"
       },
       "back": {}
     },
@@ -1711,8 +1632,7 @@
       "impassable": true,
       "front": {
         "sector": 20,
-        "texMid": "SP_ROCK1",
-        "texRatio": 1
+        "texMid": "SP_ROCK1"
       },
       "back": {}
     },
@@ -1724,8 +1644,7 @@
       "impassable": true,
       "front": {
         "sector": 20,
-        "texMid": "SP_ROCK1",
-        "texRatio": 1
+        "texMid": "SP_ROCK1"
       },
       "back": {}
     },
@@ -1737,8 +1656,7 @@
       "impassable": true,
       "front": {
         "sector": 20,
-        "texMid": "SP_ROCK1",
-        "texRatio": 1
+        "texMid": "SP_ROCK1"
       },
       "back": {}
     },
@@ -1750,8 +1668,7 @@
       "impassable": true,
       "front": {
         "sector": 20,
-        "texMid": "SP_ROCK1",
-        "texRatio": 1
+        "texMid": "SP_ROCK1"
       },
       "back": {}
     },
@@ -1763,8 +1680,7 @@
       "impassable": true,
       "front": {
         "sector": 20,
-        "texMid": "SP_ROCK1",
-        "texRatio": 1
+        "texMid": "SP_ROCK1"
       },
       "back": {}
     },
@@ -1776,8 +1692,7 @@
       "impassable": true,
       "front": {
         "sector": 20,
-        "texMid": "SP_ROCK1",
-        "texRatio": 1
+        "texMid": "SP_ROCK1"
       },
       "back": {}
     },
@@ -1789,8 +1704,7 @@
       "impassable": true,
       "front": {
         "sector": 20,
-        "texMid": "SP_ROCK1",
-        "texRatio": 1
+        "texMid": "SP_ROCK1"
       },
       "back": {}
     },
@@ -1802,8 +1716,7 @@
       "impassable": true,
       "front": {
         "sector": 20,
-        "texMid": "SP_ROCK1",
-        "texRatio": 1
+        "texMid": "SP_ROCK1"
       },
       "back": {}
     },
@@ -1815,8 +1728,7 @@
       "impassable": true,
       "front": {
         "sector": 20,
-        "texMid": "SP_ROCK1",
-        "texRatio": 1
+        "texMid": "SP_ROCK1"
       },
       "back": {}
     },
@@ -1828,8 +1740,7 @@
       "impassable": true,
       "front": {
         "sector": 20,
-        "texMid": "SP_ROCK1",
-        "texRatio": 1
+        "texMid": "SP_ROCK1"
       },
       "back": {}
     },
@@ -1841,8 +1752,7 @@
       "impassable": true,
       "front": {
         "sector": 20,
-        "texMid": "SP_ROCK1",
-        "texRatio": 1
+        "texMid": "SP_ROCK1"
       },
       "back": {}
     },
@@ -1854,8 +1764,7 @@
       "impassable": true,
       "front": {
         "sector": 20,
-        "texMid": "SP_ROCK1",
-        "texRatio": 1
+        "texMid": "SP_ROCK1"
       },
       "back": {}
     },
@@ -1867,8 +1776,7 @@
       "impassable": true,
       "front": {
         "sector": 20,
-        "texMid": "SP_ROCK1",
-        "texRatio": 1
+        "texMid": "SP_ROCK1"
       },
       "back": {}
     },
@@ -1880,8 +1788,7 @@
       "impassable": true,
       "front": {
         "sector": 20,
-        "texMid": "SP_ROCK1",
-        "texRatio": 1
+        "texMid": "SP_ROCK1"
       },
       "back": {}
     },
@@ -1893,8 +1800,7 @@
       "impassable": true,
       "front": {
         "sector": 20,
-        "texMid": "SP_ROCK1",
-        "texRatio": 1
+        "texMid": "SP_ROCK1"
       },
       "back": {}
     },
@@ -1906,8 +1812,7 @@
       "impassable": true,
       "front": {
         "sector": 20,
-        "texMid": "SP_ROCK1",
-        "texRatio": 1
+        "texMid": "SP_ROCK1"
       },
       "back": {}
     },
@@ -1919,8 +1824,7 @@
       "impassable": true,
       "front": {
         "sector": 20,
-        "texMid": "SP_ROCK1",
-        "texRatio": 1
+        "texMid": "SP_ROCK1"
       },
       "back": {}
     },
@@ -1932,8 +1836,7 @@
       "impassable": true,
       "front": {
         "sector": 20,
-        "texMid": "SP_ROCK1",
-        "texRatio": 1
+        "texMid": "SP_ROCK1"
       },
       "back": {}
     },
@@ -1945,8 +1848,7 @@
       "impassable": true,
       "front": {
         "sector": 20,
-        "texMid": "SP_ROCK1",
-        "texRatio": 1
+        "texMid": "SP_ROCK1"
       },
       "back": {}
     },
@@ -1958,8 +1860,7 @@
       "impassable": true,
       "front": {
         "sector": 20,
-        "texMid": "SP_ROCK1",
-        "texRatio": 1
+        "texMid": "SP_ROCK1"
       },
       "back": {}
     },
@@ -1971,8 +1872,7 @@
       "impassable": true,
       "front": {
         "sector": 20,
-        "texMid": "SP_ROCK1",
-        "texRatio": 1
+        "texMid": "SP_ROCK1"
       },
       "back": {}
     },
@@ -1984,8 +1884,7 @@
       "impassable": true,
       "front": {
         "sector": 20,
-        "texMid": "SP_ROCK1",
-        "texRatio": 1
+        "texMid": "SP_ROCK1"
       },
       "back": {}
     },
@@ -1997,8 +1896,7 @@
       "impassable": true,
       "front": {
         "sector": 20,
-        "texMid": "SP_ROCK1",
-        "texRatio": 1
+        "texMid": "SP_ROCK1"
       },
       "back": {}
     },
@@ -2010,8 +1908,7 @@
       "impassable": true,
       "front": {
         "sector": 20,
-        "texMid": "SP_ROCK1",
-        "texRatio": 1
+        "texMid": "SP_ROCK1"
       },
       "back": {}
     },
@@ -2024,8 +1921,7 @@
       "front": {
         "sector": 21,
         "texBot": "FLOOR6_1",
-        "texTop": "STONE3",
-        "texRatio": 1
+        "texTop": "STONE3"
       },
       "back": {
         "sector": 20
@@ -2040,8 +1936,7 @@
       "front": {
         "sector": 21,
         "texBot": "FLOOR6_1",
-        "texTop": "STONE3",
-        "texRatio": 1
+        "texTop": "STONE3"
       },
       "back": {
         "sector": 20
@@ -2056,8 +1951,7 @@
       "front": {
         "sector": 21,
         "texBot": "FLOOR6_1",
-        "texTop": "STONE3",
-        "texRatio": 1
+        "texTop": "STONE3"
       },
       "back": {
         "sector": 20
@@ -2072,8 +1966,7 @@
       "front": {
         "sector": 21,
         "texBot": "FLOOR6_1",
-        "texTop": "STONE3",
-        "texRatio": 1
+        "texTop": "STONE3"
       },
       "back": {
         "sector": 20
@@ -2088,8 +1981,7 @@
       "front": {
         "sector": 21,
         "texBot": "FLOOR6_1",
-        "texTop": "STONE3",
-        "texRatio": 1
+        "texTop": "STONE3"
       },
       "back": {
         "sector": 20
@@ -2104,8 +1996,7 @@
       "front": {
         "sector": 21,
         "texBot": "FLOOR6_1",
-        "texTop": "STONE3",
-        "texRatio": 1
+        "texTop": "STONE3"
       },
       "back": {
         "sector": 20
@@ -2120,8 +2011,7 @@
       "front": {
         "sector": 21,
         "texBot": "FLOOR6_1",
-        "texTop": "STONE3",
-        "texRatio": 1
+        "texTop": "STONE3"
       },
       "back": {
         "sector": 20
@@ -2136,8 +2026,7 @@
       "front": {
         "sector": 21,
         "texBot": "FLOOR6_1",
-        "texTop": "STONE3",
-        "texRatio": 1
+        "texTop": "STONE3"
       },
       "back": {
         "sector": 20
@@ -2152,8 +2041,7 @@
       "front": {
         "sector": 21,
         "texBot": "FLOOR6_1",
-        "texTop": "STONE3",
-        "texRatio": 1
+        "texTop": "STONE3"
       },
       "back": {
         "sector": 20
@@ -2167,8 +2055,7 @@
       "impassable": true,
       "front": {
         "sector": 22,
-        "texMid": "STONE",
-        "texRatio": 2
+        "texMid": "STONE"
       },
       "back": {}
     },
@@ -2180,8 +2067,7 @@
       "impassable": true,
       "front": {
         "sector": 22,
-        "texMid": "STONE",
-        "texRatio": 2
+        "texMid": "STONE"
       },
       "back": {}
     },
@@ -2193,8 +2079,7 @@
       "impassable": true,
       "front": {
         "sector": 22,
-        "texMid": "STONE",
-        "texRatio": 1
+        "texMid": "STONE"
       },
       "back": {}
     },
@@ -2206,8 +2091,7 @@
       "impassable": true,
       "front": {
         "sector": 22,
-        "texMid": "STONE",
-        "texRatio": 1
+        "texMid": "STONE"
       },
       "back": {}
     },
@@ -2219,8 +2103,7 @@
       "impassable": true,
       "front": {
         "sector": 22,
-        "texMid": "MARBLE2",
-        "texRatio": 1
+        "texMid": "MARBLE2"
       },
       "back": {}
     },
@@ -2232,8 +2115,7 @@
       "impassable": true,
       "front": {
         "sector": 22,
-        "texMid": "SP_DUDE1",
-        "texRatio": 1
+        "texMid": "SP_DUDE1"
       },
       "back": {}
     },
@@ -2245,8 +2127,7 @@
       "impassable": true,
       "front": {
         "sector": 22,
-        "texMid": "MARBLE2",
-        "texRatio": 1
+        "texMid": "MARBLE2"
       },
       "back": {}
     },
@@ -2258,8 +2139,7 @@
       "impassable": true,
       "front": {
         "sector": 22,
-        "texMid": "STONE",
-        "texRatio": 2
+        "texMid": "STONE"
       },
       "back": {}
     },
@@ -2271,8 +2151,7 @@
       "impassable": true,
       "front": {
         "sector": 22,
-        "texMid": "STONE",
-        "texRatio": 2
+        "texMid": "STONE"
       },
       "back": {}
     },
@@ -2284,8 +2163,7 @@
       "impassable": true,
       "front": {
         "sector": 22,
-        "texMid": "STONE",
-        "texRatio": 2
+        "texMid": "STONE"
       },
       "back": {}
     },
@@ -2297,8 +2175,7 @@
       "impassable": true,
       "front": {
         "sector": 22,
-        "texMid": "STONE",
-        "texRatio": 2
+        "texMid": "STONE"
       },
       "back": {}
     },
@@ -2310,8 +2187,7 @@
       "impassable": true,
       "front": {
         "sector": 22,
-        "texMid": "STONE",
-        "texRatio": 2
+        "texMid": "STONE"
       },
       "back": {}
     },
@@ -2323,8 +2199,7 @@
       "impassable": true,
       "front": {
         "sector": 22,
-        "texMid": "STONE",
-        "texRatio": 2
+        "texMid": "STONE"
       },
       "back": {}
     },
@@ -2336,8 +2211,7 @@
       "impassable": true,
       "front": {
         "sector": 22,
-        "texMid": "STONE",
-        "texRatio": 2
+        "texMid": "STONE"
       },
       "back": {}
     },
@@ -2349,8 +2223,7 @@
       "impassable": true,
       "front": {
         "sector": 22,
-        "texMid": "STONE",
-        "texRatio": 2
+        "texMid": "STONE"
       },
       "back": {}
     },
@@ -2361,8 +2234,7 @@
       "doubleSided": false,
       "impassable": false,
       "front": {
-        "sector": 22,
-        "texRatio": 1
+        "sector": 22
       },
       "back": {
         "sector": 23,
@@ -2378,8 +2250,7 @@
       "impassable": true,
       "front": {
         "sector": 22,
-        "texMid": "STONE",
-        "texRatio": 2
+        "texMid": "STONE"
       },
       "back": {}
     },
@@ -2391,8 +2262,7 @@
       "impassable": true,
       "front": {
         "sector": 23,
-        "texMid": "STARG3",
-        "texRatio": 1
+        "texMid": "STARG3"
       },
       "back": {}
     },
@@ -2404,8 +2274,7 @@
       "impassable": true,
       "front": {
         "sector": 23,
-        "texMid": "STARG2",
-        "texRatio": 1
+        "texMid": "STARG2"
       },
       "back": {}
     },
@@ -2417,8 +2286,7 @@
       "impassable": true,
       "front": {
         "sector": 23,
-        "texMid": "STARG2",
-        "texRatio": 1
+        "texMid": "STARG2"
       },
       "back": {}
     },
@@ -2430,8 +2298,7 @@
       "impassable": true,
       "front": {
         "sector": 23,
-        "texMid": "STARG2",
-        "texRatio": 1
+        "texMid": "STARG2"
       },
       "back": {}
     },
@@ -2443,8 +2310,7 @@
       "impassable": true,
       "front": {
         "sector": 23,
-        "texMid": "STARG2",
-        "texRatio": 1
+        "texMid": "STARG2"
       },
       "back": {}
     },
@@ -2456,8 +2322,7 @@
       "impassable": true,
       "front": {
         "sector": 23,
-        "texMid": "SKULWALL",
-        "texRatio": 1
+        "texMid": "SKULWALL"
       },
       "back": {}
     },
@@ -2469,8 +2334,7 @@
       "impassable": true,
       "front": {
         "sector": 23,
-        "texMid": "SKULWALL",
-        "texRatio": 1
+        "texMid": "SKULWALL"
       },
       "back": {}
     },
@@ -2482,8 +2346,7 @@
       "impassable": true,
       "front": {
         "sector": 23,
-        "texMid": "SKULWALL",
-        "texRatio": 1
+        "texMid": "SKULWALL"
       },
       "back": {}
     },
@@ -2495,8 +2358,7 @@
       "impassable": true,
       "front": {
         "sector": 23,
-        "texMid": "SKULWALL",
-        "texRatio": 1
+        "texMid": "SKULWALL"
       },
       "back": {}
     },
@@ -2508,8 +2370,7 @@
       "impassable": true,
       "front": {
         "sector": 23,
-        "texMid": "SKULWALL",
-        "texRatio": 1
+        "texMid": "SKULWALL"
       },
       "back": {}
     },
@@ -2521,8 +2382,7 @@
       "impassable": true,
       "front": {
         "sector": 23,
-        "texMid": "SKULWALL",
-        "texRatio": 1
+        "texMid": "SKULWALL"
       },
       "back": {}
     },
@@ -2534,8 +2394,7 @@
       "impassable": true,
       "front": {
         "sector": 23,
-        "texMid": "SKULWALL",
-        "texRatio": 1
+        "texMid": "SKULWALL"
       },
       "back": {}
     },
@@ -2547,8 +2406,7 @@
       "impassable": true,
       "front": {
         "sector": 23,
-        "texMid": "SKULWALL",
-        "texRatio": 1
+        "texMid": "SKULWALL"
       },
       "back": {}
     },
@@ -2560,8 +2418,7 @@
       "impassable": true,
       "front": {
         "sector": 23,
-        "texMid": "SKULWALL",
-        "texRatio": 1
+        "texMid": "SKULWALL"
       },
       "back": {}
     },
@@ -2573,8 +2430,7 @@
       "impassable": true,
       "front": {
         "sector": 23,
-        "texMid": "STARG2",
-        "texRatio": 1
+        "texMid": "STARG2"
       },
       "back": {}
     },
@@ -2586,8 +2442,7 @@
       "impassable": true,
       "front": {
         "sector": 23,
-        "texMid": "STARG2",
-        "texRatio": 1
+        "texMid": "STARG2"
       },
       "back": {}
     },
@@ -2599,8 +2454,7 @@
       "impassable": true,
       "front": {
         "sector": 23,
-        "texMid": "STARG2",
-        "texRatio": 1
+        "texMid": "STARG2"
       },
       "back": {}
     },
@@ -3130,8 +2984,7 @@
       "impassable": true,
       "front": {
         "sector": 51,
-        "texMid": "BSTONE1",
-        "texRatio": 1
+        "texMid": "BSTONE1"
       },
       "back": {
         "sector": 20
@@ -3145,8 +2998,7 @@
       "impassable": true,
       "front": {
         "sector": 51,
-        "texMid": "BSTONE1",
-        "texRatio": 0.5
+        "texMid": "BSTONE1"
       },
       "back": { "sector": 20 }
     },
@@ -3158,8 +3010,7 @@
       "impassable": true,
       "front": {
         "sector": 51,
-        "texMid": "BSTONE1",
-        "texRatio": 0.5
+        "texMid": "BSTONE1"
       },
       "back": { "sector": 20 }
     },
@@ -3171,8 +3022,7 @@
       "impassable": true,
       "front": {
         "sector": 51,
-        "texMid": "BSTONE1",
-        "texRatio": 0.5
+        "texMid": "BSTONE1"
       },
       "back": { "sector": 20 }
     },
@@ -3184,8 +3034,7 @@
       "impassable": true,
       "front": {
         "sector": 51,
-        "texMid": "BSTONE1",
-        "texRatio": 0.5
+        "texMid": "BSTONE1"
       },
       "back": { "sector": 20 }
     },
@@ -3197,8 +3046,7 @@
       "impassable": true,
       "front": {
         "sector": 51,
-        "texMid": "BSTONE1",
-        "texRatio": 0.5
+        "texMid": "BSTONE1"
       },
       "back": { "sector": 20 }
     },
@@ -3322,8 +3170,7 @@
       "impassable": true,
       "front": {
         "sector": 20,
-        "texTop": "BSTONE1",
-        "texRatio": 0.5
+        "texTop": "BSTONE1"
       },
       "back": {
         "sector": 54
@@ -3337,8 +3184,7 @@
       "impassable": true,
       "front": {
         "sector": 20,
-        "texTop": "BSTONE1",
-        "texRatio": 0.5
+        "texTop": "BSTONE1"
       },
       "back": {
         "sector": 54
@@ -3352,8 +3198,7 @@
       "impassable": true,
       "front": {
         "sector": 20,
-        "texTop": "BSTONE1",
-        "texRatio": 0.5
+        "texTop": "BSTONE1"
       },
       "back": {
         "sector": 54
@@ -3367,8 +3212,7 @@
       "impassable": true,
       "front": {
         "sector": 20,
-        "texTop": "BSTONE1",
-        "texRatio": 0.5
+        "texTop": "BSTONE1"
       },
       "back": {
         "sector": 54
@@ -3382,8 +3226,7 @@
       "impassable": true,
       "front": {
         "sector": 20,
-        "texTop": "BSTONE1",
-        "texRatio": 0.5
+        "texTop": "BSTONE1"
       },
       "back": {
         "sector": 54
@@ -3497,8 +3340,7 @@
       "impassable": false,
       "front": {
         "sector": 58,
-        "texMid": "WOOD5",
-        "texRatio": 2
+        "texMid": "WOOD5"
       },
       "back": {}
     },
@@ -3511,8 +3353,7 @@
       "front": {
         "sector": 58,
         "texMid": "WOOD5",
-        "xOffset": -0.56,
-        "texRatio": 2
+        "xOffset": -0.56
       },
       "back": {}
     },
@@ -3525,7 +3366,6 @@
       "front": {
         "sector": 58,
         "texMid": "WOOD5",
-        "texRatio": 2,
         "xOffset": 0.2
       },
       "back": {}
@@ -3650,7 +3490,9 @@
       "ceiling": 2,
       "lines": [117, 118, 119, 120, 121, 122, 123, 124, 125],
       "texFloor": "LAVA2",
-      "texCeil": "FLAT5_4"
+      "texCeil": "FLAT5_4",
+      "brightFloor": 8,
+      "brightness": 3
     },
     "22": {
       "id": 22,
@@ -3771,7 +3613,8 @@
       "ceiling": 2,
       "lines": [243, 244, 245, 246, 247, 248, 249],
       "texFloor": "NUKAGE1",
-      "texCeil": "GRNROCK"
+      "texCeil": "GRNROCK",
+      "brightFloor": 8
     }
   },
   "lineInc": 250,

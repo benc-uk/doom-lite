@@ -186,12 +186,9 @@ function addLine(v1Id, v2Id, sectorId) {
     id: lid,
     start: v1Id,
     end: v2Id,
-    doubleSided: false,
-    impassable: true,
     front: {
       sector: sectorId,
       texMid: 'STARG2',
-      texRatio: 1,
     },
     back: {},
   }

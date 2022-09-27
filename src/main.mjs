@@ -8,9 +8,9 @@ import { mat4 } from '../lib/gl-matrix/esm/index.js'
 import { parse as parseJSONC } from '../lib/jsonc/index.js'
 import { getGPUTier } from '../lib/detect-gpu/detect-gpu.esm.js'
 
-const VERSION = '0.4.4'
+const VERSION = '0.4.5'
 const FOV = 45
-const FAR_CLIP = 120
+const FAR_CLIP = 140
 
 const FORCE_LOAD_MAP = true
 const DEMO_MAP = 'levels/demo.json'
@@ -51,9 +51,9 @@ window.onload = async () => {
 
   const gpu = await getGPUTier()
   console.log(`🎮 GPU - Tier:${gpu.tier}, FPS:${gpu.fps}, Make:${gpu.gpu}, Mobile:${gpu.isMobile}`)
-  // if (gpu.tier < 3 || gpu.fps < 30) {
-  //   alert(`Detected your GPU is tier ${gpu.tier} (3 is best) with a benchmark of ${gpu.fps} FPS. You might have a bad time, I dunno`)
-  // }
+  if (gpu.tier < 3 || gpu.fps < 30) {
+    alert(`Detected your GPU is tier ${gpu.tier} (3 is best) with a benchmark of ${gpu.fps} FPS. You might have a bad time, I dunno`)
+  }
 
   // Load cached map data
   let map
@@ -129,7 +129,7 @@ window.onload = async () => {
 
   // Build *everything* we are going to render
   const { worldObjs, thingInstances, playerStart } = await parseMap(map, gl, templates)
-  console.log(`🗺️ Map '${map.name}' was parsed into ${worldObjs.length} parts and ${thingInstances.length} things`)
+  console.log(`🧩 Map '${map.name}' was parsed into ${worldObjs.length} parts and ${thingInstances.length} thing instances`)
 
   // Setup player position and camera
   camera = mat4.targetTo(mat4.create(), [0, 0, 0], [0, 0, -100], [0, 1, 0])
@@ -148,6 +148,8 @@ window.onload = async () => {
   // Draw the scene repeatedly every frame
   console.log(`♻️ Starting render loop`)
   let prevTime = 0
+
+  document.getElementById('loading').remove()
 
   //
   // Main render loop, called once per frame

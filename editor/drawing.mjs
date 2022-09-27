@@ -81,11 +81,9 @@ export function drawMap(map) {
     }
 
     // draw sector id text
-    if (sector.id > 20) {
-      ctx.fillStyle = 'white'
-      ctx.font = '9px Arial'
-      ctx.fillText(sid, polyFlat[0], polyFlat[1])
-    }
+    ctx.fillStyle = 'yellow'
+    ctx.font = '9px Arial'
+    ctx.fillText(sid, polyFlat[0], polyFlat[1])
 
     sIx++
   }

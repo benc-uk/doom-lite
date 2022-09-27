@@ -9,7 +9,7 @@ export const TEX_SCALE = 10
 // Returns a twgl BufferInfo https://twgljs.org/docs/module-twgl.html#.BufferInfo
 //
 export function buildWall(gl, p1x, p1y, p2x, p2y, floorHeight, ceilingHeight, widthRatio, flip = false) {
-  if (!widthRatio) widthRatio = 1
+  //if (!widthRatio) widthRatio = 1
 
   // prettier-ignore
   const positions = [

@@ -24,6 +24,20 @@ canvas {
   line-height: 1.9rem;
 }
 
+#loading {
+  position: absolute;
+  left: 50%;
+  top: 50%;
+  transform: translate(-50%, -50%);
+  color: rgb(36, 221, 166);
+  font-family: 'Trebuchet MS', 'Lucida Sans Unicode', 'Lucida Grande', 'Lucida Sans', Arial, sans-serif;
+  font-size: 5vw;
+  padding: 3rem;
+  background-color: rgba(50, 50, 50, 0.7);
+  border-radius: 15px;
+  /* line-height: 1.9rem; */
+}
+
 a {
   color: darkturquoise;
 }

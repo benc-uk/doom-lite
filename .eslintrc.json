@@ -14,7 +14,8 @@
   "rules": {
     "no-var": "error",
     "prefer-const": "error",
-    "no-prototype-builtins": "warn"
+    "no-unused-vars": ["error", { "varsIgnorePattern": "^_", "argsIgnorePattern": "^_", "destructuredArrayIgnorePattern": "^_" }],
+    "no-prototype-builtins": "off"
   },
   "globals": {
     "earcut": "readonly"
