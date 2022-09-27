@@ -100,10 +100,10 @@ export function handleInputs(deltaTime, player, camera, map) {
 }
 
 export function updatePlayer(map, player, camera) {
-  // Check which sector player is in
+  // Check which sector player is in, this is brute force
+  // TODO: Any way to optimize this?
   for (const [sid, sector] of Object.entries(map.sectors)) {
     if (pointInPolygonFlat([player.location[0], player.location[2]], sector.poly)) {
-      //console.log('Player is in sector', sid)
       player.sector = sid
       break
     }

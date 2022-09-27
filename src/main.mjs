@@ -8,7 +8,7 @@ import { mat4 } from '../lib/gl-matrix/esm/index.js'
 import { parse as parseJSONC } from '../lib/jsonc/index.js'
 import { getGPUTier } from '../lib/detect-gpu/detect-gpu.esm.js'
 
-const VERSION = '0.4.2-goat2'
+const VERSION = '0.4.3'
 const FOV = 45
 const FAR_CLIP = 120
 
@@ -189,7 +189,7 @@ window.onload = async () => {
       ...baseUniforms,
     }
 
-    drawWorld(gl, worldProg, uniforms, worldObjs, viewPerspective)
+    drawWorld(gl, worldProg, uniforms, worldObjs, viewPerspective, physWorld, map)
     drawThings(gl, spriteProg, uniforms, thingInstances, view, perspective, deltaTime)
 
     requestAnimationFrame(render)
@@ -202,10 +202,26 @@ window.onload = async () => {
 //
 // Draw the world geometry, which is pre-transformed into world space
 //
-function drawWorld(gl, programInfo, uniforms, worldObjs, viewPerspective) {
+function drawWorld(gl, programInfo, uniforms, worldObjs, viewPerspective, physWorld, map) {
   for (const obj of worldObjs) {
+    // New optimization: only add bodies to the world if they are in the player's sector
+    if (obj.body) {
+      physWorld.removeBody(obj.body)
+    }
+
+    if (obj.type == 'line' && obj.body) {
+      const line = map.lines[obj.id]
+      const frontSecId = line.front.sector
+      const backSecId = line.back.sector
+
+      if (frontSecId == player.sector || backSecId == player.sector) {
+        physWorld.addBody(obj.body)
+      }
+    }
+
     const drawUniforms = {
       ...uniforms,
+      // Reset these uniforms for each object
       u_debugColor: [0, 0, 0, 0],
       u_yOffset: 0,
       u_xOffset: 0,
