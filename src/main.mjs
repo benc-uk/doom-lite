@@ -8,7 +8,7 @@ import { mat4 } from '../lib/gl-matrix/esm/index.js'
 import { parse as parseJSONC } from '../lib/jsonc/index.js'
 import { getGPUTier } from '../lib/detect-gpu/detect-gpu.esm.js'
 
-const VERSION = '0.4.3'
+const VERSION = '0.4.4'
 const FOV = 45
 const FAR_CLIP = 120
 
@@ -50,10 +50,10 @@ window.onload = async () => {
   }
 
   const gpu = await getGPUTier()
-  console.log(`🎮 GPU - Tier:${gpu.tier}, FPS:${gpu.fps}, Make:${gpu.gpu}, Mobile:${gpu.mobile}`)
-  if (gpu.tier < 3 || gpu.fps < 30) {
-    alert(`Detected your GPU is tier ${gpu.tier} (3 is best) with a benchmark of ${gpu.fps} FPS. You will likely experience very poor performance`)
-  }
+  console.log(`🎮 GPU - Tier:${gpu.tier}, FPS:${gpu.fps}, Make:${gpu.gpu}, Mobile:${gpu.isMobile}`)
+  // if (gpu.tier < 3 || gpu.fps < 30) {
+  //   alert(`Detected your GPU is tier ${gpu.tier} (3 is best) with a benchmark of ${gpu.fps} FPS. You might have a bad time, I dunno`)
+  // }
 
   // Load cached map data
   let map
@@ -128,7 +128,7 @@ window.onload = async () => {
   console.log('🧪 Physics initialized')
 
   // Build *everything* we are going to render
-  const { worldObjs, thingInstances, playerStart } = await parseMap(map, gl, physWorld, templates)
+  const { worldObjs, thingInstances, playerStart } = await parseMap(map, gl, templates)
   console.log(`🗺️ Map '${map.name}' was parsed into ${worldObjs.length} parts and ${thingInstances.length} things`)
 
   // Setup player position and camera
@@ -204,7 +204,8 @@ window.onload = async () => {
 //
 function drawWorld(gl, programInfo, uniforms, worldObjs, viewPerspective, physWorld, map) {
   for (const obj of worldObjs) {
-    // New optimization: only add bodies to the world if they are in the player's sector
+    // New optimization! Makes a HUGE difference!
+    // Only add bodies of lines that border the player's current sector
     if (obj.body) {
       physWorld.removeBody(obj.body)
     }
@@ -225,6 +226,7 @@ function drawWorld(gl, programInfo, uniforms, worldObjs, viewPerspective, physWo
       u_debugColor: [0, 0, 0, 0],
       u_yOffset: 0,
       u_xOffset: 0,
+      u_brightness: 1.0,
       ...obj.uniforms,
       u_texture: obj.texture,
       u_worldInverseTranspose: mat4.create(), // For transforming normals

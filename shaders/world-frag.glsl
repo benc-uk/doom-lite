@@ -24,6 +24,7 @@ uniform sampler2D u_texture;
 uniform float u_xOffset;
 uniform float u_yOffset;
 uniform vec4 u_debugColor;
+uniform float u_brightness;
 
 // Light function returns two floats (packed into a vec2)
 // One for diffuse component of lighting, the second for specular
@@ -63,10 +64,12 @@ void main(void) {
     texel.a 
   );
 
-  // if (u_debugColor.a > 0.0) {
-  //   gl_FragColor = u_debugColor;
-  // } else {
-  //   gl_FragColor = outColor;
-  // }
-  gl_FragColor = outColor;
+  outColor *= u_brightness;
+
+  if (u_debugColor.a > 0.0) {
+    gl_FragColor = u_debugColor;
+  } else {
+    gl_FragColor = outColor;
+  }
+  //gl_FragColor = outColor;
 }

@@ -13,7 +13,7 @@ const WALL_MASS = 100000
 //
 // Main function to build all world geometry, physics and things
 //
-export function parseMap(map, gl, physWorld, templates) {
+export function parseMap(map, gl, templates) {
   const worldObjs = []
   const thingInstances = []
 
@@ -59,9 +59,13 @@ export function parseMap(map, gl, physWorld, templates) {
       const v2 = map.vertices[line.end]
 
       const uniforms = {}
+      if (sector.brightness) {
+        uniforms.u_brightness = sector.brightness
+      }
 
-      const impassable = line.hasOwnProperty('impassable') ? line.impassable : true
-      // eslint-disable-next-line
+      // Weirdly impassable is now implicit where there are no textures
+      //const impassable = line.hasOwnProperty('impassable') ? line.impassable : true
+      // Not used currently
       //const doubleSided = line.hasOwnProperty('doubleSided') ? line.doubleSided : false
 
       // FRONT
@@ -72,21 +76,18 @@ export function parseMap(map, gl, physWorld, templates) {
           const { bufferInfo, shape } = buildWall(gl, v1[X], v1[Y], v2[X], v2[Y], frontSec.floor, frontSec.ceiling, line.front.texRatio, false)
           const texture = twgl.createTexture(gl, { src: `textures/${line.front.texMid}.png` })
           const body = new Cannon.Body({ mass: WALL_MASS, shape })
-          //if (impassable) physWorld.addBody(body)
           worldObjs.push({ id: lid, type: 'line', bufferInfo, texture, uniforms, body })
         }
         if (line.front.texBot) {
           const { bufferInfo, shape } = buildWall(gl, v1[X], v1[Y], v2[X], v2[Y], backSec.floor, frontSec.floor, line.back.texRatio, true)
           const texture = twgl.createTexture(gl, { src: `textures/${line.front.texBot}.png` })
           const body = new Cannon.Body({ mass: WALL_MASS, shape })
-          //physWorld.addBody(body)
           worldObjs.push({ id: lid, type: 'line', bufferInfo, texture, uniforms, body })
         }
         if (line.front.texTop) {
           const { bufferInfo, shape } = buildWall(gl, v1[X], v1[Y], v2[X], v2[Y], frontSec.ceiling, backSec.ceiling, line.back.texRatio, true)
           const texture = twgl.createTexture(gl, { src: `textures/${line.front.texTop}.png` })
           const body = new Cannon.Body({ mass: WALL_MASS, shape })
-          //if (impassable) physWorld.addBody(body)
           worldObjs.push({ id: lid, type: 'line', bufferInfo, texture, uniforms, body })
         }
       }
@@ -99,28 +100,28 @@ export function parseMap(map, gl, physWorld, templates) {
           const { bufferInfo, shape } = buildWall(gl, v1[X], v1[Y], v2[X], v2[Y], backSec.floor, backSec.ceiling, line.back.texRatio, true)
           const texture = twgl.createTexture(gl, { src: `textures/${line.back.texMid}.png` })
           const body = new Cannon.Body({ mass: WALL_MASS, shape })
-          //if (impassable) physWorld.addBody(body)
           worldObjs.push({ id: lid, type: 'line', bufferInfo, texture, uniforms, body })
         }
         if (line.back.texBot) {
           const { bufferInfo, shape } = buildWall(gl, v1[X], v1[Y], v2[X], v2[Y], backSec.floor, frontSec.floor, line.back.texRatio, true)
           const texture = twgl.createTexture(gl, { src: `textures/${line.back.texBot}.png` })
           const body = new Cannon.Body({ mass: WALL_MASS, shape })
-          //if (impassable) physWorld.addBody(body)
           worldObjs.push({ id: lid, type: 'line', bufferInfo, texture, uniforms, body })
         }
         if (line.back.texTop) {
           const { bufferInfo, shape } = buildWall(gl, v1[X], v1[Y], v2[X], v2[Y], frontSec.ceiling, backSec.ceiling, line.back.texRatio, true)
           const texture = twgl.createTexture(gl, { src: `textures/${line.back.texTop}.png` })
           const body = new Cannon.Body({ mass: WALL_MASS, shape })
-          //if (impassable) physWorld.addBody(body)
           worldObjs.push({ id: lid, type: 'line', bufferInfo, texture, uniforms, body })
         }
       }
     }
 
     let flatId = 0
-    const uniforms = {}
+    let uniforms = {}
+    if (sector.brightness) {
+      uniforms.u_brightness = sector.brightness
+    }
 
     // Floor and ceiling polys build using earcut
     const holes = sector.holes ? sector.holes : []
@@ -130,6 +131,10 @@ export function parseMap(map, gl, physWorld, templates) {
     const floorTex = twgl.createTexture(gl, {
       src: `textures/${sector.texFloor}.png`,
     })
+    // HACK: Separate brightness for floor and ceiling
+    if (sector.texFloor == 'NUKAGE1' || sector.texFloor == 'LAVA2') {
+      uniforms.u_brightness = 6.0
+    }
     worldObjs.push({
       id: ++flatId,
       type: 'floor',
@@ -138,6 +143,10 @@ export function parseMap(map, gl, physWorld, templates) {
       uniforms,
     })
 
+    uniforms = {}
+    if (sector.brightness) {
+      uniforms.u_brightness = sector.brightness
+    }
     if (sector.ceiling !== false || sector.ceiling == undefined) {
       const ceilFlat = buildFlatNew(gl, polyFlat, floorCeilIndices, sector.ceiling, false)
       const ceilTex = twgl.createTexture(gl, {

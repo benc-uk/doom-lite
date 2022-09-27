@@ -79,10 +79,13 @@ export function drawMap(map) {
       ctx.closePath()
       ctx.fill()
     }
+
     // draw sector id text
-    ctx.fillStyle = 'pink'
-    ctx.font = '9px Arial'
-    ctx.fillText(sid, polyFlat[0], polyFlat[1])
+    if (sector.id > 20) {
+      ctx.fillStyle = 'white'
+      ctx.font = '9px Arial'
+      ctx.fillText(sid, polyFlat[0], polyFlat[1])
+    }
 
     sIx++
   }
@@ -104,7 +107,7 @@ export function drawMap(map) {
     // draw line id
     ctx.fillStyle = 'white'
     ctx.font = `${16 / state.zoom}px monospace`
-    ctx.fillText(line.id, (v1[0] + v2[0]) / 2, (v1[1] + v2[1]) / 2)
+    // ctx.fillText(line.id, (v1[0] + v2[0]) / 2, (v1[1] + v2[1]) / 2)
   }
 
   // draw any new sector in progress
