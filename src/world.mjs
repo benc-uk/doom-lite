@@ -33,12 +33,9 @@ export function parseMap(map, gl, physWorld, templates) {
   }
 
   for (const [sid, sector] of Object.entries(map.sectors)) {
-    // Build polygon for this sector
-    // ARGH: This code is a fucking horror show
+    // Build polygon for this sector - this code is a total horror show, but seems to work
     const polyFlat = []
-    //console.log(`------ sector ${sid} ------`)
-    for (let lineIx = 0; lineIx < sector.lines.length; lineIx++) {
-      const lid = sector.lines[lineIx]
+    for (const lid of sector.lines) {
       const line = map.lines[lid]
       let v = map.vertices[line.end]
 
@@ -46,11 +43,10 @@ export function parseMap(map, gl, physWorld, templates) {
         v = map.vertices[line.start]
       }
 
-      //console.log(`  line id: ${lid}, v: ${v} back: ${line.back.sector == sid}`)
       polyFlat.push(v[X], v[Y])
     }
 
-    // Mutate sector adding the poly
+    // Mutate sector adding the poly, we need it later for player-sector calc
     sector.poly = polyFlat
 
     for (const lid of sector.lines) {
@@ -117,7 +113,7 @@ export function parseMap(map, gl, physWorld, templates) {
 
     const uniforms = {}
 
-    // Floor and ceiling polys build from earcut
+    // Floor and ceiling polys build using earcut
     const holes = sector.holes ? sector.holes : []
     const floorCeilIndices = earcut(polyFlat, holes)
 

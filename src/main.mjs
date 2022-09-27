@@ -6,10 +6,11 @@ import * as Cannon from '../lib/cannon-es/dist/cannon-es.js'
 import * as twgl from '../lib/twgl/dist/4.x/twgl-full.module.js'
 import { mat4 } from '../lib/gl-matrix/esm/index.js'
 import { parse as parseJSONC } from '../lib/jsonc/index.js'
+import { getGPUTier } from '../lib/detect-gpu/detect-gpu.esm.js'
 
-const VERSION = '0.4.1'
+const VERSION = '0.4.2'
 const FOV = 45
-const FAR_CLIP = 300
+const FAR_CLIP = 120
 
 const FORCE_LOAD_MAP = true
 const DEMO_MAP = 'levels/demo.json'
@@ -48,8 +49,14 @@ window.onload = async () => {
     return
   }
 
-  let map
+  const gpu = await getGPUTier()
+  console.log(`🎮 GPU - Tier:${gpu.tier}, FPS:${gpu.fps}, Make:${gpu.gpu}, Mobile:${gpu.mobile ? 'mobile' : 'desktop'}`)
+  if (gpu.tier < 3 || gpu.fps < 30) {
+    alert(`Detected your GPU is tier ${gpu.tier} (3 is best) with a benchmark of ${gpu.fps} FPS. You will likely experience very poor performance`)
+  }
+
   // Load cached map data
+  let map
   try {
     // HACK: Force reload of map data
     let mapData = localStorage.getItem('map')
@@ -66,7 +73,6 @@ window.onload = async () => {
 
     // Parse map raw JSON data
     map = parseJSONC(mapData)
-    //localStorage.setItem('map', mapData)
     console.log(`🗺️ Map '${map.name}' was loaded`)
   } catch (e) {
     setOverlay(`Map loading error: ${e.message}`)
@@ -81,7 +87,7 @@ window.onload = async () => {
   let worldProg = null
   let spriteProg = null
   try {
-    // Note, we load shaders from external files
+    // Note, we load shaders from external files, that's how I like to work
     const { vertex: worldVert, fragment: worldFrag } = await fetchShaders('shaders/world-vert.glsl', 'shaders/world-frag.glsl')
     worldProg = twgl.createProgramInfo(gl, [worldVert, worldFrag])
 

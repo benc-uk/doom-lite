@@ -8,8 +8,8 @@ export const TEX_SCALE = 10
 // buildWall - creates a rectangle, how hard can that be?!
 // Returns a twgl BufferInfo https://twgljs.org/docs/module-twgl.html#.BufferInfo
 //
-export function buildWall(gl, p1x, p1y, p2x, p2y, floorHeight, ceilingHeight, widthRatio = 1, flip = false) {
-  if (widthRatio === undefined) widthRatio = 1
+export function buildWall(gl, p1x, p1y, p2x, p2y, floorHeight, ceilingHeight, widthRatio, flip = false) {
+  if (!widthRatio) widthRatio = 1
 
   // prettier-ignore
   const positions = [
@@ -60,6 +60,7 @@ function makeRectBuffer(gl, positions, indices, widthRatio, flip = false) {
 
   const texcoord = [0, 0, v1Len, 0, 0, v2Len, v1Len, v2Len]
   // flip the texture coords if we are flipped
+  // TODO: This is wrong!
   if (flip) {
     texcoord[1] = v2Len
     texcoord[3] = v2Len
@@ -77,10 +78,6 @@ function makeRectBuffer(gl, positions, indices, widthRatio, flip = false) {
 }
 
 export function buildFlatNew(gl, poly, indices, height, up = true) {
-  // console.log('=== buildFlatNew ===')
-  // console.log('  poly:', JSON.stringify(poly))
-  // console.log('  indices:', JSON.stringify(indices))
-
   const position = []
   const texcoord = []
   const indicesCopy = []
