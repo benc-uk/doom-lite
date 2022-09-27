@@ -107,7 +107,7 @@ export function updatePlayer(map, player, camera) {
   //     player.sector = sid
   //     break
   //   }
-  }
+  // }
 
   // We don't have gravity so move the player body Y axis too
   const playerY = player.sector ? map.sectors[player.sector].floor + player.height : player.height
