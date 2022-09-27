@@ -1,11 +1,11 @@
-# FPS Experiment
+# 'Doom Like' FPS Experiment
 
-A learning exercise in writing a simple retro style FPS like Doom using nothing by JavaScript and WebGL
-A spin off repo from https://github.com/benc-uk/webgl-sandbox
+A learning exercise in writing a simple retro style FPS like Doom using nothing by JavaScript and WebGL.  
+A spin off repo from work originally created here https://github.com/benc-uk/webgl-sandbox
 
 ## Screenshots
 
-![screenshot](./etc/Screenshot%202022-09-17%20122123.png)
+![screenshot](./etc/oldish.png)
 ![screenshot](./etc/demo.png)
 
 ## Running Locally
