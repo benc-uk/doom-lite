@@ -50,7 +50,7 @@ window.onload = async () => {
   }
 
   const gpu = await getGPUTier()
-  console.log(`🎮 GPU - Tier:${gpu.tier}, FPS:${gpu.fps}, Make:${gpu.gpu}, Mobile:${gpu.mobile ? 'mobile' : 'desktop'}`)
+  console.log(`🎮 GPU - Tier:${gpu.tier}, FPS:${gpu.fps}, Make:${gpu.gpu}, Mobile:${gpu.mobile}`)
   if (gpu.tier < 3 || gpu.fps < 30) {
     alert(`Detected your GPU is tier ${gpu.tier} (3 is best) with a benchmark of ${gpu.fps} FPS. You will likely experience very poor performance`)
   }
