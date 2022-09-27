@@ -8,7 +8,7 @@ import { mat4 } from '../lib/gl-matrix/esm/index.js'
 import { parse as parseJSONC } from '../lib/jsonc/index.js'
 import { getGPUTier } from '../lib/detect-gpu/detect-gpu.esm.js'
 
-const VERSION = '0.4.2'
+const VERSION = '0.4.2-goat'
 const FOV = 45
 const FAR_CLIP = 120
 

@@ -101,12 +101,12 @@ export function handleInputs(deltaTime, player, camera, map) {
 
 export function updatePlayer(map, player, camera) {
   // Check which sector player is in
-  for (const [sid, sector] of Object.entries(map.sectors)) {
-    if (pointInPolygonFlat([player.location[0], player.location[2]], sector.poly)) {
-      //console.log('Player is in sector', sid)
-      player.sector = sid
-      break
-    }
+  // for (const [sid, sector] of Object.entries(map.sectors)) {
+  //   if (pointInPolygonFlat([player.location[0], player.location[2]], sector.poly)) {
+  //     //console.log('Player is in sector', sid)
+  //     player.sector = sid
+  //     break
+  //   }
   }
 
   // We don't have gravity so move the player body Y axis too

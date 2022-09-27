@@ -58,7 +58,7 @@ export function parseMap(map, gl, physWorld, templates) {
 
       const uniforms = {}
 
-      const impassable = line.hasOwnProperty('impassable') ? line.impassable : true
+      const impassable = false //line.hasOwnProperty('impassable') ? line.impassable : true
       // eslint-disable-next-line
       //const doubleSided = line.hasOwnProperty('doubleSided') ? line.doubleSided : false
 
