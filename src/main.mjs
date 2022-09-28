@@ -1,19 +1,23 @@
+// ===== main.mjs ===================================================================
+// Main entry point for the game, initialization and core rendering loop
+// Ben Coleman, 2022
+// ==================================================================================
+
 import { fetchShaders, hideOverlay, setOverlay } from './utils.mjs'
-import { parseMap, buildTemplates } from './world.mjs'
+import { buildWorld, buildTemplates } from './world.mjs'
 import { initInput, handleInputs, updatePlayer } from './controls.mjs'
+import { loadDataFiles, buildTextureCache } from './data.mjs'
 
 import * as Cannon from '../lib/cannon-es/dist/cannon-es.js'
 import * as twgl from '../lib/twgl/dist/4.x/twgl-full.module.js'
 import { mat4 } from '../lib/gl-matrix/esm/index.js'
-import { parse as parseJSONC } from '../lib/jsonc/index.js'
 import { getGPUTier } from '../lib/detect-gpu/detect-gpu.esm.js'
 
-const VERSION = '0.4.5'
-const FOV = 45
+const VERSION = '0.4.6'
+const FOV = 38
 const FAR_CLIP = 140
 
-const FORCE_LOAD_MAP = true
-const DEMO_MAP = 'levels/demo.json'
+const MAP_FILE = 'levels/demo.json'
 const NO_CLIP = false
 
 let camera
@@ -29,7 +33,6 @@ const player = {
 
 const baseUniforms = {
   u_lightColor: [1, 1, 1, 1],
-
   u_lightAmbient: [0.3, 0.3, 0.3, 1],
   u_specular: [1, 1, 1, 1],
   u_shininess: 350,
@@ -55,27 +58,14 @@ window.onload = async () => {
     alert(`Detected your GPU is tier ${gpu.tier} (3 is best) with a benchmark of ${gpu.fps} FPS. You might have a bad time, I dunno`)
   }
 
-  // Load cached map data
-  let map
+  // Load data files like the main and the thing DB
+  let map, thingDB
   try {
-    // HACK: Force reload of map data
-    let mapData = localStorage.getItem('map')
-    if (FORCE_LOAD_MAP) mapData = null
-    // fetch demo map from file if not in local storage
-    if (!mapData) {
-      console.log(`💾 Loading map from ${DEMO_MAP} not local storage`)
-      const mapResp = await fetch(DEMO_MAP)
-      if (!mapResp.ok) {
-        throw new Error(`Unable to load ${DEMO_MAP} ${mapResp.status}`)
-      }
-      mapData = await mapResp.text()
-    }
-
-    // Parse map raw JSON data
-    map = parseJSONC(mapData)
+    console.log(`💾 Loading map '${MAP_FILE}' and other data files...`)
+    ;({ map, thingDB } = await loadDataFiles('data/things.json', MAP_FILE))
     console.log(`🗺️ Map '${map.name}' was loaded`)
   } catch (e) {
-    setOverlay(`Map loading error: ${e.message}`)
+    setOverlay(`Data loading error: ${e.message}`)
     return // Give up here!
   }
 
@@ -84,8 +74,7 @@ window.onload = async () => {
 
   // Use TWLG to set up the shaders and programs
   // We have two programs and two pairs of shaders, one for the world and one for the sprites
-  let worldProg = null
-  let spriteProg = null
+  let worldProg, spriteProg
   try {
     // Note, we load shaders from external files, that's how I like to work
     const { vertex: worldVert, fragment: worldFrag } = await fetchShaders('shaders/world-vert.glsl', 'shaders/world-frag.glsl')
@@ -101,10 +90,21 @@ window.onload = async () => {
     return // Give up here!
   }
 
-  // Set up all thing templates
-  let templates = null
+  // Load all the textures we need
+  let textureCache
   try {
-    templates = await buildTemplates(gl)
+    textureCache = await buildTextureCache(gl, map, thingDB)
+    console.log(`🖼️ Loaded ${Object.keys(textureCache).length} textures into cache`)
+  } catch (err) {
+    console.error(err)
+    setOverlay(`Texture loading error ${err}`)
+    return // Give up here!
+  }
+
+  // Set up all thing templates
+  let templates
+  try {
+    templates = await buildTemplates(gl, textureCache, thingDB)
     console.log(`🗿 Loaded ${Object.keys(templates).length} thing templates`)
   } catch (err) {
     console.error(err)
@@ -128,7 +128,7 @@ window.onload = async () => {
   console.log('🧪 Physics initialized')
 
   // Build *everything* we are going to render
-  const { worldObjs, thingInstances, playerStart } = await parseMap(map, gl, templates)
+  const { worldObjs, thingInstances, playerStart } = await buildWorld(map, gl, templates, textureCache)
   console.log(`🧩 Map '${map.name}' was parsed into ${worldObjs.length} parts and ${thingInstances.length} thing instances`)
 
   // Setup player position and camera

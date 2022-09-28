@@ -1,6 +1,12 @@
+// ===== geometry.mjs ===============================================================
+// Used for building the geometry buffers for walls and floors/ceilings
+// Ben Coleman, 2022
+// ==================================================================================
+
 import * as twgl from '../lib/twgl/dist/4.x/twgl-full.module.js'
 import * as Cannon from '../lib/cannon-es/dist/cannon-es.js'
 import { vec3 } from '../lib/gl-matrix/esm/index.js'
+import { earcut } from '../lib/earcut/earcut.esm.js'
 
 export const TEX_SCALE = 10
 
@@ -9,8 +15,6 @@ export const TEX_SCALE = 10
 // Returns a twgl BufferInfo https://twgljs.org/docs/module-twgl.html#.BufferInfo
 //
 export function buildWall(gl, p1x, p1y, p2x, p2y, floorHeight, ceilingHeight, widthRatio, flip = false) {
-  //if (!widthRatio) widthRatio = 1
-
   // prettier-ignore
   const positions = [
      p1x, ceilingHeight, p1y,
@@ -28,23 +32,9 @@ export function buildWall(gl, p1x, p1y, p2x, p2y, floorHeight, ceilingHeight, wi
   return { bufferInfo, shape }
 }
 
-export function buildFlatOLDNOTUSED(gl, p1x, p1y, p2x, p2y, p3x, p3y, p4x, p4y, height, up = true) {
-  // prettier-ignore
-  const positions = [
-     p1x, height, p1y,
-     p2x, height, p2y,
-     p4x, height, p4y,
-     p3x, height, p3y,
-  ]
-
-  const indices = [0, 2, 1, 1, 2, 3]
-  if (!up) indices.reverse()
-
-  const bufferInfo = makeRectBuffer(gl, positions, indices, 1)
-
-  return bufferInfo
-}
-
+//
+// Helper to make rectangle BufferInfo
+//
 function makeRectBuffer(gl, positions, indices, widthRatio, flip = false) {
   // Work out normal with classic cross product method
   const v1 = vec3.fromValues(positions[0] - positions[3], positions[1] - positions[4], positions[2] - positions[5])
@@ -74,10 +64,20 @@ function makeRectBuffer(gl, positions, indices, widthRatio, flip = false) {
     normal: [norm[0], norm[1], norm[2], norm[0], norm[1], norm[2], norm[0], norm[1], norm[2], norm[0], norm[1], norm[2]],
     indices,
   }
+
   return twgl.createBufferInfoFromArrays(gl, arrays)
 }
 
-export function buildFlatNew(gl, poly, indices, height, up = true) {
+//
+// Build a flat (floor or ceiling) for a sector
+//
+export function buildFlat(gl, sector, floor = true) {
+  const poly = sector.poly
+  const height = floor ? sector.floor : sector.ceiling
+
+  // Use earcut to triangulate the polygon
+  const indices = earcut(poly, sector.holes ? sector.holes : [])
+
   const position = []
   const texcoord = []
   const indicesCopy = []
@@ -100,7 +100,7 @@ export function buildFlatNew(gl, poly, indices, height, up = true) {
     maxY = Math.max(maxY, poly[ix + 1])
   }
 
-  const normalY = up ? -1 : 1
+  const normalY = floor ? -1 : 1
   for (let ix = 0; ix < poly.length; ix += 2) {
     texcoord.push((poly[ix] - minX) / TEX_SCALE, (poly[ix + 1] - minY) / TEX_SCALE)
     normal.push(0, normalY, 0)
@@ -110,7 +110,7 @@ export function buildFlatNew(gl, poly, indices, height, up = true) {
   for (let ix = 0; ix < indices.length; ix++) {
     indicesCopy[ix] = indices[ix]
   }
-  if (up) indicesCopy.reverse()
+  if (floor) indicesCopy.reverse()
 
   const arrays = {
     position,

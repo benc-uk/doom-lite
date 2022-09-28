@@ -1,4 +1,9 @@
-import { buildFlatNew, buildWall } from './geometry.mjs'
+// ===== world.mjs ===============================================================
+// Parsing the map and other data structures into geometry that OpenGL can render
+// Ben Coleman, 2022
+// ================================================================================
+
+import { buildFlat, buildWall } from './geometry.mjs'
 
 import * as twgl from '../lib/twgl/dist/4.x/twgl-full.module.js'
 import * as Cannon from '../lib/cannon-es/dist/cannon-es.js'
@@ -13,10 +18,9 @@ const WALL_MASS = 100000
 //
 // Main function to build all world geometry, physics and things
 //
-export async function parseMap(map, gl, templates) {
+export async function buildWorld(map, gl, templates, textureCache) {
   const worldObjs = []
   const thingInstances = []
-  const textureRequestMap = {}
 
   let thingCount = 0
   // First pass, create all thing instances
@@ -34,44 +38,6 @@ export async function parseMap(map, gl, templates) {
       textureIndex: Math.floor(Math.random() * template.textures.length),
     })
   }
-
-  // Build a hash map of all line/wall textures we need
-  // TODO: Maybe remove this extra pass of all the map lines?
-  for (const [_, line] of Object.entries(map.lines)) {
-    if (line.front.texMid) textureRequestMap[line.front.texMid] = { src: `textures/${line.front.texMid}.png` }
-    if (line.front.texBot) textureRequestMap[line.front.texBot] = { src: `textures/${line.front.texBot}.png` }
-    if (line.front.texTop) textureRequestMap[line.front.texTop] = { src: `textures/${line.front.texTop}.png` }
-    if (line.back.texMid) textureRequestMap[line.back.texMid] = { src: `textures/${line.back.texMid}.png` }
-    if (line.back.texBot) textureRequestMap[line.back.texBot] = { src: `textures/${line.back.texBot}.png` }
-    if (line.back.texTop) textureRequestMap[line.back.texTop] = { src: `textures/${line.back.texTop}.png` }
-  }
-  for (const [_, sector] of Object.entries(map.sectors)) {
-    if (sector.texFloor) textureRequestMap[sector.texFloor] = { src: `textures/${sector.texFloor}.png` }
-    if (sector.texCeil) textureRequestMap[sector.texCeil] = { src: `textures/${sector.texCeil}.png` }
-  }
-
-  // Load all line/wall textures synchronously
-  // This way we can get their width/height and use that to build the geometry
-  const textureCache = await new Promise((resolve, reject) => {
-    twgl.createTextures(gl, textureRequestMap, (err, textures, sources) => {
-      if (!err) {
-        for (const name in sources) {
-          // Mutate the texture object map, adding width and height
-          textures[name] = {
-            texture: textures[name],
-            width: sources[name].width,
-            height: sources[name].height,
-          }
-        }
-
-        resolve(textures)
-      } else {
-        reject(err)
-      }
-    })
-  })
-
-  console.log(`🖼️ Loaded ${Object.keys(textureCache).length} textures into cache`)
 
   for (const [sid, sector] of Object.entries(map.sectors)) {
     // Build polygon for this sector - this code is a total horror show, but seems to work
@@ -157,10 +123,6 @@ export async function parseMap(map, gl, templates) {
     }
 
     let flatId = 0
-    // Floor and ceiling polys build using earcut
-    const holes = sector.holes ? sector.holes : []
-    const floorCeilIndices = earcut(polyFlat, holes)
-
     // Floors...
     let uniforms = {}
     if (sector.brightness) {
@@ -170,9 +132,10 @@ export async function parseMap(map, gl, templates) {
       uniforms.u_brightness = sector.brightFloor
     }
 
-    const floorFlat = buildFlatNew(gl, polyFlat, floorCeilIndices, sector.floor)
+    // const floorFlat = buildFlat(gl, polyFlat, floorCeilIndices, sector.floor)
+    const floorFlat = buildFlat(gl, sector, true)
     worldObjs.push({
-      id: ++flatId,
+      id: flatId++,
       type: 'floor',
       bufferInfo: floorFlat,
       texture: textureCache[sector.texFloor],
@@ -189,9 +152,9 @@ export async function parseMap(map, gl, templates) {
     }
 
     if (sector.ceiling !== false || sector.ceiling == undefined) {
-      const ceilFlat = buildFlatNew(gl, polyFlat, floorCeilIndices, sector.ceiling, false)
+      const ceilFlat = buildFlat(gl, sector, false)
       worldObjs.push({
-        id: ++flatId,
+        id: flatId++,
         type: 'ceiling',
         bufferInfo: ceilFlat,
         texture: textureCache[sector.texCeil],
@@ -204,16 +167,9 @@ export async function parseMap(map, gl, templates) {
 }
 
 //
-// Sets up all the thing templates, used for instancing thigns (sprites)
+// Sets up all the thing templates, used for instancing things (sprites)
 //
-export async function buildTemplates(gl) {
-  // Try to load the templates database
-  const thingDbResp = await fetch('data/things.json')
-  if (!thingDbResp.ok) {
-    throw new Error(`HTTP error! status: ${thingDbResp.status}`)
-  }
-  const thingDB = await thingDbResp.json()
-
+export async function buildTemplates(gl, textureCache, thingDB) {
   const templates = {}
   for (const dbEntry of thingDB) {
     const size = dbEntry.size
@@ -222,14 +178,8 @@ export async function buildTemplates(gl) {
     const buffers = twgl.primitives.createPlaneBufferInfo(gl, size, size, 1, 1, spriteTransform)
 
     const textures = []
-    for (const texture of dbEntry.textures) {
-      textures.push(
-        twgl.createTexture(gl, {
-          src: `sprites/${texture}.png`,
-          mag: gl.NEAREST,
-          wrap: gl.CLAMP_TO_EDGE,
-        })
-      )
+    for (const textureName of dbEntry.textures) {
+      textures.push(textureCache[textureName].texture)
     }
 
     templates[dbEntry.name] = {

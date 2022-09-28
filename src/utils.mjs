@@ -1,11 +1,11 @@
-// #########################################################################
-// utils - A collection of helper functions
+// ===== utils.mjs ===============================================================
+// A collection of helper functions, most were replaced with twgl
 // Ben Coleman, 2022
-// #########################################################################
+// ===============================================================================
 
-// ====================================================================================
+//
 // Load shader sources from external files using fetch, return both sources as strings
-// ====================================================================================
+//
 export async function fetchShaders(vertPath, fragPath) {
   const vsResp = await fetch(vertPath)
   const fsResp = await fetch(fragPath)
@@ -20,9 +20,9 @@ export async function fetchShaders(vertPath, fragPath) {
   return { vertex: vsText, fragment: fsText }
 }
 
-// ====================================================================================
+//
 // Helper to show text on the screen
-// ====================================================================================
+//
 export function setOverlay(message) {
   const overlay = document.getElementById('overlay')
   if (!overlay) return

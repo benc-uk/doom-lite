@@ -18,3 +18,7 @@ If you have Node installed, you can run:
 make install-tools
 make local-server
 ```
+
+## Included Libraries
+
+Some libraries have been copied into the repo (within the lib folder), this has been done under the terms of the license they have been distributed under.

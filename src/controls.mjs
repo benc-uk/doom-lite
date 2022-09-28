@@ -1,3 +1,9 @@
+// ===== controls.mjs ===============================================================
+// Input handling and controls for movement of the player
+// Also camera, lighting and physics is updated here
+// Ben Coleman, 2022
+// ==================================================================================
+
 import { mat4 } from '../lib/gl-matrix/esm/index.js'
 import { pointInPolygonFlat } from '../lib/point-in-poly/pip.mjs'
 
@@ -99,6 +105,9 @@ export function handleInputs(deltaTime, player, camera, map) {
   updatePlayer(map, player, camera)
 }
 
+//
+// Update where the player is, camera and lights
+//
 export function updatePlayer(map, player, camera) {
   // Check which sector player is in, this is brute force
   // TODO: Any way to optimize this?
@@ -120,5 +129,5 @@ export function updatePlayer(map, player, camera) {
   camera[14] = player.body.position.z
 
   // lower the body so we bump into low steps
-  player.body.position.y = playerY - 0.5
+  player.body.position.y = playerY
 }
