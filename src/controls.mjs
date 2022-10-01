@@ -69,79 +69,93 @@ export function initInput(gl) {
 //
 // Handle any active input, called every frame
 //
-export function handleInputs(deltaTime, player, camera, map) {
+export function handleInputs(deltaTime, player, camera) {
   const moveSpeed = 62.0 // Don't understand why don't need to multiply by deltaTime here
   const turnSpeed = 3.9 * deltaTime
+  const playerFacing = [camera[8], camera[9], camera[10]]
 
+  // Move forward/back
   if (inputMap['w'] || inputMap['ArrowUp']) {
-    player.body.velocity.set(-player.facing[0] * moveSpeed, -player.facing[1] * moveSpeed, -player.facing[2] * moveSpeed)
+    player.body.velocity.set(-playerFacing[0] * moveSpeed, -playerFacing[1] * moveSpeed, -playerFacing[2] * moveSpeed)
   }
-
   if (inputMap['s'] || inputMap['ArrowDown']) {
-    player.body.velocity.set(player.facing[0] * moveSpeed, player.facing[1] * moveSpeed, player.facing[2] * moveSpeed)
+    player.body.velocity.set(playerFacing[0] * moveSpeed, playerFacing[1] * moveSpeed, playerFacing[2] * moveSpeed)
   }
 
+  // Strafe left/right
   if (inputMap['q']) {
-    player.body.velocity.set((-player.facing[2] * moveSpeed) / 2, 0, (player.facing[0] * moveSpeed) / 2)
+    player.body.velocity.set((-playerFacing[2] * moveSpeed) / 2, 0, (playerFacing[0] * moveSpeed) / 2)
   }
-
   if (inputMap['e']) {
-    player.body.velocity.set((player.facing[2] * moveSpeed) / 2, 0, (-player.facing[0] * moveSpeed) / 2)
+    player.body.velocity.set((playerFacing[2] * moveSpeed) / 2, 0, (-playerFacing[0] * moveSpeed) / 2)
   }
 
+  // Turn left & right
   if (inputMap['a'] || inputMap['ArrowLeft']) {
-    mat4.rotateY(camera, camera, turnSpeed)
-
-    // update facing
-    player.facing = [camera[8], camera[9], camera[10]]
+    player.yAngle += turnSpeed
   }
-
   if (inputMap['d'] || inputMap['ArrowRight']) {
-    mat4.rotateY(camera, camera, -turnSpeed)
-
-    // update facing
-    player.facing = [camera[8], camera[9], camera[10]]
+    player.yAngle -= turnSpeed
   }
 
-  if (inputMap['r'] && player.noClip) {
+  // Look up/down
+  if (inputMap['r']) {
+    player.xAngle += turnSpeed / 4
+  }
+  if (inputMap['f']) {
+    player.xAngle -= turnSpeed / 4
+  }
+
+  // No clip controls for debugging
+  if (inputMap['PageUp'] && player.noClip) {
     player.height += 0.3
   }
-  if (inputMap['f'] && player.noClip) {
+  if (inputMap['PageDown'] && player.noClip) {
     player.height -= 0.3
   }
-
-  if (inputMap['c']) {
+  if (inputMap['Insert']) {
     player.noClip = !player.noClip
-    delete inputMap['c']
+    delete inputMap['Insert']
     showToast('🚫 NoClip ' + (player.noClip ? 'enabled' : 'disabled'))
   }
 
-  updatePlayer(map, player, camera)
+  // FOV controls
+  if (inputMap['1']) {
+    player.fov -= 2
+    if (player.fov < 1) player.fov = 1
+  }
+  if (inputMap['2']) {
+    player.fov += 2
+    if (player.fov >= 170) player.fov = 170
+  }
 }
 
 //
-// Update where the player is, camera and lights
+// Update where the player camera etc
 //
-export function updatePlayer(map, player, camera) {
+export function updatePlayerCamera(map, player, camera) {
   // Check which sector player is in, this is brute force
   // TODO: Any way to optimize this?
   for (const [sid, sector] of Object.entries(map.sectors)) {
-    if (pointInPolygonFlat([player.location[0], player.location[2]], sector.poly)) {
+    if (pointInPolygonFlat([player.body.position.x, player.body.position.z], sector.poly)) {
       player.sector = sid
       break
     }
   }
 
-  // We don't have gravity so move the player body Y axis too
   const playerY = player.sector ? map.sectors[player.sector].floor + player.height : player.height
-  player.body.position.y = playerY + 1.5
-
-  // Move the camera & light to the player position
-  player.location = [player.body.position.x, playerY, player.body.position.z]
-  camera[12] = player.body.position.x
-  camera[13] = player.body.position.y
-  camera[14] = player.body.position.z
+  player.body.position.y = playerY
+  mat4.translate(camera, camera, [player.body.position.x, player.body.position.y, player.body.position.z])
+  mat4.rotateY(camera, camera, player.yAngle)
+  mat4.rotateX(camera, camera, player.xAngle)
 
   // lower the body so we bump into low geometry
   player.body.position.y = playerY - 0.8
+
+  // Handle no clip mode
+  if (player.noClip) {
+    player.body.collisionFilterGroup = 0
+  } else {
+    player.body.collisionFilterGroup = 1
+  }
 }

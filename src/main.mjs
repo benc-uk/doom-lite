@@ -5,7 +5,7 @@
 
 import { fetchShaders, hideOverlay, setOverlay } from './utils.mjs'
 import { buildWorld, buildTemplates } from './world.mjs'
-import { initInput, handleInputs, updatePlayer } from './controls.mjs'
+import { initInput, handleInputs, updatePlayerCamera } from './controls.mjs'
 import { loadDataFiles, buildTextureCache } from './data.mjs'
 
 import * as Cannon from '../lib/cannon-es/dist/cannon-es.js'
@@ -13,25 +13,21 @@ import * as twgl from '../lib/twgl/dist/4.x/twgl-full.module.js'
 import { mat4, vec3 } from '../lib/gl-matrix/esm/index.js'
 import { getGPUTier } from '../lib/detect-gpu/detect-gpu.esm.js'
 
-const VERSION = '0.5.3'
-const FOV = 38
+const VERSION = '0.5.4'
 const FAR_CLIP = 140
 const MAX_LIGHTS = 16 // Should match shader code
-
 const MAP_FILE = 'levels/demo.json5'
-//const NO_CLIP = true
 
-let camera
 let totalTime = 0
 
 const player = {
-  location: [0, 0, 0],
-  facing: [0, 0, 0],
+  yAngle: 0,
+  xAngle: -0.1,
   body: null,
-  height: 4,
+  height: 6,
   sector: 0,
   noClip: false,
-  lookUp: 0.0,
+  fov: 38,
 }
 
 const baseUniforms = {
@@ -42,7 +38,7 @@ const baseUniforms = {
 }
 
 //
-// Start here when the page is loaded.
+// ENTRYPOINT! Start here when the page is loaded
 //
 window.onload = async () => {
   console.log(`🌍 Starting up... \n⚓ v${VERSION}`)
@@ -123,7 +119,7 @@ window.onload = async () => {
   player.body = new Cannon.Body({
     mass: 0.001,
     shape: new Cannon.Sphere(1.5),
-    linearDamping: 0.99998,
+    linearDamping: 0.995,
   })
   physWorld.addBody(player.body)
   console.log('🧪 Physics initialized')
@@ -132,16 +128,11 @@ window.onload = async () => {
   const { worldObjs, thingInstances, playerStart } = await buildWorld(map, gl, templates, textureCache)
   console.log(`🧩 Map '${map.name}' was parsed into ${worldObjs.length} parts and ${thingInstances.length} thing instances`)
 
-  // Setup player position and camera
-  camera = mat4.targetTo(mat4.create(), [0, 0, 0], [0, 0, -1], [0, 1, 0])
-  mat4.translate(camera, camera, [playerStart.x, player.height, playerStart.z])
-  mat4.rotateY(camera, camera, map.playerStart.angle)
-  player.body.position.set(camera[12], camera[13], camera[14])
-
-  player.facing = [camera[8], camera[9], camera[10]]
-  player.location = [camera[12], camera[13], camera[14]]
-
-  updatePlayer(map, player, camera)
+  // Setup player position and facing
+  player.body.position.x = playerStart.x
+  player.body.position.y = player.height
+  player.body.position.z = playerStart.y
+  player.yAngle = playerStart.angle
 
   gl.enable(gl.DEPTH_TEST)
   gl.enable(gl.CULL_FACE)
@@ -161,39 +152,28 @@ window.onload = async () => {
     prevTime = now
     totalTime += deltaTime
 
-    // Process inputs and controls
-    handleInputs(deltaTime, player, camera, map)
-
-    if (player.noClip) {
-      player.body.collisionFilterGroup = 0
-    } else {
-      player.body.collisionFilterGroup = 1
-    }
+    // Process inputs and controls, and update player & camera
+    const camera = mat4.targetTo(mat4.create(), [0, 0, 0], [0, 0, -1], [0, 1, 0])
+    updatePlayerCamera(map, player, camera)
+    handleInputs(deltaTime, player, camera)
 
     // Update physics
     physWorld.fixedStep()
-
-    if (now % 3 < deltaTime) {
-      //console.log(`🚀 FPS: ${Math.round(1 / deltaTime)}`)
-    }
-    if (totalTime > 5) {
-      setOverlay(`PLAYER: ${Math.round(player.location[0])}, ${Math.round(player.location[2])} &nbsp;&nbsp; FPS: ${Math.round(1 / deltaTime)}`)
-    }
 
     gl.clear(gl.COLOR_BUFFER_BIT)
 
     twgl.resizeCanvasToDisplaySize(gl.canvas)
     gl.viewport(0, 0, gl.canvas.width, gl.canvas.height)
 
-    const view = mat4.invert(mat4.create(), camera)
-
     // Do this in every frame since the window and therefore the aspect ratio of projection matrix might change
-    const perspective = mat4.perspective(mat4.create(), (FOV * Math.PI) / 180, gl.canvas.clientWidth / gl.canvas.clientHeight, 0.1, FAR_CLIP)
+    const view = mat4.invert(mat4.create(), camera)
+    const perspective = mat4.perspective(mat4.create(), (player.fov * Math.PI) / 180, gl.canvas.clientWidth / gl.canvas.clientHeight, 0.1, FAR_CLIP)
     const viewPerspective = mat4.multiply(mat4.create(), perspective, view)
 
-    // Note we place the light at the camera & player position
+    // Note we place the light at the player position
+    const playerPos = [player.body.position.x, player.body.position.y, player.body.position.z]
     const playerLight = {
-      pos: player.location,
+      pos: playerPos,
       color: [1, 1, 1, 1],
       intensity: 1.1,
       radius: 130,
@@ -205,7 +185,7 @@ window.onload = async () => {
       if (instance.template.light) {
         const lightTmpl = instance.template.light
         const lightPos = [instance.location[0], instance.location[1] + lightTmpl.height, instance.location[2]]
-        const dist = vec3.distance(lightPos, player.location)
+        const dist = vec3.distance(lightPos, playerPos)
 
         // Only add lights that are close enough to be visible
         if (dist < FAR_CLIP) {
@@ -233,6 +213,10 @@ window.onload = async () => {
         intensity: lightTmpl.intensity,
         radius: lightTmpl.radius,
       }
+    }
+
+    if (totalTime > 5) {
+      setOverlay(`PLAYER: ${Math.round(playerPos[0])},${Math.round(playerPos[2])} &nbsp;&nbsp; FPS: ${Math.round(1 / deltaTime)}`)
     }
 
     drawWorld(gl, worldProg, uniforms, worldObjs, viewPerspective, physWorld, map)
@@ -289,7 +273,7 @@ function drawWorld(gl, programInfo, uniforms, worldObjs, viewPerspective, physWo
 }
 
 //
-//
+// Draw all the things, which are billboard 2d sprites, transformed into world space
 //
 function drawThings(gl, programInfo, uniforms, thingInstances, view, perspective, deltaTime) {
   for (const instance of thingInstances) {

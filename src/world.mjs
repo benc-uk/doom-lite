@@ -163,7 +163,7 @@ export async function buildWorld(map, gl, templates, textureCache) {
     }
   }
 
-  return { worldObjs, thingInstances, playerStart: { x: map.playerStart.x, y: 0, z: map.playerStart.y } }
+  return { worldObjs, thingInstances, playerStart: map.playerStart }
 }
 
 //
