@@ -70,31 +70,37 @@ export function initInput(gl) {
 // Handle any active input, called every frame
 //
 export function handleInputs(deltaTime, player, camera) {
-  const moveSpeed = 62.0 // Don't understand why don't need to multiply by deltaTime here
-  const turnSpeed = 3.9 * deltaTime
+  let moveSpeed = 60.0 // Don't understand why don't need to multiply by deltaTime here
+  let turnSpeed = 3.9 * deltaTime
   const playerFacing = [camera[8], camera[9], camera[10]]
 
+  // For extra slow movement
+  if (inputMap['Shift']) {
+    moveSpeed *= 0.3
+    turnSpeed *= 0.2
+  }
+
   // Move forward/back
-  if (inputMap['w'] || inputMap['ArrowUp']) {
+  if (inputMap['w'] || inputMap['W'] || inputMap['ArrowUp']) {
     player.body.velocity.set(-playerFacing[0] * moveSpeed, -playerFacing[1] * moveSpeed, -playerFacing[2] * moveSpeed)
   }
-  if (inputMap['s'] || inputMap['ArrowDown']) {
+  if (inputMap['s'] || inputMap['S'] || inputMap['ArrowDown']) {
     player.body.velocity.set(playerFacing[0] * moveSpeed, playerFacing[1] * moveSpeed, playerFacing[2] * moveSpeed)
   }
 
   // Strafe left/right
-  if (inputMap['q']) {
+  if (inputMap['q'] || inputMap['Q']) {
     player.body.velocity.set((-playerFacing[2] * moveSpeed) / 2, 0, (playerFacing[0] * moveSpeed) / 2)
   }
-  if (inputMap['e']) {
+  if (inputMap['e'] || inputMap['E']) {
     player.body.velocity.set((playerFacing[2] * moveSpeed) / 2, 0, (-playerFacing[0] * moveSpeed) / 2)
   }
 
   // Turn left & right
-  if (inputMap['a'] || inputMap['ArrowLeft']) {
+  if (inputMap['a'] || inputMap['A'] || inputMap['ArrowLeft']) {
     player.yAngle += turnSpeed
   }
-  if (inputMap['d'] || inputMap['ArrowRight']) {
+  if (inputMap['d'] || inputMap['D'] || inputMap['ArrowRight']) {
     player.yAngle -= turnSpeed
   }
 

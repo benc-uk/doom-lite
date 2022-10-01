@@ -13,7 +13,7 @@ import * as twgl from '../lib/twgl/dist/4.x/twgl-full.module.js'
 import { mat4, vec3 } from '../lib/gl-matrix/esm/index.js'
 import { getGPUTier } from '../lib/detect-gpu/detect-gpu.esm.js'
 
-const VERSION = '0.5.4'
+const VERSION = '0.5.5'
 const FAR_CLIP = 140
 const MAX_LIGHTS = 16 // Should match shader code
 const MAP_FILE = 'levels/demo.json5'

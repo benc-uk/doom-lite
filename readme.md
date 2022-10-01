@@ -1,24 +1,60 @@
-# 'Doom Like' FPS Experiment
+# 'Doom Like' FPS Engine
 
-A learning exercise in writing a simple retro style FPS like Doom using nothing by JavaScript and WebGL.  
-A spin off repo from work originally created here https://github.com/benc-uk/webgl-sandbox
+This repo is a learning exercise in writing a simple retro style FPS engine, similar to Doom using nothing by JavaScript and WebGL. 
+
+It is not an attempt to implement the original Doom engine in JS, instead a fully polygon based 3D world is created & rendered using WebGL. The world (walls, floors, ceilings etc) consists of triangle meshes, and the items, monsters etc are draw using the 'bill-boarding' technique to inject 2D sprites into a 3D world.
+
+Current features:
+
+- 🧊 Full 3D geometry, including triangulated floors and ceilings
+- 🗺️ Custom levels loaded from JSON
+- 🖼️ Doom style texture mapping
+- 🪚 Sectors with differing heights for floors & ceilings
+- 🪨 Physics based collision detection 
+- 🚨 Multiple lights and coloured lighting
+- 🏃‍♂️ Animation for sprites
+
+No bundling or compilation is required, it runs as a pure HTML & JS app, using modern ES6 modules.
+
+## Live Demo
+
+[Live demo version is here](http://code.benco.io/doom-lite/) hosted on GitHub pages
 
 ## Screenshots
 
-![screenshot](./etc/oldish.png)
-![screenshot](./etc/demo.png)
-![screenshot](./etc/lights-1.png)
-![screenshot](./etc/lights-2.png)
+![screenshot](./etc/new-7.png)
+![screenshot](./etc/new-3.png)
+![screenshot](./etc/new-6.png)
+![screenshot](./etc/new-5.png)
 
 ## Running Locally
 
-Run a HTTP server from the root of this repo, and browse to the local URL
+Run any [HTTP server of your choice](https://gist.github.com/benc-uk/3c4b00ce33432ade88914aee28737c4c#file-local-server-md) from the root directory of this repo, and browse to the URL serving this repo folder.
 
 If you have Node installed, you can run:
 
 ```bash
 make install-tools
 make local-server
+```
+
+---
+
+The makefile is your friend, simply run `make` for helpful text 
+
+```text
+$ make
+ _          _       
+| |__   ___| |_ __  
+| '_ \ / _ \ | '_ \ 
+| | | |  __/ | |_) |
+|_| |_|\___|_| .__/ 
+             |_|    
+help                 💬 This help message :)
+install-tools        🔮 Install dev tools into project bin directory
+lint                 🌟 Lint & format check only, sets exit code on error
+lint-fix             📝 Lint & format, attempts to fix errors & modify code
+local-server         🌐 Start a local HTTP server for development
 ```
 
 ## Controls
