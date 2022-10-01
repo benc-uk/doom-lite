@@ -13,11 +13,11 @@ import * as twgl from '../lib/twgl/dist/4.x/twgl-full.module.js'
 import { mat4 } from '../lib/gl-matrix/esm/index.js'
 import { getGPUTier } from '../lib/detect-gpu/detect-gpu.esm.js'
 
-const VERSION = '0.4.6'
+const VERSION = '0.5.0'
 const FOV = 38
-const FAR_CLIP = 140
+const FAR_CLIP = 340
 
-const MAP_FILE = 'levels/demo.json'
+const MAP_FILE = 'levels/demo.json5'
 const NO_CLIP = false
 
 let camera
@@ -32,7 +32,6 @@ const player = {
 }
 
 const baseUniforms = {
-  u_lightColor: [1, 1, 1, 1],
   u_lightAmbient: [0.3, 0.3, 0.3, 1],
   u_specular: [1, 1, 1, 1],
   u_shininess: 350,
@@ -62,7 +61,7 @@ window.onload = async () => {
   let map, thingDB
   try {
     console.log(`💾 Loading map '${MAP_FILE}' and other data files...`)
-    ;({ map, thingDB } = await loadDataFiles('data/things.json', MAP_FILE))
+    ;({ map, thingDB } = await loadDataFiles(MAP_FILE))
     console.log(`🗺️ Map '${map.name}' was loaded`)
   } catch (e) {
     setOverlay(`Data loading error: ${e.message}`)
@@ -187,7 +186,32 @@ window.onload = async () => {
     // Note we place the light at the camera & player position
     const uniforms = {
       u_viewInverse: camera, // Add the view inverse to the uniforms, we need it for shading
-      u_lightWorldPos: player.location, // Add the light position to the uniforms, we need it for shading
+      u_lights: [
+        {
+          pos: player.location,
+          color: [1, 1, 1, 1],
+          intensity: 1.1,
+          radius: 140,
+        },
+        {
+          pos: [127, 6, 29],
+          color: [0, 1, 0, 1],
+          intensity: 0.6,
+          radius: 15,
+        },
+        {
+          pos: [122, 6, 25],
+          color: [0, 1, 0, 1],
+          intensity: 0.6,
+          radius: 15,
+        },
+        {
+          pos: [258, -10, 174],
+          color: [1, 0.2, 0, 1],
+          intensity: 1.5,
+          radius: 80,
+        },
+      ],
       ...baseUniforms,
     }
 

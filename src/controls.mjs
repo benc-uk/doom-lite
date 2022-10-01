@@ -128,6 +128,6 @@ export function updatePlayer(map, player, camera) {
   camera[13] = player.body.position.y
   camera[14] = player.body.position.z
 
-  // lower the body so we bump into low steps
-  player.body.position.y = playerY
+  // lower the body so we bump into low geometry
+  player.body.position.y = playerY - 0.8
 }

@@ -4,19 +4,26 @@
 // =============================================================
 
 precision highp float;
+struct Light {
+  vec3 pos;
+  vec4 color;
+  float intensity;
+  float radius;
+};
 
-varying vec4 v_position;
 varying vec3 v_normal;
-varying vec3 v_surfaceToLight;
-varying vec3 v_surfaceToView;
 varying vec2 v_texCoord;
-varying float v_lightDist;
+varying vec4 v_position;
 
-uniform vec4 u_lightColor;
+uniform mat4 u_world;
+uniform mat4 u_viewInverse;
+
+const int MAX_LIGHTS = 4;
 uniform vec4 u_lightAmbient;
 uniform vec4 u_specular;
 uniform float u_shininess;
 uniform float u_specularFactor;
+uniform Light u_lights[MAX_LIGHTS];
 
 uniform sampler2D u_texture;
 
@@ -32,37 +39,55 @@ uniform float u_brightness;
 // - surfaceToLightN:  Vector towards light (normalized)
 // - halfVector:       Half vector towards camera (normalized)
 // - shininess:        Hardness or size of specular highlights
-vec2 light(vec3 normalN, vec3 surfaceToLightN, vec3 halfVector, float shininess) {
+vec2 lightCalc(vec3 normalN, vec3 surfaceToLightN, vec3 halfVector, float shininess) {
   float NdotL = dot(normalN, surfaceToLightN);
   float NdotH = dot(normalN, halfVector);
   
   return vec2(
-    abs(NdotL),                                            // Diffuse term in x
+    // abs(NdotL),                                     // Diffuse term in x
+    NdotL,                                            // Diffuse term in x
     (NdotL > 0.0) ? pow(max(0.0, NdotH), shininess) : 0.0  // Specular term in y
   );
 }
 
 void main(void) {
   vec4 texel = texture2D(u_texture, vec2(v_texCoord.x + u_xOffset, v_texCoord.y + u_yOffset));
+
+  // Walls can have transparent pixels, so we need to discard them
   if(texel.a < 0.5) {
     discard;
   }
 
-  vec3 normalN = normalize(v_normal);
-  vec3 surfaceToLightN = normalize(v_surfaceToLight);
-  vec3 surfaceToViewN = normalize(v_surfaceToView);
-  vec3 halfVector = normalize(surfaceToLightN + surfaceToViewN);
+  vec4 outColor = vec4(0.0, 0.0, 0.0, 0.0);
+  for(int i = 0; i < MAX_LIGHTS; i++) {
+    Light light = u_lights[i];
 
-  vec2 l = light(normalN, surfaceToLightN, halfVector, u_shininess);
+    if(light.intensity == 0.0) {
+      continue;
+    }
 
-  float lightDist = length(v_surfaceToLight);
-  float attenuation = 1.0 / (1.0 + 8.00 * lightDist + 1.3 * (lightDist * lightDist));
-  attenuation = clamp(attenuation * 2000.0, 0.0, 1.0);
+    vec3 surfaceToLight = light.pos - (u_world * v_position).xyz;
+    vec3 surfaceToView = (u_viewInverse[3] - (u_world * v_position)).xyz;
+    vec3 normalN = normalize(v_normal);
+    vec3 surfaceToLightN = normalize(surfaceToLight);
+    vec3 surfaceToViewN = normalize(surfaceToView);
+    vec3 halfVector = normalize(surfaceToLightN + surfaceToViewN);
 
-  vec4 outColor = vec4(
-    (texel * u_lightAmbient * attenuation + (u_lightColor * (texel * l.x * attenuation + u_specular * l.y * u_specularFactor * attenuation))).rgb, 
-    texel.a 
-  );
+    vec2 l = lightCalc(normalN, surfaceToLightN, halfVector, u_shininess);
+
+    float dist = length(surfaceToLight);
+    float att = clamp(1.0 - dist*dist/(light.radius*light.radius), 0.0, 1.0);
+    att *= att;
+
+    vec4 diffuse = texel * l.x * att * light.intensity;
+    vec4 spec = u_specular * l.y * u_specularFactor * att * light.intensity;
+    vec4 lightColor = vec4(
+      ((texel * u_lightAmbient + (light.color * (diffuse + spec))) * att).rgb, 
+      texel.a 
+    );
+
+    outColor += lightColor;
+  }
 
   outColor *= u_brightness;
 
@@ -71,5 +96,4 @@ void main(void) {
   } else {
     gl_FragColor = outColor;
   }
-  //gl_FragColor = outColor;
 }

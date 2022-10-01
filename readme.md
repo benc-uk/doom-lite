@@ -7,6 +7,8 @@ A spin off repo from work originally created here https://github.com/benc-uk/web
 
 ![screenshot](./etc/oldish.png)
 ![screenshot](./etc/demo.png)
+![screenshot](./etc/lights-1.png)
+![screenshot](./etc/lights-2.png)
 
 ## Running Locally
 

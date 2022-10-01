@@ -5,22 +5,22 @@
 
 import * as twgl from '../lib/twgl/dist/4.x/twgl-full.module.js'
 
-import { parse as parseJSONC } from '../lib/jsonc/index.js'
+import JSON5 from '../lib/json5/dist/index.min.mjs'
 
 const TEXTURE_PATH = 'textures'
 const SPRITE_PATH = 'sprites'
-
+const THING_DB_PATH = 'data/things.json5'
 //
 // Load any JSON files, currently the main map and the thing DB
 //
-export async function loadDataFiles(thingDbPath, mapPath) {
+export async function loadDataFiles(mapPath) {
   // Try to load the thing templates database
-  const thingDbResp = await fetch(thingDbPath)
+  const thingDbResp = await fetch(THING_DB_PATH)
   if (!thingDbResp.ok) {
-    throw new Error(`Unable to load ${thingDbPath} ${thingDbResp.status}`)
+    throw new Error(`Unable to load ${THING_DB_PATH} ${thingDbResp.status}`)
   }
   const thingData = await thingDbResp.text()
-  const thingDB = parseJSONC(thingData)
+  const thingDB = JSON5.parse(thingData)
 
   // fetch map from file
   const mapResp = await fetch(mapPath)
@@ -28,7 +28,7 @@ export async function loadDataFiles(thingDbPath, mapPath) {
     throw new Error(`Unable to load ${mapPath} ${mapResp.status}`)
   }
   const mapData = await mapResp.text()
-  const map = parseJSONC(mapData)
+  const map = JSON5.parse(mapData)
 
   return { map, thingDB }
 }

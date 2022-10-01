@@ -100,7 +100,7 @@ export function buildFlat(gl, sector, floor = true) {
     maxY = Math.max(maxY, poly[ix + 1])
   }
 
-  const normalY = floor ? -1 : 1
+  const normalY = floor ? 1 : -1
   for (let ix = 0; ix < poly.length; ix += 2) {
     texcoord.push((poly[ix] - minX) / TEX_SCALE, (poly[ix + 1] - minY) / TEX_SCALE)
     normal.push(0, normalY, 0)
