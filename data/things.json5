@@ -70,12 +70,24 @@
     size: 4,
     animSpeed: 0.3,
     textures: ['BAR1A0', 'BAR1B0'],
+    light: {
+      color: [0, 1, 0, 1],
+      intensity: 0.6,
+      radius: 15,
+      height: 5,
+    },
   },
   {
     name: 'barrel_fire',
     size: 6,
     animSpeed: 0.3,
     textures: ['FCANA0', 'FCANB0', 'FCANC0'],
+    light: {
+      color: [1, 0.7, 0.3, 1],
+      intensity: 1.8,
+      radius: 40,
+      height: 5,
+    },
   },
   {
     name: 'gore',
@@ -94,12 +106,24 @@
     size: 7,
     animSpeed: 0.3,
     textures: ['SMRTA0', 'SMRTB0', 'SMRTC0', 'SMRTD0'],
+    light: {
+      color: [1, 0.7, 0.3, 1],
+      intensity: 2.2,
+      radius: 30,
+      height: 2.5,
+    },
   },
   {
     name: 'torch_metal',
     size: 7,
     animSpeed: 0.3,
     textures: ['TREDA0', 'TREDB0', 'TREDC0', 'TREDD0'],
+    light: {
+      color: [1, 0.5, 0.2, 1],
+      intensity: 1.7,
+      radius: 20,
+      height: 3,
+    },
   },
   {
     name: 'stalagmite',

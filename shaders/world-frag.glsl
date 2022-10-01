@@ -18,7 +18,7 @@ varying vec4 v_position;
 uniform mat4 u_world;
 uniform mat4 u_viewInverse;
 
-const int MAX_LIGHTS = 4;
+const int MAX_LIGHTS = 16;
 uniform vec4 u_lightAmbient;
 uniform vec4 u_specular;
 uniform float u_shininess;
@@ -44,8 +44,7 @@ vec2 lightCalc(vec3 normalN, vec3 surfaceToLightN, vec3 halfVector, float shinin
   float NdotH = dot(normalN, halfVector);
   
   return vec2(
-    // abs(NdotL),                                     // Diffuse term in x
-    NdotL,                                            // Diffuse term in x
+    abs(NdotL),                                    // Diffuse term in x
     (NdotL > 0.0) ? pow(max(0.0, NdotH), shininess) : 0.0  // Specular term in y
   );
 }
@@ -57,6 +56,8 @@ void main(void) {
   if(texel.a < 0.5) {
     discard;
   }
+  
+  texel.rgb *= u_brightness;
 
   vec4 outColor = vec4(0.0, 0.0, 0.0, 0.0);
   for(int i = 0; i < MAX_LIGHTS; i++) {
@@ -88,8 +89,6 @@ void main(void) {
 
     outColor += lightColor;
   }
-
-  outColor *= u_brightness;
 
   if (u_debugColor.a > 0.0) {
     gl_FragColor = u_debugColor;

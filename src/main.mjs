@@ -10,12 +10,13 @@ import { loadDataFiles, buildTextureCache } from './data.mjs'
 
 import * as Cannon from '../lib/cannon-es/dist/cannon-es.js'
 import * as twgl from '../lib/twgl/dist/4.x/twgl-full.module.js'
-import { mat4 } from '../lib/gl-matrix/esm/index.js'
+import { mat4, vec3 } from '../lib/gl-matrix/esm/index.js'
 import { getGPUTier } from '../lib/detect-gpu/detect-gpu.esm.js'
 
-const VERSION = '0.5.0'
+const VERSION = '0.5.2'
 const FOV = 38
-const FAR_CLIP = 340
+const FAR_CLIP = 140
+const MAX_LIGHTS = 16 // Should match shader code
 
 const MAP_FILE = 'levels/demo.json5'
 const NO_CLIP = false
@@ -184,35 +185,47 @@ window.onload = async () => {
     const viewPerspective = mat4.multiply(mat4.create(), perspective, view)
 
     // Note we place the light at the camera & player position
+    const playerLight = {
+      pos: player.location,
+      color: [1, 1, 1, 1],
+      intensity: 1.1,
+      radius: 140,
+    }
+
+    // Add static lights from things that glow
+    const thingLights = []
+    for (const instance of thingInstances) {
+      if (instance.template.light) {
+        const lightTmpl = instance.template.light
+        const lightPos = [instance.location[0], instance.location[1] + lightTmpl.height, instance.location[2]]
+        const dist = vec3.distance(lightPos, player.location)
+
+        // Only add lights that are close enough to be visible
+        if (dist < FAR_CLIP) {
+          thingLights.push({ dist, lightPos, lightTmpl })
+        }
+      }
+    }
+    // Sort by distance to player
+    thingLights.sort((a, b) => a.dist - b.dist)
+
+    // NOTE: For u_lights we use some slight odd syntax that twgl supports for arrays of objects
     const uniforms = {
       u_viewInverse: camera, // Add the view inverse to the uniforms, we need it for shading
-      u_lights: [
-        {
-          pos: player.location,
-          color: [1, 1, 1, 1],
-          intensity: 1.1,
-          radius: 140,
-        },
-        {
-          pos: [127, 6, 29],
-          color: [0, 1, 0, 1],
-          intensity: 0.6,
-          radius: 15,
-        },
-        {
-          pos: [122, 6, 25],
-          color: [0, 1, 0, 1],
-          intensity: 0.6,
-          radius: 15,
-        },
-        {
-          pos: [258, -10, 174],
-          color: [1, 0.2, 0, 1],
-          intensity: 1.5,
-          radius: 80,
-        },
-      ],
+      'u_lights[0]': playerLight, // First light is the player light
       ...baseUniforms,
+    }
+
+    // Add the rest of u_lights is the closest lights up to MAX_LIGHTS
+    let lightCount = 1
+    for (const { lightPos, lightTmpl } of thingLights) {
+      if (lightCount > MAX_LIGHTS) break
+      uniforms[`u_lights[${lightCount++}]`] = {
+        pos: lightPos,
+        color: lightTmpl.color,
+        intensity: lightTmpl.intensity,
+        radius: lightTmpl.radius,
+      }
     }
 
     drawWorld(gl, worldProg, uniforms, worldObjs, viewPerspective, physWorld, map)

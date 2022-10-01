@@ -184,6 +184,7 @@ export async function buildTemplates(gl, textureCache, thingDB) {
 
     templates[dbEntry.name] = {
       name: dbEntry.name,
+      light: dbEntry.light ? dbEntry.light : null,
       buffers,
       textures,
       animSpeed: dbEntry.animSpeed,
