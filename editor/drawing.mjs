@@ -1,4 +1,5 @@
 import { state } from './editor.mjs'
+import { earcut } from '../../lib/earcut/earcut.esm.js'
 
 const LINE_THICKNESS = 2.5
 const DOTSIZE = 6

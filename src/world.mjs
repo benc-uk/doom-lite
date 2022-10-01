@@ -4,6 +4,7 @@
 // ================================================================================
 
 import { buildFlat, buildWall } from './geometry.mjs'
+// import { getTexture } from './data.mjs'
 
 import * as twgl from '../lib/twgl/dist/4.x/twgl-full.module.js'
 import * as Cannon from '../lib/cannon-es/dist/cannon-es.js'
@@ -78,19 +79,19 @@ export async function buildWorld(map, gl, templates, textureCache) {
         uniforms.u_xOffset = line.front.xOffset ? line.front.xOffset : 0
         uniforms.u_yOffset = line.front.yOffset ? line.front.yOffset : 0
         if (line.front.texMid) {
-          const tex = textureCache[line.front.texMid]
+          const tex = textureCache.get('TEX', line.front.texMid)
           const { bufferInfo, shape } = buildWall(gl, v1[X], v1[Y], v2[X], v2[Y], frontSec.floor, frontSec.ceiling, tex.width / tex.height, false)
           const body = new Cannon.Body({ mass: WALL_MASS, shape })
           worldObjs.push({ id: lid, type: 'line', bufferInfo, texture: tex.texture, uniforms, body })
         }
         if (line.front.texBot) {
-          const tex = textureCache[line.front.texBot]
+          const tex = textureCache.get('TEX', line.front.texBot)
           const { bufferInfo, shape } = buildWall(gl, v1[X], v1[Y], v2[X], v2[Y], backSec.floor, frontSec.floor, tex.width / tex.height, true)
           const body = new Cannon.Body({ mass: WALL_MASS, shape })
           worldObjs.push({ id: lid, type: 'line', bufferInfo, texture: tex.texture, uniforms, body })
         }
         if (line.front.texTop) {
-          const tex = textureCache[line.front.texTop]
+          const tex = textureCache.get('TEX', line.front.texTop)
           const { bufferInfo, shape } = buildWall(gl, v1[X], v1[Y], v2[X], v2[Y], frontSec.ceiling, backSec.ceiling, tex.width / tex.height, true)
           const body = new Cannon.Body({ mass: WALL_MASS, shape })
           worldObjs.push({ id: lid, type: 'line', bufferInfo, texture: tex.texture, uniforms, body })
@@ -102,19 +103,19 @@ export async function buildWorld(map, gl, templates, textureCache) {
         uniforms.u_xOffset = line.back.xOffset ? line.back.xOffset : 0
         uniforms.u_yOffset = line.back.yOffset ? line.back.yOffset : 0
         if (line.back.texMid) {
-          const tex = textureCache[line.back.texMid]
+          const tex = textureCache.get('TEX', line.back.texMid)
           const { bufferInfo, shape } = buildWall(gl, v1[X], v1[Y], v2[X], v2[Y], backSec.floor, backSec.ceiling, tex.width / tex.height, true)
           const body = new Cannon.Body({ mass: WALL_MASS, shape })
           worldObjs.push({ id: lid, type: 'line', bufferInfo, texture: tex.texture, uniforms, body })
         }
         if (line.back.texBot) {
-          const tex = textureCache[line.back.texBot]
+          const tex = textureCache.get('TEX', line.back.texBot)
           const { bufferInfo, shape } = buildWall(gl, v1[X], v1[Y], v2[X], v2[Y], backSec.floor, frontSec.floor, tex.width / tex.height, true)
           const body = new Cannon.Body({ mass: WALL_MASS, shape })
           worldObjs.push({ id: lid, type: 'line', bufferInfo, texture: tex.texture, uniforms, body })
         }
         if (line.back.texTop) {
-          const tex = textureCache[line.back.texTop]
+          const tex = textureCache.get('TEX', line.back.texTop)
           const { bufferInfo, shape } = buildWall(gl, v1[X], v1[Y], v2[X], v2[Y], frontSec.ceiling, backSec.ceiling, tex.width / tex.height, true)
           const body = new Cannon.Body({ mass: WALL_MASS, shape })
           worldObjs.push({ id: lid, type: 'line', bufferInfo, texture: tex.texture, uniforms, body })
@@ -138,7 +139,7 @@ export async function buildWorld(map, gl, templates, textureCache) {
       id: flatId++,
       type: 'floor',
       bufferInfo: floorFlat,
-      texture: textureCache[sector.texFloor],
+      texture: textureCache.get('FLAT', sector.texFloor),
       uniforms,
     })
 
@@ -157,7 +158,7 @@ export async function buildWorld(map, gl, templates, textureCache) {
         id: flatId++,
         type: 'ceiling',
         bufferInfo: ceilFlat,
-        texture: textureCache[sector.texCeil],
+        texture: textureCache.get('FLAT', sector.texCeil),
         uniforms,
       })
     }
@@ -179,7 +180,7 @@ export async function buildTemplates(gl, textureCache, thingDB) {
 
     const textures = []
     for (const textureName of dbEntry.textures) {
-      textures.push(textureCache[textureName].texture)
+      textures.push(textureCache.get('THING', textureName).texture)
     }
 
     templates[dbEntry.name] = {

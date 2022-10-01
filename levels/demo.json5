@@ -1920,8 +1920,8 @@
       impassable: true,
       front: {
         sector: 21,
-        texBot: 'FLOOR6_1',
-        texTop: 'STONE3',
+        texBot: 'CRAKLE2',
+        texTop: 'STONE7',
       },
       back: {
         sector: 20,
@@ -1935,8 +1935,8 @@
       impassable: true,
       front: {
         sector: 21,
-        texBot: 'FLOOR6_1',
-        texTop: 'STONE3',
+        texBot: 'CRAKLE2',
+        texTop: 'STONE7',
       },
       back: {
         sector: 20,
@@ -1950,8 +1950,8 @@
       impassable: true,
       front: {
         sector: 21,
-        texBot: 'FLOOR6_1',
-        texTop: 'STONE3',
+        texBot: 'CRAKLE2',
+        texTop: 'STONE7',
       },
       back: {
         sector: 20,
@@ -1965,8 +1965,8 @@
       impassable: true,
       front: {
         sector: 21,
-        texBot: 'FLOOR6_1',
-        texTop: 'STONE3',
+        texBot: 'CRAKLE2',
+        texTop: 'STONE7',
       },
       back: {
         sector: 20,
@@ -1980,8 +1980,8 @@
       impassable: true,
       front: {
         sector: 21,
-        texBot: 'FLOOR6_1',
-        texTop: 'STONE3',
+        texBot: 'CRAKLE2',
+        texTop: 'STONE7',
       },
       back: {
         sector: 20,
@@ -1995,8 +1995,8 @@
       impassable: true,
       front: {
         sector: 21,
-        texBot: 'FLOOR6_1',
-        texTop: 'STONE3',
+        texBot: 'CRAKLE2',
+        texTop: 'STONE7',
       },
       back: {
         sector: 20,
@@ -2010,8 +2010,8 @@
       impassable: true,
       front: {
         sector: 21,
-        texBot: 'FLOOR6_1',
-        texTop: 'STONE3',
+        texBot: 'CRAKLE2',
+        texTop: 'STONE7',
       },
       back: {
         sector: 20,
@@ -2025,8 +2025,8 @@
       impassable: true,
       front: {
         sector: 21,
-        texBot: 'FLOOR6_1',
-        texTop: 'STONE3',
+        texBot: 'CRAKLE2',
+        texTop: 'STONE7',
       },
       back: {
         sector: 20,
@@ -2040,8 +2040,8 @@
       impassable: false,
       front: {
         sector: 21,
-        texBot: 'FLOOR6_1',
-        texTop: 'STONE3',
+        texBot: 'CRAKLE2',
+        texTop: 'STONE7',
       },
       back: {
         sector: 20,
@@ -3588,7 +3588,7 @@
       floor: -12,
       ceiling: 10,
       lines: [226, 227, 228, 229, 230, 231, 232, 233],
-      texFloor: 'WOOD3',
+      texFloor: 'RROCK19',
       texCeil: 'FLAT1_2',
     },
     '54': {

@@ -96,7 +96,7 @@ window.onload = async () => {
   } catch (err) {
     console.error(err)
     setOverlay(`Texture loading error ${err}`)
-    return // Give up here!
+    //return // Give up here!
   }
 
   // Set up all thing templates
