@@ -73,7 +73,7 @@
     light: {
       color: [0, 1, 0, 1],
       intensity: 0.6,
-      radius: 15,
+      radius: 25,
       height: 5,
     },
   },
@@ -107,9 +107,9 @@
     animSpeed: 0.3,
     textures: ['SMRTA0', 'SMRTB0', 'SMRTC0', 'SMRTD0'],
     light: {
-      color: [1, 0.7, 0.3, 1],
+      color: [1, 0.6, 0.3, 1],
       intensity: 2.2,
-      radius: 30,
+      radius: 50,
       height: 2.5,
     },
   },

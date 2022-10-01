@@ -6,6 +6,7 @@
 
 import { mat4 } from '../lib/gl-matrix/esm/index.js'
 import { pointInPolygonFlat } from '../lib/point-in-poly/pip.mjs'
+import { showToast } from './toast.mjs'
 
 let inputMap = {}
 
@@ -80,11 +81,11 @@ export function handleInputs(deltaTime, player, camera, map) {
     player.body.velocity.set(player.facing[0] * moveSpeed, player.facing[1] * moveSpeed, player.facing[2] * moveSpeed)
   }
 
-  if (inputMap['q'] || inputMap['z']) {
+  if (inputMap['q']) {
     player.body.velocity.set((-player.facing[2] * moveSpeed) / 2, 0, (player.facing[0] * moveSpeed) / 2)
   }
 
-  if (inputMap['e'] || inputMap['x']) {
+  if (inputMap['e']) {
     player.body.velocity.set((player.facing[2] * moveSpeed) / 2, 0, (-player.facing[0] * moveSpeed) / 2)
   }
 
@@ -100,6 +101,19 @@ export function handleInputs(deltaTime, player, camera, map) {
 
     // update facing
     player.facing = [camera[8], camera[9], camera[10]]
+  }
+
+  if (inputMap['r'] && player.noClip) {
+    player.height += 0.3
+  }
+  if (inputMap['f'] && player.noClip) {
+    player.height -= 0.3
+  }
+
+  if (inputMap['c']) {
+    player.noClip = !player.noClip
+    delete inputMap['c']
+    showToast('🚫 NoClip ' + (player.noClip ? 'enabled' : 'disabled'))
   }
 
   updatePlayer(map, player, camera)

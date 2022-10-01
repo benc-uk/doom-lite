@@ -4,26 +4,53 @@
 // =============================================================
 
 precision highp float;
+const int MAX_LIGHTS = 16;
+struct Light {
+  vec3 pos;
+  vec4 color;
+  float intensity;
+  float radius;
+};
 
 varying vec2 v_texCoord;
-varying vec3 v_surfaceToLight;
+varying vec4 v_position;
 
-uniform vec4 u_lightColor;
+// Common uniforms
+uniform mat4 u_world;
 uniform vec4 u_lightAmbient;
+uniform Light u_lights[MAX_LIGHTS];
 
+// Texture uniforms
 uniform sampler2D u_texture;
 
 void main(void) {
-  vec4 texel = texture2D(u_texture, v_texCoord );
+  vec4 texel = texture2D(u_texture, v_texCoord);
 
   // Magic to make transparent sprites work, without blending 
   if(texel.a < 0.5) {
     discard;
   }
 
-  float lightDist = length(v_surfaceToLight);
-  float attenuation = 1.0 / (1.0 + 8.00 * lightDist + 1.3 * (lightDist * lightDist));
-  attenuation = clamp(attenuation * 1000.0, 0.0, 1.0);
+  vec4 outColor = vec4(0.0, 0.0, 0.0, 1.0);
+  for(int i = 0; i < MAX_LIGHTS; i++) {
+    Light light = u_lights[i];
+    if(light.intensity == 0.0) {
+      continue;
+    }
 
-  gl_FragColor = attenuation * texel; 
+    vec3 surfaceToLight = light.pos - v_position.xyz;
+    float dist = length(surfaceToLight);
+    float att = clamp(1.0 - ((dist * dist) / (light.radius * light.radius)), 0.0, 1.0);
+    att *= att;
+
+    vec4 diffuse = texel * att * light.intensity;
+    vec4 lightColor = vec4(
+      ((texel * u_lightAmbient + (light.color * diffuse)) * att).rgb, 
+      1.0
+    );
+
+    outColor += lightColor;
+  }
+
+  gl_FragColor = outColor;
 }

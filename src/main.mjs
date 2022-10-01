@@ -13,13 +13,13 @@ import * as twgl from '../lib/twgl/dist/4.x/twgl-full.module.js'
 import { mat4, vec3 } from '../lib/gl-matrix/esm/index.js'
 import { getGPUTier } from '../lib/detect-gpu/detect-gpu.esm.js'
 
-const VERSION = '0.5.2'
+const VERSION = '0.5.3'
 const FOV = 38
 const FAR_CLIP = 140
 const MAX_LIGHTS = 16 // Should match shader code
 
 const MAP_FILE = 'levels/demo.json5'
-const NO_CLIP = false
+//const NO_CLIP = true
 
 let camera
 let totalTime = 0
@@ -30,6 +30,8 @@ const player = {
   body: null,
   height: 4,
   sector: 0,
+  noClip: false,
+  lookUp: 0.0,
 }
 
 const baseUniforms = {
@@ -123,7 +125,6 @@ window.onload = async () => {
     shape: new Cannon.Sphere(1.5),
     linearDamping: 0.99998,
   })
-  if (NO_CLIP) player.body.collisionFilterGroup = 0
   physWorld.addBody(player.body)
   console.log('🧪 Physics initialized')
 
@@ -132,7 +133,7 @@ window.onload = async () => {
   console.log(`🧩 Map '${map.name}' was parsed into ${worldObjs.length} parts and ${thingInstances.length} thing instances`)
 
   // Setup player position and camera
-  camera = mat4.targetTo(mat4.create(), [0, 0, 0], [0, 0, -100], [0, 1, 0])
+  camera = mat4.targetTo(mat4.create(), [0, 0, 0], [0, 0, -1], [0, 1, 0])
   mat4.translate(camera, camera, [playerStart.x, player.height, playerStart.z])
   mat4.rotateY(camera, camera, map.playerStart.angle)
   player.body.position.set(camera[12], camera[13], camera[14])
@@ -163,6 +164,12 @@ window.onload = async () => {
     // Process inputs and controls
     handleInputs(deltaTime, player, camera, map)
 
+    if (player.noClip) {
+      player.body.collisionFilterGroup = 0
+    } else {
+      player.body.collisionFilterGroup = 1
+    }
+
     // Update physics
     physWorld.fixedStep()
 
@@ -189,7 +196,7 @@ window.onload = async () => {
       pos: player.location,
       color: [1, 1, 1, 1],
       intensity: 1.1,
-      radius: 140,
+      radius: 130,
     }
 
     // Add static lights from things that glow
@@ -209,7 +216,7 @@ window.onload = async () => {
     // Sort by distance to player
     thingLights.sort((a, b) => a.dist - b.dist)
 
-    // NOTE: For u_lights we use some slight odd syntax that twgl supports for arrays of objects
+    // NOTE: For u_lights we use some odd syntax that twgl supports for array
     const uniforms = {
       u_viewInverse: camera, // Add the view inverse to the uniforms, we need it for shading
       'u_lights[0]': playerLight, // First light is the player light

@@ -4,6 +4,7 @@
 // =============================================================
 
 precision highp float;
+const int MAX_LIGHTS = 16;
 struct Light {
   vec3 pos;
   vec4 color;
@@ -15,19 +16,19 @@ varying vec3 v_normal;
 varying vec2 v_texCoord;
 varying vec4 v_position;
 
+// Common uniforms
 uniform mat4 u_world;
 uniform mat4 u_viewInverse;
-
-const int MAX_LIGHTS = 16;
 uniform vec4 u_lightAmbient;
 uniform vec4 u_specular;
 uniform float u_shininess;
 uniform float u_specularFactor;
 uniform Light u_lights[MAX_LIGHTS];
 
+// Texture uniforms
 uniform sampler2D u_texture;
 
-// per object uniforms
+// Per object instance uniforms
 uniform float u_xOffset;
 uniform float u_yOffset;
 uniform vec4 u_debugColor;
@@ -44,11 +45,14 @@ vec2 lightCalc(vec3 normalN, vec3 surfaceToLightN, vec3 halfVector, float shinin
   float NdotH = dot(normalN, halfVector);
   
   return vec2(
-    abs(NdotL),                                    // Diffuse term in x
-    (NdotL > 0.0) ? pow(max(0.0, NdotH), shininess) : 0.0  // Specular term in y
+    abs(NdotL), // Diffuse term in x
+    (NdotL > 0.0) ? pow(max(0.0, NdotH), shininess) : 0.0 // Specular term in y
   );
 }
 
+//
+// Main function
+//
 void main(void) {
   vec4 texel = texture2D(u_texture, vec2(v_texCoord.x + u_xOffset, v_texCoord.y + u_yOffset));
 
@@ -67,7 +71,7 @@ void main(void) {
       continue;
     }
 
-    vec3 surfaceToLight = light.pos - (u_world * v_position).xyz;
+    vec3 surfaceToLight = light.pos - v_position.xyz;
     vec3 surfaceToView = (u_viewInverse[3] - (u_world * v_position)).xyz;
     vec3 normalN = normalize(v_normal);
     vec3 surfaceToLightN = normalize(surfaceToLight);
@@ -77,14 +81,14 @@ void main(void) {
     vec2 l = lightCalc(normalN, surfaceToLightN, halfVector, u_shininess);
 
     float dist = length(surfaceToLight);
-    float att = clamp(1.0 - dist*dist/(light.radius*light.radius), 0.0, 1.0);
+    float att = clamp(1.0 - dist * dist / (light.radius * light.radius), 0.0, 1.0);
     att *= att;
 
     vec4 diffuse = texel * l.x * att * light.intensity;
     vec4 spec = u_specular * l.y * u_specularFactor * att * light.intensity;
     vec4 lightColor = vec4(
       ((texel * u_lightAmbient + (light.color * (diffuse + spec))) * att).rgb, 
-      texel.a 
+      1.0
     );
 
     outColor += lightColor;
