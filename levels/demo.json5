@@ -1920,7 +1920,7 @@
       impassable: true,
       front: {
         sector: 21,
-        texBot: 'CRAKLE2',
+        texBot: 'CRACKLE2',
         texTop: 'STONE7',
       },
       back: {
@@ -1935,7 +1935,7 @@
       impassable: true,
       front: {
         sector: 21,
-        texBot: 'CRAKLE2',
+        texBot: 'CRACKLE2',
         texTop: 'STONE7',
       },
       back: {
@@ -1950,7 +1950,7 @@
       impassable: true,
       front: {
         sector: 21,
-        texBot: 'CRAKLE2',
+        texBot: 'CRACKLE2',
         texTop: 'STONE7',
       },
       back: {
@@ -1965,7 +1965,7 @@
       impassable: true,
       front: {
         sector: 21,
-        texBot: 'CRAKLE2',
+        texBot: 'CRACKLE2',
         texTop: 'STONE7',
       },
       back: {
@@ -1980,7 +1980,7 @@
       impassable: true,
       front: {
         sector: 21,
-        texBot: 'CRAKLE2',
+        texBot: 'CRACKLE2',
         texTop: 'STONE7',
       },
       back: {
@@ -1995,7 +1995,7 @@
       impassable: true,
       front: {
         sector: 21,
-        texBot: 'CRAKLE2',
+        texBot: 'CRACKLE2',
         texTop: 'STONE7',
       },
       back: {
@@ -2010,7 +2010,7 @@
       impassable: true,
       front: {
         sector: 21,
-        texBot: 'CRAKLE2',
+        texBot: 'CRACKLE2',
         texTop: 'STONE7',
       },
       back: {
@@ -2025,7 +2025,7 @@
       impassable: true,
       front: {
         sector: 21,
-        texBot: 'CRAKLE2',
+        texBot: 'CRACKLE2',
         texTop: 'STONE7',
       },
       back: {
@@ -2040,7 +2040,7 @@
       impassable: false,
       front: {
         sector: 21,
-        texBot: 'CRAKLE2',
+        texBot: 'CRACKLE2',
         texTop: 'STONE7',
       },
       back: {

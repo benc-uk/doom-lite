@@ -44,7 +44,7 @@ export async function buildTextureCache(gl, map, thingDB) {
   // Build a hash map of ALL textures we need
   const textureRequestMap = {}
 
-  const MAG_TEXTURES = gl.LINEAR
+  const MAG_TEXTURES = gl.NEAREST_MIPMAP_LINEAR
   const MAG_SPRITES = gl.NEAREST
 
   // We have additional passes of the map & thingDB data structure here, not ideal but fast enough
