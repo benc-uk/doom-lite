@@ -288,7 +288,6 @@ function drawThings(gl, programInfo, uniforms, thingInstances, view, perspective
     uniforms = {
       ...uniforms,
       u_texture: thingTexture,
-      u_worldInverseTranspose: mat4.create(), // For transforming normals
       u_worldViewProjection: mat4.create(), // Main transformation matrix for vetices
     }
 
@@ -296,10 +295,6 @@ function drawThings(gl, programInfo, uniforms, thingInstances, view, perspective
     const world = mat4.create()
     mat4.translate(world, world, [instance.location[0], instance.location[1], instance.location[2]])
     uniforms.u_world = world
-
-    // Populate u_worldInverseTranspose - used for normals & shading
-    mat4.invert(uniforms.u_worldInverseTranspose, world)
-    mat4.transpose(uniforms.u_worldInverseTranspose, uniforms.u_worldInverseTranspose)
 
     // World view before projection, intermediate step for billboarding
     const worldView = mat4.multiply(mat4.create(), view, world)
